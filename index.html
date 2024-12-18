@@ -338,7 +338,7 @@ const successModal = document.getElementById('success-modal');
 
 let currentUser = null;
 let currentModal = null;
-
+  
 // Фокусировка на первом поле при загрузке
 pinInputs[0].focus();
 
@@ -421,11 +421,15 @@ function filterMenuByAccess(accessLevel) {
   });
 }
 
-function openModal(modalId) {
+window.openModal = openModal;
+window.fadeInModal = fadeInModal;
+window.fadeOutModal = fadeOutModal;
+
+
+window.openModal = function(modalId) {
   const newModal = document.getElementById(modalId);
   if (!newModal) return;
 
-  // Если уже открыто модальное окно, скрываем его
   if (currentModal && currentModal !== newModal) {
     fadeOutModal(currentModal, () => {
       fadeInModal(newModal);
@@ -436,6 +440,14 @@ function openModal(modalId) {
   currentModal = newModal;
 }
 
+document.querySelectorAll('.list').forEach(item => {
+  item.addEventListener('click', () => {
+    const modalId = /* логика получения id окна, например data-атрибут */;
+    openModal(modalId);
+  });
+});
+
+  
 function fadeInModal(modal) {
   modal.classList.add('show');
   modal.classList.remove('hide');
