@@ -3,249 +3,451 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CRM Пример с Presence</title>
+<title>Авторизация по пин-коду</title>
 <style>
-  body {
-    font-family: sans-serif;
-    margin: 20px;
+  @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap');
+
+  :root {
+    --black-color: #121212;
+    --white-color1: #F4F5F0;
+    --white-color2: #D1D5D0;
   }
-  .hidden {
-    display: none;
+
+  * {
+    box-sizing: border-box;
+    font-family: "Comfortaa", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-optical-sizing: auto;
   }
-  .field-container {
+
+  body, html {
+    margin: 0;
+    padding: 0;
+    background-color: var(--black-color);
+    color: var(--white-color1);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+    width: 100vw;
     position: relative;
-    margin-bottom: 10px;
+    overflow: hidden;
   }
-  .field-focus-info {
-    font-size: 0.9em;
-    color: #555;
+
+  #pin-wrapper {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  #pin {
+    display: flex;
+    gap: 10px;
+  }
+
+  .pin-input {
+    width: 60px;
+    height: 70px;
+    font-size: 30px;
+    text-align: center;
+    background-color: transparent;
+    border: 2px solid var(--white-color1);
+    color: var(--white-color1);
+    outline: none;
+    border-radius: 10px;
+    transition: border-color 0.3s, background-color 0.3s;
+  }
+
+  .pin-input:focus {
+    border-color: lightblue;
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  #error-message {
+    margin-top: 20px;
+    color: red;
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .shake {
+    animation: shake 0.5s;
+  }
+
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+
+  /* Меню */
+  .navigation {
+    position: fixed;
+    top: 1vw;
+    left: 1vw; 
+    height: auto;
+    max-height: 25vw;
+    width: 3vw; 
+    background: var(--white-color1);
+    border-radius: 0.4vw;
+    box-shadow: 0 1.5vw 2.5vw rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    transition: opacity 1s ease, transform 1s ease;
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  .navigation.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .navigation ul {
     position: absolute;
-    top: -1.2em;
+    top: 0;
     left: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .navigation ul li {
+    position: relative;
+    list-style: none;
+    width: 3vw;
+    height: 3vw;
+    z-index: 1;
+    cursor: pointer;
+  }
+
+  .navigation ul li a {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    color: var(--black-color);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .navigation ul li a .icon {
+    position: relative;
+    display: block;
+    line-height: 3.5vw;
+    text-align: center;
+    transition: 0.5s;
+  }
+
+  .navigation ul li a .icon i {
+    font-size: 1vw;
+  }
+
+  .navigation ul li a .title {
+    position: absolute;
+    top: 50%;
+    left: 6.4vw; 
+    background: var(--white-color1);
+    transform: translateY(-50%);
+    padding: 0.2vw 0.4vw;
+    border-radius: 0.9vw; 
+    transition: 0.5s;
+    box-shadow: 0 0.5vw 1.5vw rgba(0, 0, 0, 0.1); 
+    opacity: 0;
+    visibility: hidden;
+    font-size: 0.6vw;
+  }
+
+  .navigation ul li:hover a .title {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-2.5vw) translateY(-50%);
+  }
+
+  .navigation ul .indicator {
+    position: absolute;
+    left: 0vw;
+    width: 3vw;
+    height: 3vw;
+    transition: 0.5s;
+  }
+
+  .navigation ul .indicator::before {
+    content: "";
+    position: absolute;
+    width: 2vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 2vw;
+    background: var(--black-color);
+    border-radius: 0.4vw;
+    transition: 0.5s;
+  }
+
+  /* Модальные окна */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 1vw;
+    left: 5vw;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 1vw;
+    border-radius: 0.4vw;
+    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+    height: 90vh;
+    width: 90vw;
+    color: black;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .modal.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .modal.hide {
+    display: block;
+    opacity: 0; 
+  }
+
+  /* Анимации появления/исчезновения */
+  .fade-out {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .fade-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
   }
 </style>
 </head>
 <body>
-<h1>CRM Пример</h1>
-
-<!--форма авторизации по пин-коду-->
-<div id="loginForm">
-  <h2>Авторизация по пин-коду</h2>
-  <input id="pinInput" type="password" placeholder="Введите пин-код" />
-  <button id="loginBtn">Войти</button>
-  <div id="loginError" style="color:red;"></div>
-</div>
-
-<!--форма ввода данных после авторизации-->
-<div id="dataForm" class="hidden">
-  <h2>Добавление записи</h2>
-
-  <!--4 инпут поля с контейнерами-->
-  <div class="field-container">
-    <div class="field-focus-info" id="focusInfoField1"></div>
-    <input id="field1" type="text" placeholder="Поле 1" />
+<div id="app">
+  <div id="pin-wrapper">
+    <div id="pin">
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+    </div>
   </div>
-  <div class="field-container">
-    <div class="field-focus-info" id="focusInfoField2"></div>
-    <input id="field2" type="text" placeholder="Поле 2" />
-  </div>
-  <div class="field-container">
-    <div class="field-focus-info" id="focusInfoField3"></div>
-    <input id="field3" type="text" placeholder="Поле 3" />
-  </div>
-  <div class="field-container">
-    <div class="field-focus-info" id="focusInfoField4"></div>
-    <input id="field4" type="text" placeholder="Поле 4" />
-  </div>
-  <button id="saveBtn">Сохранить</button>
+  <div id="error-message"></div>
 
-  <h3>Список записей</h3>
-  <div id="entriesList"></div>
+  <!-- Меню -->
+  <div class="navigation" id="success-modal">
+    <ul>
+      <li class="list active" data-levels="A,B,C,D" onclick="openModal('modal1')">
+        <a href="#">
+          <span class="icon"><i class="material-symbols-outlined">analytics</i></span>
+          <span class="title">ELABORATION</span>
+        </a>
+      </li>
+      <li class="list" data-levels="A,B,C,D" onclick="openModal('modal2')">
+        <a href="#">
+          <span class="icon"><i class="material-symbols-outlined">finance_mode</i></span>
+          <span class="title">CONTRACT</span>
+        </a>
+      </li>
+      <li class="list" data-levels="A,B" onclick="openModal('modal3')">
+        <a href="#">
+          <span class="icon"><i class="material-symbols-outlined">data_table</i></span>
+          <span class="title">TASKS</span>
+        </a>
+      </li>
+      <li class="list" data-levels="A,B" onclick="openModal('modal4')">
+        <a href="#">
+          <span class="icon"><i class="material-symbols-outlined">full_stacked_bar_chart</i></span>
+          <span class="title">in_development</span>
+        </a>
+      </li>
+      <li class="list" data-levels="A,B" onclick="openModal('modal5')">
+        <a href="#">
+          <span class="icon"><i class="material-symbols-outlined">full_stacked_bar_chart</i></span>
+          <span class="title">in_development</span>
+        </a>
+      </li>
+      <div class="indicator"></div>
+    </ul>
+  </div>
+
+  <!-- Модальные окна -->
+  <div class="modal" id="modal1">
+    <h2>ELABORATION</h2>
+    <p>Контент окна 1</p>
+  </div>
+  <div class="modal" id="modal2">
+    <h2>CONTRACT</h2>
+    <p>Контент окна 2</p>
+  </div>
+  <div class="modal" id="modal3">
+    <h2>TASKS</h2>
+    <p>Контент окна 3</p>
+  </div>
+  <div class="modal" id="modal4">
+    <h2>in_development</h2>
+    <p>Контент окна 4</p>
+  </div>
+  <div class="modal" id="modal5">
+    <h2>in_development</h2>
+    <p>Контент окна 5</p>
+  </div>
 </div>
 
 <script type="module">
-//"//инициализация supabase"
+// Инициализация supabase
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let currentUserPin = null;
+// Получаем ссылки на элементы
+const pinInputs = document.querySelectorAll('.pin-input');
+const errorMessage = document.getElementById('error-message');
+const pinWrapper = document.getElementById('pin-wrapper');
+const successModal = document.getElementById('success-modal');
 
-//"//функция авторизации по пин-коду"
-async function loginByPin(pin) {
+let currentUser = null;
+let currentModal = null;
+
+// Фокусировка на первом поле при загрузке
+pinInputs[0].focus();
+
+// Переход к следующему полю по вводу символа
+pinInputs.forEach((input, index) => {
+  input.addEventListener('input', () => {
+    if (input.value.length === 1 && index < pinInputs.length - 1) {
+      pinInputs[index+1].focus();
+    } else if (index === pinInputs.length - 1 && input.value.length === 1) {
+      checkPinCode();
+    }
+  });
+
+  // Возможность передвигаться по полям с Backspace
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && input.value === '' && index > 0) {
+      pinInputs[index-1].focus();
+    }
+  });
+});
+
+async function checkPinCode() {
+  const pinCode = Array.from(pinInputs).map(i => i.value).join('');
+  
   const { data, error } = await supabase
     .from('users')
     .select('*')
-    .eq('pin_code', pin)
+    .eq('pin_code', pinCode)
     .single();
-  
+
   if (error || !data) {
-    return false;
-  }
-  currentUserPin = pin;
-  return true;
-}
-
-//"//функция загрузки всех записей"
-async function loadEntries() {
-  const { data, error } = await supabase
-    .from('entries')
-    .select('*')
-    .order('id', { ascending: true });
-  
-  if (error) {
-    console.error(error);
-    return [];
-  }
-  return data;
-}
-
-//"//функция рендеринга записей"
-function renderEntries(entries) {
-  const list = document.getElementById('entriesList');
-  list.innerHTML = '';
-  entries.forEach(entry => {
-    const div = document.createElement('div');
-    div.className = 'entry';
-    div.innerHTML = `<strong>ID:</strong> ${entry.id}<br>
-                     <strong>field1:</strong> ${entry.field1}<br>
-                     <strong>field2:</strong> ${entry.field2}<br>
-                     <strong>field3:</strong> ${entry.field3}<br>
-                     <strong>field4:</strong> ${entry.field4}`;
-    list.appendChild(div);
-  });
-}
-
-//"//функция сохранения новой записи"
-async function saveEntry(field1, field2, field3, field4) {
-  const { data, error } = await supabase
-    .from('entries')
-    .insert([
-      { field1, field2, field3, field4, created_by: currentUserPin }
-    ]);
-
-  if (error) {
-    console.error(error);
-  }
-}
-
-//"//привязка событий к кнопке входа"
-document.getElementById('loginBtn').addEventListener('click', async () => {
-  const pin = document.getElementById('pinInput').value;
-  const ok = await loginByPin(pin);
-  if (!ok) {
-    document.getElementById('loginError').textContent = 'Неверный пин-код!';
+    // Неверный пин
+    showError("Код авторизации введён неверно");
+    clearInputs();
   } else {
-    document.getElementById('loginForm').classList.add('hidden');
-    document.getElementById('dataForm').classList.remove('hidden');
-    const entries = await loadEntries();
-    renderEntries(entries);
-    initPresence(); // Инициализируем отслеживание пользователей
-  }
-});
-
-//"//привязка событий к кнопке сохранения записи"
-document.getElementById('saveBtn').addEventListener('click', async () => {
-  const f1 = document.getElementById('field1').value;
-  const f2 = document.getElementById('field2').value;
-  const f3 = document.getElementById('field3').value;
-  const f4 = document.getElementById('field4').value;
-
-  await saveEntry(f1, f2, f3, f4);
-
-  // Очистим поля после сохранения
-  document.getElementById('field1').value = '';
-  document.getElementById('field2').value = '';
-  document.getElementById('field3').value = '';
-  document.getElementById('field4').value = '';
-});
-
-//"//подписка на realtime обновления таблицы entries"
-supabase
-  .channel('entries_changes')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'entries' }, async (payload) => {
-    const entries = await loadEntries();
-    renderEntries(entries);
-  })
-  .subscribe();
-
-//-------------------------------------
-// Реализация Presence для отслеживания фокуса полей
-//-------------------------------------
-let presenceChannel;
-
-//"//инициализация presence"
-function initPresence() {
-  presenceChannel = supabase.channel('realtime-presence', {
-    config: {
-      presence: {
-        key: currentUserPin // ключ, идентифицирующий пользователя в канале
-      }
-    }
-  });
-
-  presenceChannel.on('presence', { event: 'sync' }, () => {
-    updatePresenceUI();
-  });
-
-  presenceChannel.on('presence', { event: 'join' }, () => {
-    updatePresenceUI();
-  });
-
-  presenceChannel.on('presence', { event: 'leave' }, () => {
-    updatePresenceUI();
-  });
-
-  presenceChannel.subscribe((status) => {
-    if (status === 'SUBSCRIBED') {
-      // После подписки отправляем текущее состояние (без фокуса) 
-      presenceChannel.track({ currentField: null });
-    }
-  });
-
-  // Подписываемся на события фокуса/блюра полей
-  ['field1', 'field2', 'field3', 'field4'].forEach(fieldId => {
-    const input = document.getElementById(fieldId);
-    input.addEventListener('focus', () => {
-      presenceChannel.track({ currentField: fieldId });
-    });
-    input.addEventListener('blur', () => {
-      presenceChannel.track({ currentField: null });
-    });
-  });
-}
-
-//"//функция обновления интерфейса на основе presence"
-function updatePresenceUI() {
-  const state = presenceChannel.presenceState();
-  // state — объект с ключами как userPin и массивами их состояний
-  
-  // Сначала очистим всю информацию о фокусе
-  ['focusInfoField1', 'focusInfoField2', 'focusInfoField3', 'focusInfoField4'].forEach(id => {
-    document.getElementById(id).textContent = '';
-  });
-  
-  // Пройдёмся по всем пользователям
-  for (const userPin in state) {
-    const metas = state[userPin]; // массив состояний, как правило, будет один объект
-    if (metas && metas.length > 0) {
-      const userState = metas[0]; 
-      if (userState.currentField) {
-        const infoElem = document.getElementById('focusInfo' + capitalize(userState.currentField));
-        if (infoElem) {
-          infoElem.textContent = `Сейчас редактируется пользователем с пин-кодом: ${userPin}`;
-        }
-      }
-    }
+    currentUser = data;
+    // Корректный пин
+    hidePinAndShowMenu(currentUser);
   }
 }
 
-//"//функция helper для капитализации Field1...Field4"
-function capitalize(str) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+function clearInputs() {
+  pinInputs.forEach(i => i.value = '');
+  pinInputs[0].focus();
+}
+
+function showError(msg) {
+  errorMessage.textContent = msg;
+  errorMessage.style.opacity = '1';
+  errorMessage.classList.add('shake');
+  setTimeout(() => {
+    errorMessage.classList.remove('shake');
+    errorMessage.style.opacity = '0';
+  }, 1000);
+}
+
+function hidePinAndShowMenu(user) {
+  // Плавно скрываем поля ввода пина
+  pinWrapper.style.opacity = '0';
+  pinWrapper.style.transform = 'translateY(20px)';
+  setTimeout(() => {
+    pinWrapper.style.display = 'none';
+    // Плавно показываем меню
+    successModal.classList.add('fade-in');
+    filterMenuByAccess(user.access_level);
+  }, 500);
+}
+
+function filterMenuByAccess(accessLevel) {
+  // В зависимости от уровня доступа можно скрывать или показывать пункты меню
+  // Пример: если у пункта есть атрибут data-levels="A,B,C,D" и у пользователя level = "A", то показываем
+  const menuItems = successModal.querySelectorAll('.list');
+  menuItems.forEach(item => {
+    const levels = item.getAttribute('data-levels');
+    if (levels && !levels.split(',').includes(accessLevel)) {
+      item.style.display = 'none';
+    } else {
+      item.style.display = 'flex';
+    }
+  });
+}
+
+function openModal(modalId) {
+  const newModal = document.getElementById(modalId);
+  if (!newModal) return;
+
+  // Если уже открыто модальное окно, скрываем его
+  if (currentModal && currentModal !== newModal) {
+    fadeOutModal(currentModal, () => {
+      fadeInModal(newModal);
+    });
+  } else if (!currentModal) {
+    fadeInModal(newModal);
+  }
+  currentModal = newModal;
+}
+
+function fadeInModal(modal) {
+  modal.classList.add('show');
+  modal.classList.remove('hide');
+}
+
+function fadeOutModal(modal, callback) {
+  modal.classList.add('hide');
+  setTimeout(() => {
+    modal.classList.remove('show');
+    if (callback) callback();
+  }, 500);
 }
 </script>
 </body>
 </html>
+
