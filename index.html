@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CRM Пример</title>
+<style>
+  body {
+    font-family: sans-serif;
+    margin: 20px;
+  }
+  .hidden {
+    display: none;
+  }
+  .entry {
+    border: 1px solid #ddd;
+    margin: 5px 0;
+    padding: 5px;
+  }
+</style>
+</head>
+<body>
+<h1>CRM Пример</h1>
+
+<!--форма авторизации по пин-коду-->
+<div id="loginForm">
+  <h2>Авторизация по пин-коду</h2>
+  <!--поле ввода пин-кода-->
+  <input id="pinInput" type="password" placeholder="Введите пин-код" />
+  <button id="loginBtn">Войти</button>
+  <div id="loginError" style="color:red;"></div>
+</div>
+
+<!--форма ввода данных после авторизации-->
+<div id="dataForm" class="hidden">
+  <h2>Добавление записи</h2>
+  <!--4 инпут поля-->
+  <input id="field1" type="text" placeholder="Поле 1" />  
+  <input id="field2" type="text" placeholder="Поле 2" />  
+  <input id="field3" type="text" placeholder="Поле 3" />  
+  <input id="field4" type="text" placeholder="Поле 4" />  
+  <button id="saveBtn">Сохранить</button>
+
+  <h3>Список записей</h3>
+  <!--контейнер для отображения актуальных данных-->
+  <div id="entriesList"></div>
+</div>
+
+<!-- Подключение Supabase -->
+<!--скрипт инициализации supabase-->
+<script type="module">
+//инициализация supabase клиентской библиотеки
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// Вставьте сюда свой URL проекта Supabase и публичный anon ключ
+//"//инициализация клиента supabase"
+const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';  
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+//глобальные переменные для хранения идентификатора пользователя (опционально)
+let currentUserPin = null;
+
+//"//функция авторизации по пин-коду"
+async function loginByPin(pin) {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('pin_code', pin)
+    .single();
+  
+  if (error || !data) {
+    return false;
+  }
+  currentUserPin = pin;
+  return true;
+}
+
+//"//функция загрузки всех записей"
+async function loadEntries() {
+  const { data, error } = await supabase
+    .from('entries')
+    .select('*')
+    .order('id', { ascending: true });
+  
+  if (error) {
+    console.error(error);
+    return [];
+  }
+  return data;
+}
+
+//"//функция рендеринга записей"
+function renderEntries(entries) {
+  const list = document.getElementById('entriesList');
+  list.innerHTML = '';
+  entries.forEach(entry => {
+    const div = document.createElement('div');
+    div.className = 'entry';
+    div.innerHTML = `<strong>ID:</strong> ${entry.id}<br>
+                     <strong>field1:</strong> ${entry.field1}<br>
+                     <strong>field2:</strong> ${entry.field2}<br>
+                     <strong>field3:</strong> ${entry.field3}<br>
+                     <strong>field4:</strong> ${entry.field4}`;
+    list.appendChild(div);
+  });
+}
+
+//"//функция сохранения новой записи"
+async function saveEntry(field1, field2, field3, field4) {
+  const { data, error } = await supabase
+    .from('entries')
+    .insert([
+      { field1, field2, field3, field4, created_by: currentUserPin }
+    ]);
+
+  if (error) {
+    console.error(error);
+  }
+}
+
+//"//привязка событий к кнопке входа"
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const pin = document.getElementById('pinInput').value;
+  const ok = await loginByPin(pin);
+  if (!ok) {
+    document.getElementById('loginError').textContent = 'Неверный пин-код!';
+  } else {
+    document.getElementById('loginForm').classList.add('hidden');
+    document.getElementById('dataForm').classList.remove('hidden');
+    const entries = await loadEntries();
+    renderEntries(entries);
+  }
+});
+
+//"//привязка событий к кнопке сохранения записи"
+document.getElementById('saveBtn').addEventListener('click', async () => {
+  const f1 = document.getElementById('field1').value;
+  const f2 = document.getElementById('field2').value;
+  const f3 = document.getElementById('field3').value;
+  const f4 = document.getElementById('field4').value;
+
+  await saveEntry(f1, f2, f3, f4);
+
+  // Очистим поля после сохранения
+  document.getElementById('field1').value = '';
+  document.getElementById('field2').value = '';
+  document.getElementById('field3').value = '';
+  document.getElementById('field4').value = '';
+});
+
+//"//подписка на realtime обновления таблицы entries"
+supabase
+  .channel('any')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'entries' }, async (payload) => {
+    const entries = await loadEntries();
+    renderEntries(entries);
+  })
+  .subscribe();
+</script>
+</body>
+</html>
