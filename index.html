@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CRM Пример</title>
+<title>CRM Пример с Presence</title>
 <style>
   body {
     font-family: sans-serif;
@@ -12,10 +12,16 @@
   .hidden {
     display: none;
   }
-  .entry {
-    border: 1px solid #ddd;
-    margin: 5px 0;
-    padding: 5px;
+  .field-container {
+    position: relative;
+    margin-bottom: 10px;
+  }
+  .field-focus-info {
+    font-size: 0.9em;
+    color: #555;
+    position: absolute;
+    top: -1.2em;
+    left: 0;
   }
 </style>
 </head>
@@ -25,7 +31,6 @@
 <!--форма авторизации по пин-коду-->
 <div id="loginForm">
   <h2>Авторизация по пин-коду</h2>
-  <!--поле ввода пин-кода-->
   <input id="pinInput" type="password" placeholder="Введите пин-код" />
   <button id="loginBtn">Войти</button>
   <div id="loginError" style="color:red;"></div>
@@ -34,31 +39,38 @@
 <!--форма ввода данных после авторизации-->
 <div id="dataForm" class="hidden">
   <h2>Добавление записи</h2>
-  <!--4 инпут поля-->
-  <input id="field1" type="text" placeholder="Поле 1" />  
-  <input id="field2" type="text" placeholder="Поле 2" />  
-  <input id="field3" type="text" placeholder="Поле 3" />  
-  <input id="field4" type="text" placeholder="Поле 4" />  
+
+  <!--4 инпут поля с контейнерами-->
+  <div class="field-container">
+    <div class="field-focus-info" id="focusInfoField1"></div>
+    <input id="field1" type="text" placeholder="Поле 1" />
+  </div>
+  <div class="field-container">
+    <div class="field-focus-info" id="focusInfoField2"></div>
+    <input id="field2" type="text" placeholder="Поле 2" />
+  </div>
+  <div class="field-container">
+    <div class="field-focus-info" id="focusInfoField3"></div>
+    <input id="field3" type="text" placeholder="Поле 3" />
+  </div>
+  <div class="field-container">
+    <div class="field-focus-info" id="focusInfoField4"></div>
+    <input id="field4" type="text" placeholder="Поле 4" />
+  </div>
   <button id="saveBtn">Сохранить</button>
 
   <h3>Список записей</h3>
-  <!--контейнер для отображения актуальных данных-->
   <div id="entriesList"></div>
 </div>
 
-<!-- Подключение Supabase -->
-<!--скрипт инициализации supabase-->
 <script type="module">
-//инициализация supabase клиентской библиотеки
+//"//инициализация supabase"
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-// Вставьте сюда свой URL проекта Supabase и публичный anon ключ
-//"//инициализация клиента supabase"
-const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
+const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co'; 
+const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';  
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-//глобальные переменные для хранения идентификатора пользователя (опционально)
 let currentUserPin = null;
 
 //"//функция авторизации по пин-коду"
@@ -130,6 +142,7 @@ document.getElementById('loginBtn').addEventListener('click', async () => {
     document.getElementById('dataForm').classList.remove('hidden');
     const entries = await loadEntries();
     renderEntries(entries);
+    initPresence(); // Инициализируем отслеживание пользователей
   }
 });
 
@@ -151,12 +164,88 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
 
 //"//подписка на realtime обновления таблицы entries"
 supabase
-  .channel('any')
+  .channel('entries_changes')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'entries' }, async (payload) => {
     const entries = await loadEntries();
     renderEntries(entries);
   })
   .subscribe();
+
+//-------------------------------------
+// Реализация Presence для отслеживания фокуса полей
+//-------------------------------------
+let presenceChannel;
+
+//"//инициализация presence"
+function initPresence() {
+  presenceChannel = supabase.channel('realtime-presence', {
+    config: {
+      presence: {
+        key: currentUserPin // ключ, идентифицирующий пользователя в канале
+      }
+    }
+  });
+
+  presenceChannel.on('presence', { event: 'sync' }, () => {
+    updatePresenceUI();
+  });
+
+  presenceChannel.on('presence', { event: 'join' }, () => {
+    updatePresenceUI();
+  });
+
+  presenceChannel.on('presence', { event: 'leave' }, () => {
+    updatePresenceUI();
+  });
+
+  presenceChannel.subscribe((status) => {
+    if (status === 'SUBSCRIBED') {
+      // После подписки отправляем текущее состояние (без фокуса) 
+      presenceChannel.track({ currentField: null });
+    }
+  });
+
+  // Подписываемся на события фокуса/блюра полей
+  ['field1', 'field2', 'field3', 'field4'].forEach(fieldId => {
+    const input = document.getElementById(fieldId);
+    input.addEventListener('focus', () => {
+      presenceChannel.track({ currentField: fieldId });
+    });
+    input.addEventListener('blur', () => {
+      presenceChannel.track({ currentField: null });
+    });
+  });
+}
+
+//"//функция обновления интерфейса на основе presence"
+function updatePresenceUI() {
+  const state = presenceChannel.presenceState();
+  // state — объект с ключами как userPin и массивами их состояний
+  
+  // Сначала очистим всю информацию о фокусе
+  ['focusInfoField1', 'focusInfoField2', 'focusInfoField3', 'focusInfoField4'].forEach(id => {
+    document.getElementById(id).textContent = '';
+  });
+  
+  // Пройдёмся по всем пользователям
+  for (const userPin in state) {
+    const metas = state[userPin]; // массив состояний, как правило, будет один объект
+    if (metas && metas.length > 0) {
+      const userState = metas[0]; 
+      if (userState.currentField) {
+        const infoElem = document.getElementById('focusInfo' + capitalize(userState.currentField));
+        if (infoElem) {
+          infoElem.textContent = `Сейчас редактируется пользователем с пин-кодом: ${userPin}`;
+        }
+      }
+    }
+  }
+}
+
+//"//функция helper для капитализации Field1...Field4"
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 </script>
 </body>
 </html>
