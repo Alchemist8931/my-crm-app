@@ -99,10 +99,10 @@
     height: auto;
     max-height: 25vw;
     width: 3vw; 
-    background: var(--white-color1);
+    background: #ffffff; /* Заменили на чистый белый фон */
     border-radius: 0.4vw;
     box-shadow: 0 1.5vw 2.5vw rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 3000; /* Увеличен z-index */
     transition: opacity 1s ease, transform 1s ease;
     opacity: 0;
     transform: translateY(-20px);
@@ -129,6 +129,9 @@
     height: 3vw;
     z-index: 1;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .navigation ul li a {
@@ -141,25 +144,28 @@
     color: var(--black-color);
     font-weight: 500;
     text-decoration: none;
+    height: 100%;
+    width: 100%;
   }
 
   .navigation ul li a .icon {
     position: relative;
     display: block;
-    line-height: 3.5vw;
+    line-height: 3vw;
     text-align: center;
     transition: 0.5s;
   }
 
   .navigation ul li a .icon i {
     font-size: 1vw;
+    color: black;
   }
 
   .navigation ul li a .title {
     position: absolute;
     top: 50%;
     left: 6.4vw; 
-    background: var(--white-color1);
+    background: #ffffff;
     transform: translateY(-50%);
     padding: 0.2vw 0.4vw;
     border-radius: 0.9vw; 
@@ -168,6 +174,7 @@
     opacity: 0;
     visibility: hidden;
     font-size: 0.6vw;
+    color: black;
   }
 
   .navigation ul li:hover a .title {
@@ -323,8 +330,8 @@
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
+const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';  
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const pinInputs = document.querySelectorAll('.pin-input');
