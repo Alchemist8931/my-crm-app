@@ -98,11 +98,7 @@
     100% { transform: translateX(0); }
   }
 
-
   /* Новое меню */
-  body{
-    font-family: 'Comfortaa', sans-serif;
-  }
   .navbar {
     position: fixed;
     top: var(--spacer);
@@ -168,7 +164,8 @@
     transition: var(--transition);
   }
 
-  .navbar:hover .navbar__link span {
+  /* Подсказка появляется только у наведённого пункта, а не у всех */
+  .navbar__item:hover .navbar__link span {
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
@@ -195,17 +192,20 @@
     color: black;
     z-index: 2000;
     opacity: 0;
-    transition: opacity 0.5s ease;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
   }
 
   .modal.show {
     display: block;
     opacity: 1;
+    transform: translateY(0);
   }
 
   .modal.hide {
     display: block;
-    opacity: 0; 
+    opacity: 0;
+    transform: translateY(20px);
   }
 
   .fade-out {
@@ -231,6 +231,7 @@
 <div id="app">
   <div id="pin-wrapper">
     <div id="pin">
+      <!-- Убедились, что поля ввода пусты по умолчанию (без стартовых символов) -->
       <input type="password" maxlength="1" class="pin-input" />
       <input type="password" maxlength="1" class="pin-input" />
       <input type="password" maxlength="1" class="pin-input" />
@@ -300,8 +301,8 @@
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
+const SUPABASE_URL = 'https://YOUR-PROJECT-REF.supabase.co';
+const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';  
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const pinInputs = document.querySelectorAll('.pin-input');
@@ -312,7 +313,7 @@ const successModal = document.getElementById('success-modal');
 let currentUser = null;
 let currentModal = null;
 
-// Фокус на первый инпут
+// Фокус на первый инпут (без стартового символа)
 pinInputs[0].focus();
 
 // Переход к следующему полю при вводе символа
@@ -423,6 +424,3 @@ window.fadeOutModal = fadeOutModal;
 </script>
 </body>
 </html>
-
-
-
