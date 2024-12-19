@@ -12,7 +12,7 @@
     --white-color1: #F4F5F0;
     --white-color2: #D1D5D0;
     --borderRadius: 10px;
-    --spacer: 1rem;
+    --spacer: 1vw;
     --primary: #406ff3;
     --text: #6a778e;
     --linkHeight: 3.5rem;
@@ -100,15 +100,17 @@
 
   /* Новое меню */
   .navbar {
+    display: flex;
     position: fixed;
     top: var(--spacer);
     left: var(--spacer);
-    background: #fff;
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
     border-radius: var(--borderRadius);
     padding: var(--spacer) 0;
     box-shadow: 0 0 40px rgba(0,0,0,0.03);
-    height: calc(100vh - (var(--spacer)*4));
-    width: 4rem;
+    height: calc(100vh - (var(--spacer)*2));
+    width: 3vw;
     z-index: 3000;
     opacity: 0;
     transform: translateY(-20px);
@@ -128,6 +130,7 @@
 
   .navbar__item {
     position: relative;
+    margin-bottom: 1vw;
   }
 
   .navbar__link {
@@ -136,7 +139,7 @@
     align-items: center;
     justify-content: center;
     height: var(--linkHeight);
-    width: calc(var(--spacer)*5.5);
+    width: calc(var(--spacer)*3);
     margin: 0 auto;
     color: var(--text);
     text-decoration: none;
@@ -144,24 +147,28 @@
   }
 
   .navbar__link i.material-symbols-outlined {
-    font-size: 1.2rem;
-    color: var(--text);
+    font-size: 2.5vw;;
+    color: var(--white-color2);
   }
 
   .navbar__link span {
     position: absolute;
-    left: 100%;
+    left: 80%;
     white-space: nowrap;
-    margin-left: 1rem;
+    margin-left: 1vw;
     opacity: 0;
-    pointer-events: none;
-    color: var(--primary);
-    background: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: calc(var(--borderRadius)*1.75);
-    box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    transform: translateX(-1rem);
+    pointer-events: auto;
+    color: var(--white-color1);
+    padding: 0.4vw 0.6vw;
+    transform: translateX(0);
     transition: var(--transition);
+  font-size: 0.8vw;;
+  background: rgba(255, 255, 255, 0.19);
+  border-radius: 10px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(13px);
+  -webkit-backdrop-filter: blur(13px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   /* Подсказка появляется только у наведённого пункта, а не у всех */
@@ -172,23 +179,29 @@
   }
 
   .navbar__link:hover {
-    color: #fff;
-    background: var(--primary);
-    border-radius: calc(var(--borderRadius)*1.75);
+    background: var(--white-color1);
+    border-radius: 10px;
+    height: 2.2vw;
+    width: 2.2vw;
   }
+
+  .navbar__link i.material-symbols-outlined:hover {
+    font-size: 2.5vw;;
+    color: var(--black-color);
+}
 
   /* Модальные окна */
   .modal {
     display: none;
     position: fixed;
     top: 1vw;
-    left: 5vw;
+    left: calc(100vw - (var(--spacer)*95));
     background: rgba(255, 255, 255, 0.04);
     padding: 1vw;
     border-radius: 0.4vw;
     box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
-    height: 90vh;
-    width: 90vw;
+    height: calc(100vh - (var(--spacer)*2));
+    width: calc(100vw - (var(--spacer)*6));
     color: black;
     z-index: 2000;
     opacity: 0;
@@ -217,6 +230,22 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  h2 {
+  position: fixed;
+    top: 1vw;
+    left: 1vw;
+    font-size: 1.5vw;;
+    color: var(--white-color2);
+}
+
+p {
+  position: fixed;
+    top: 2.3vw;
+    left: 1vw;
+    font-size: 1vw;;
+    color: var(--white-color2);
+}
 
   .material-symbols-outlined {
     font-variation-settings:
