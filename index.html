@@ -99,7 +99,7 @@
     height: auto;
     max-height: 25vw;
     width: 3vw; 
-    background: #ffffff; /* Заменили на чистый белый фон */
+    background: var(--white-color1);
     border-radius: 0.4vw;
     box-shadow: 0 1.5vw 2.5vw rgba(0, 0, 0, 0.1);
     z-index: 3000; /* Увеличен z-index */
@@ -114,95 +114,111 @@
   }
 
   .navigation ul {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
   }
 
   .navigation ul li {
-    position: relative;
-    list-style: none;
-    width: 3vw;
-    height: 3vw;
-    z-index: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: relative;
+  list-style: none;
+  width: 3vw;
+  height: 3vw;
+  z-index: 1;
   }
 
   .navigation ul li a {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    text-align: center;
-    color: var(--black-color);
-    font-weight: 500;
-    text-decoration: none;
-    height: 100%;
-    width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  text-align: center;
+  color: var(--black-color);
+  font-weight: 500;
   }
 
   .navigation ul li a .icon {
-    position: relative;
-    display: block;
-    line-height: 3vw;
-    text-align: center;
-    transition: 0.5s;
+  position: relative;
+  display: block;
+  line-height: 3.5vw;
+  text-align: center;
+  transition: 0.5s;
   }
 
-  .navigation ul li a .icon i {
-    font-size: 1vw;
-    color: black;
-  }
+.navigation ul li.active a .icon {
+  color: var(--white-color1);
+}
+
+.navigation ul li a .icon i {
+  font-size: 1vw;
+}
+
 
   .navigation ul li a .title {
-    position: absolute;
-    top: 50%;
-    left: 6.4vw; 
-    background: #ffffff;
-    transform: translateY(-50%);
-    padding: 0.2vw 0.4vw;
-    border-radius: 0.9vw; 
-    transition: 0.5s;
-    box-shadow: 0 0.5vw 1.5vw rgba(0, 0, 0, 0.1); 
-    opacity: 0;
-    visibility: hidden;
-    font-size: 0.6vw;
-    color: black;
+  position: absolute;
+  top: 50%;
+  left: 6.4vw; 
+  background: var(--white-color1);
+  transform: translateY(-50%);
+  padding: 0.2vw 0.4vw;
+  border-radius: 0.9vw; 
+  transition: 0.5s;
+  box-shadow: 0 0.5vw 1.5vw rgba(0, 0, 0, 0.1); 
+  opacity: 0;
+  visibility: hidden;
   }
 
   .navigation ul li:hover a .title {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-2.5vw) translateY(-50%);
+      opacity: 1;
+  visibility: visible;
+  transform: translateX(-2.5vw) translateY(-50%);
+  font-size: 0.6vw;
   }
 
   .navigation ul .indicator {
-    position: absolute;
-    left: 0vw;
-    width: 3vw;
-    height: 3vw;
-    transition: 0.5s;
+  position: absolute;
+  left: 0vw;
+  width: 3vw;
+  height: 3vw;
+  transition: 0.5s;
   }
 
   .navigation ul .indicator::before {
-    content: "";
-    position: absolute;
-    width: 2vw;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 2vw;
-    background: var(--black-color);
-    border-radius: 0.4vw;
-    transition: 0.5s;
+  content: "";
+  position: absolute;
+  width: 2vw;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 2vw;
+  background: var(--black-color);
+  border-radius: 0.4vw;
+  transition: 0.5s;
   }
+
+  .navigation ul li:nth-child(1).active ~ .indicator {
+  transform: translateY(calc(3vw * 0)); 
+}
+
+.navigation ul li:nth-child(2).active ~ .indicator {
+  transform: translateY(calc(3vw * 1));
+}
+
+.navigation ul li:nth-child(3).active ~ .indicator {
+  transform: translateY(calc(3vw * 2));
+}
+
+.navigation ul li:nth-child(4).active ~ .indicator {
+  transform: translateY(calc(3vw * 3));
+}
+
+.navigation ul li:nth-child(5).active ~ .indicator {
+  transform: translateY(calc(3vw * 4));
+}
 
   /* Модальные окна */
   .modal {
