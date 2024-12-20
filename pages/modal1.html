@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Авторизация по пин-коду</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+
+  
+
+/* функциональное модальное окно */
+
+/* Модальное окно с прокруткой */
+.modalVNUT {
+  display: flex;
+  position: fixed;
+  background: none;
+  padding: 1vw;
+  border-radius: 0.4vw;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: black;
+  z-index: 1000;
+  overflow: hidden; /* Отключаем общий скролл */
+  box-sizing: border-box;
+}
+
+/* Внутренний контейнер с прокруткой */
+.modalVNUT-content {
+  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
+  height: 100%;
+  width: 100%;
+  overflow-y: auto; /* Включаем вертикальную прокрутку */
+  box-sizing: border-box;
+}
+
+/* Стилизация скроллбара */
+.modalVNUT-content::-webkit-scrollbar {
+  width: 4px; /* Ширина скроллбара */
+  background-color: var(--scrollbar-color);
+}
+
+.modalVNUT-content::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
+  border-radius: 10px; /* Скругление */
+}
+
+.modalVNUT-content::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-color);
+}
+
+/* Контейнеры внутри модального окна */
+.modalCONTEINER {
+  display: flex;
+  position: relative;
+  padding: 0.4vw;
+  height: auto;
+  border-radius: 0.4vw;
+  color: black;
+  z-index: 1100;
+  box-sizing: border-box;
+  vertical-align: middle;
+  
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.modalCONTEINER:hover,
+.modalCONTEINER:focus {
+  border: 1px solid var(--white-color2);
+}
+
+/* Отступы только между контейнерами */
+.modalCONTEINER:not(:last-child) {
+  margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
+}
+
+
+
+
+/* input с LABEL */
+.input-group{
+  position: relative;
+  font-family: "Comfortaa", sans-serif;
+}
+
+.input-group label {
+  background: none;
+  color: rgba(255, 255, 255, 0.18);
+  position: absolute;
+  top: 0.86vw;
+  left: 0.4vw;
+  transform: translateY(-50%);
+  text-transform: uppercase;
+  font-weight: 700;
+  pointer-events: none;
+  font-size: 0.6vw;
+  transition: all 0.3s;
+}
+
+.input-group input {
+  padding: 0.4vw 0.4vw;
+  width: 3vw;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  outline: none;
+  color: var(--white-color2);
+  font-size: 0.7vw;
+  font-family: inherit;
+  background-color: transparent;
+  border-radius: 10px;
+}
+
+.input-group input:hover,
+.input-group input:focus {
+  border: 1px solid var(--white-color2);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.4vw;
+  padding: 0 0.4vw;
+  font-weight: 700;
+  background: none;
+  
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+color: var(--white-color2);
+}
+
+
+
+/* input ЗАГОЛОВОК без границ */
+.input-TYPE1 {
+  position: relative;
+  font-family: "Comfortaa", sans-serif;
+  width: 2vw;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.18);
+  font-family: inherit;
+  background-color: transparent;
+  margin-top: 1vw;
+}
+
+/* иконка для контейнера */
+.iconTYPE1 {
+  color: rgba(255, 255, 255, 0.18);
+  font-size: 1vw;
+  z-index: 1200;
+}
+
+.iconTYPE1:hover {
+  color: var(--white-color2);
+  transform: font-size(0.6vw);
+}
+
+.iconTYPE1:active {
+  transform: scale(0.92);
+}
+
+
+
+/* выпадающий список (меню) */
+nav menuitem {
+    position: relative;
+    display: block;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10000;   
+}
+
+nav menuitem > menu {
+    position: absolute;
+    pointer-events: none;
+}
+
+nav > menu {
+    display: flex;
+}
+
+nav > menu > menuitem {
+    pointer-events: all;
+    opacity: 1;
+}
+
+menu menuitem a {
+    white-space: nowrap;
+    display: block;
+    user-select: none; /* Запрет выделения текста */
+}
+
+menuitem:hover > menu {
+    pointer-events: initial;
+}
+
+menuitem:hover > menu > menuitem,
+menu:hover > menuitem {
+    opacity: 1;
+}
+
+nav > menu > menuitem menuitem menu {
+    transform: translateX(100%);
+    top: 0;
+    right: 0;
+}
+
+nav {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+nav a {
+    background: var(--color1);
+    color: var(--white-color2);
+    min-width: 190px;
+    transition: background 0.5s, color 0.5s, transform 0.5s;
+    margin: 0px 10px 10px 0px;
+    padding: 10px 40px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid var(--white-color2);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    height: 40px;
+}
+
+nav a:hover {
+    color: var(--color1);
+    background: var(--white-color2);
+    box-shadow: 0 0 6px var(--white-color2);
+}
+
+nav a:active {
+    box-shadow: 0 0 3px var(--white-color2);
+    color: var(--white-color2);
+    transform: scale(0.95); /* Сжатие кнопки при нажатии */
+    background: var(--color1);
+}
+
+nav > menu > menuitem > a + menu:after {
+    content: '';
+    position: absolute;
+    border: 6px solid transparent;
+    border-top: 6px solid var(--white-color2);
+    left: 14px;
+    top: -32px;
+}
+
+nav menuitem > menu > menuitem > a + menu:after {
+    content: '';
+    position: absolute;
+    border: 6px solid transparent;
+    border-left: 6px solid var(--white-color2);
+    top: 14px;
+    left: -218px;
+    transition: opacity 0.3, transform 0s;
+}
+
+nav > menu > menuitem > menu > menuitem {
+    transition: transform 0.3s, opacity 0.3s;
+    transform: translateY(150%);
+    opacity: 0;
+}
+
+nav > menu > menuitem:hover > menu > menuitem,
+nav > menu > menuitem.hover > menu > menuitem {
+    transform: translateY(0%);
+    opacity: 1;
+    
+}
+
+menuitem > menu > menuitem > menu > menuitem {
+    transition: transform 0.3s, opacity 0.3s;
+    transform: translateX(195px) translateY(0%);
+    opacity: 0;
+}
+
+menuitem > menu > menuitem:hover > menu > menuitem,
+menuitem > menu > menuitem.hover > menu > menuitem {
+    transform: translateX(0) translateY(0%);
+    opacity: 1;
+}
+  
+<style>
+</head>
+<body>
+<nav>
+    <menu>
+        <menuitem id="demo1" style="left: 17.6vw">
+            <a>status</a>
+            <menu>
+                <menuitem><a>idea</a></menuitem>
+                <menuitem><a>planned</a></menuitem>
+                <menuitem><a>elaboration</a></menuitem>
+                <menuitem><a>proposal sent</a></menuitem>
+                <menuitem><a>signing an agreement</a></menuitem>
+                <menuitem><a>contract is concluded</a></menuitem>
+                <menuitem><a>invoice issued</a></menuitem>
+                <menuitem><a>payment received</a></menuitem>
+            </menu>
+        </menuitem>
+    </menu>
+</nav>
+
+  <nav>
+    <menu>
+        <menuitem id="demo2" style="left: 43.2vw">
+            <a>seller</a>
+            <menu>
+                <menuitem><a>LLC TABIA Group</a></menuitem>
+                <menuitem><a>LLC MPSteel</a></menuitem>
+                <menuitem><a>LLC ST</a></menuitem>
+                <menuitem><a>LLC SMK</a></menuitem>
+            </menu>
+        </menuitem>
+    </menu>
+</nav>
+  
+  <nav>
+    <menu>
+        <menuitem id="demo3" style="left: 52.1vw">
+            <a>buyer</a>
+            <menu>
+                <menuitem><a>Knauf Insulation г. Тюмень</a></menuitem>
+                <menuitem><a>ФГУП ПО Маяк</a></menuitem>
+            </menu>
+        </menuitem>
+    </menu>
+</nav>
+  
+  <!-- модальное окно проектов -->
+  <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 7vw); width: 92vw;">
+    <div class="modalVNUT-content">
+      <!-- Контент внутри нижнего окна -->
+      
+      
+      <div id="modalCONTEINER" class="modalCONTEINER">
+        
+        <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw;">developer_guide</i></span>
+        <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw; margin-left: 0.25vw;">data_table</i></span>
+        
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="input" placeholder=" " style="width: 4.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="fffff">project ID</label>
+          </div>
+        
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 11vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="fffff">project name</label>
+          </div>
+        
+           <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 7.4vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="fffff">status</label>
+          </div>
+        
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="fffff">contract amount</label>
+          </div>
+        
+         <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="fffff">contract costs</label>
+          </div>
+        
+        <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="fffff">contract profit</label>
+          </div>
+        
+        <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 3vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="fffff">profit %</label>
+          </div>
+        
+           <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="fffff">company seller</label>
+          </div>
+        
+        <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="fffff">TIN seller</label>
+          </div>
+        
+        <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="fffff">buyer company</label>
+          </div>
+        
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="fffff" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="fffff">TIN buyer</label>
+          </div>
+        
+      </div>         
+      
+
+      
+      
+      <!-- Добавлен еще контент -->
+    </div>
+  </div>
+
+  </body>
+</html>
