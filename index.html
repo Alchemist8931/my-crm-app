@@ -269,48 +269,6 @@
     /* Можно добавить стили для скрытия при загрузке */
     display: none;
   }
-
-  /* Добавляем стили для лоадера и плавных переключений */
-.lines-loader, .modal-content {
-  transition: opacity 0.5s ease;
-  opacity: 0; /* Изначально скрываем контент, лоадер будет показан через JS */
-  pointer-events: none;
-}
-
-.lines-loader.show, .modal-content.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/*стили лоадера перенесены сюда же, чтобы они не конфликтовали*/
-.lines-loader {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.line {
-  width: 10px;
-  height: 70px;
-  background-color: #ffffff;
-  animation: bounce 1.5s infinite ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-}
-
-.line:nth-child(2) { animation-delay: 0.3s; }
-.line:nth-child(3) { animation-delay: 0.6s; }
-.line:nth-child(5) { animation-delay: 1.2s; }
-
-@keyframes bounce {
-  0%,20%,50%,80%,100% { transform: translateY(0); }
-  40% { transform: translateY(-30px); }
-  60% { transform: translateY(-15px); }
-}
-  
 </style>
 </head>
 <body>
@@ -364,21 +322,11 @@
 
   <!-- РАЗМЕТКА модальных окон вызываемых МЕНЮ -->
   <div class="modal" id="modal1">
-  <h2>ELABORATION</h2>
-  <p>проекты компании</p>
-  <!-- Лоадер и контент -->
-  <div class="modal-content" id="modal1-content-container">
-    <div class="lines-loader" id="modal1-loader">
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-    </div>
-    <!-- Здесь будет подгружаемый контент -->
+    <h2>ELABORATION</h2>
+    <p>проекты компании</p>
+    <!--контейнер для подгружаемого контента modal1-->
     <div class="modal-content" id="modal1-content"></div>
   </div>
-</div>
 
   <div class="modal" id="modal2">
     <h2>ANALYTICS</h2>
@@ -501,42 +449,22 @@ function filterMenuByAccess(accessLevel) {
 
 //функция загрузки HTML контента в конкретный контейнер
 async function loadModalContent(modalId) {
+  //формируем имя html файла (пример: modal1 -> modal1.html)
   const fileName = modalId + '.html';
-  const url = `./pages/${fileName}`;
-  const loader = document.getElementById(modalId + '-loader');
-  const contentDiv = document.getElementById(modalId + '-content');
-  const contentContainer = document.getElementById(modalId + '-content-container');
-
-  if (loader && contentDiv && contentContainer) {
-    // Показать лоадер
-    loader.classList.add('show');
-    contentDiv.classList.remove('show');
-
-    try {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error('Ошибка загрузки контента');
-      const html = await response.text();
-
-      // Подставляем HTML в contentDiv
-      contentDiv.innerHTML = `<div class="modal1-container">${html}</div>`;
-
-      // Ждем 1.5 секунды, затем скрываем лоадер и показываем контент
-      setTimeout(() => {
-        // Скрываем лоадер
-        loader.classList.remove('show');
-        // Через 0.5 секунды после начала скрытия лоадера показываем контент
-        setTimeout(() => {
-          contentDiv.classList.add('show');
-        }, 500);
-      }, 1500);
-
-    } catch (e) {
-      console.error(e);
-      loader.classList.remove('show');
+  const url = `./pages/${fileName}`; //путь к вашим html файлам в репозитории
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Ошибка загрузки контента');
+    const html = await response.text();
+    const contentDiv = document.getElementById(modalId + '-content');
+    if (contentDiv) {
+      contentDiv.innerHTML = html;
+      contentDiv.style.display = 'block'; // показываем контент после загрузки
     }
+  } catch (e) {
+    console.error(e);
   }
 }
-
 
 // Функции работы с модальными окнами
 function fadeInModal(modal) {
