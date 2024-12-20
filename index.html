@@ -131,7 +131,7 @@
   .navbar__item {
     position: relative;
     margin-bottom: 1vw;
-    /* height: var(--linkHeight); */
+    height: var(--linkHeight);
   }
 
   .navbar__link {
@@ -139,7 +139,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    /* height: var(--linkHeight); */
+    height: var(--linkHeight);
     width: calc(var(--spacer)*3);
     margin: 0 auto;
     color: var(--text);
@@ -179,6 +179,8 @@
     opacity: 1;
     transform: translateX(0);
     pointer-events: auto;
+    
+    height: var(--linkHeight);
   }
 
   .navbar__link:hover {
@@ -186,10 +188,14 @@
     border-radius: 10px;
     height: 1.7vw;
     width: 1.7vw;
+    
+    height: var(--linkHeight);
   }
 
   .navbar__link i.material-symbols-outlined:hover {
     color: var(--black-color);
+    
+    height: var(--linkHeight);
 }
 
   /* Модальные окна */
