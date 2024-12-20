@@ -6,172 +6,194 @@
 <title>Авторизация по пин-коду</title>
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+
 <style>
+/* Стили, предоставленные ранее, без изменений */
+:root {
+  /* основные цвета */
+  --black-color: #121212;
+  --white-color1: #F4F5F0;
+  --white-color2: #D1D5D0;
+  --akcent-color1: #46647E;
+ 
+  /* из нового */
+  --borderRadius: 10px;
+  --spacer: 1vw;
+  --linkHeight: 3.5rem;
+  --timing: 250ms;
+  --transition: 250ms ease all;
+    
+  /* СКРОЛЛ */
+  --scrollbar-color: rgba(255, 255, 255, 0.04);
+  --scrollbar-thumb-color: #D1D5D0;
+  --scroll-y-position: 10%;
+  --reflection-y-position: 50%;
+}
 
-  :root {
-    --black-color: #121212;
-    --white-color1: #F4F5F0;
-    --white-color2: #D1D5D0;
-    --borderRadius: 10px;
-    --spacer: 1vw;
-    --linkHeight: 3.5rem;
-    --timing: 250ms;
-    --transition: 250ms ease all;
-  }
+* {
+  box-sizing: border-box;
+  font-family: "Comfortaa", sans-serif;
+  margin: 0;
+  padding: 0;
+  font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal;
+}
 
-  * {
-    box-sizing: border-box;
-    font-family: "Comfortaa", sans-serif;
-    margin: 0;
-    padding: 0;
-    font-optical-sizing: auto;
-  }
+body, html {
+  margin: 0;
+  padding: 0;
+  background-color: var(--black-color);
+  color: var(--white-color1);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  body, html {
-    margin: 0;
-    padding: 0;
-    background-color: var(--black-color);
-    color: var(--white-color1);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+/* __________________ СТИЛИ ИКОНОК __________________ */
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
 
-  #app {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 100vh;
-    width: 100vw;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  /* __________________ СТИЛИ для полей ПИН-КОДА __________________ */
-  #pin-wrapper {
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+}
 
-  #pin {
-    display: flex;
-    gap: 10px;
-  }
+/* __________________ СТИЛИ для полей ПИН-КОДА __________________ */
+#pin-wrapper {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
 
-  .pin-input {
-    width: 60px;
-    height: 70px;
-    font-size: 30px;
-    text-align: center;
-    background-color: transparent;
-    border: 2px solid var(--white-color1);
-    color: var(--white-color1);
-    outline: none;
-    border-radius: 10px;
-    transition: border-color 0.3s, background-color 0.3s;
-  }
+#pin {
+  display: flex;
+  gap: 10px;
+}
 
-  .pin-input:hover {
-    border-color: var(--white-color1);
-    background-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 16px 2px var(--white-color1);
-  }
+.pin-input {
+  width: 60px;
+  height: 70px;
+  font-size: 30px;
+  text-align: center;
+  background-color: transparent;
+  border: 2px solid var(--white-color1);
+  color: var(--white-color1);
+  outline: none;
+  border-radius: 10px;
+  transition: border-color 0.3s, background-color 0.3s;
+}
 
-  .pin-input:focus {
-    border-color: var(--white-color2);
-    background-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 32px 4px var(--white-color1);
-  }
+.pin-input:hover {
+  border-color: var(--white-color1);
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 16px 2px var(--white-color1);
+}
 
-  #error-message {
-    margin-top: 20px;
-    color: var(--white-color2);
-    font-size: 20px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
+.pin-input:focus {
+  border-color: var(--white-color2);
+  background-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 32px 4px var(--white-color1);
+}
 
-  .shake {
-    animation: shake 0.5s;
-  }
+#error-message {
+  margin-top: 20px;
+  color: var(--white-color2);
+  font-size: 20px;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
 
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-  }
+.shake {
+  animation: shake 0.5s;
+}
 
-  /* __________________ СТИЛИ МЕНЮ ПРИЛОЖНИЯ __________________ */
-  .navbar {
-    display: flex;
-    position: fixed;
-    top: var(--spacer);
-    left: var(--spacer);
-    background: rgba(255, 255, 255, 0.04);
-    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
-    border-radius: var(--borderRadius);
-    padding: var(--spacer) 0;
-    box-shadow: 0 0 40px rgba(0,0,0,0.03);
-    height: calc(100vh - (var(--spacer)*2));
-    width: 3vw;
-    z-index: 3000;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 1s ease, transform 1s ease;
-  }
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+  100% { transform: translateX(0); }
+}
 
-  .navbar.fade-in {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* __________________ СТИЛИ МЕНЮ ПРИЛОЖЕНИЯ __________________ */
+.navbar {
+  display: flex;
+  position: fixed;
+  top: var(--spacer);
+  left: var(--spacer);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+  border-radius: var(--borderRadius);
+  padding: var(--spacer) 0;
+  box-shadow: 0 0 40px rgba(0,0,0,0.03);
+  height: calc(100vh - (var(--spacer)*2));
+  width: 3vw;
+  z-index: 3000;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 1s ease, transform 1s ease;
+}
 
-  .navbar__menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+.navbar.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
 
-  .navbar__item {
-    position: relative;
-    margin-bottom: 1vw;
-    height: var(--linkHeight);
-  }
+.navbar__menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
 
-  .navbar__link {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: var(--linkHeight);
-    width: calc(var(--spacer)*3);
-    margin: 0 auto;
-    color: var(--white-color1);
-    text-decoration: none;
-    transition: var(--transition);
+.navbar__item {
+  position: relative;
+  margin-bottom: 1vw;
+  height: var(--linkHeight);
+}
 
-    box-sizing: border-box;
-  }
+.navbar__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--linkHeight);
+  width: calc(var(--spacer)*3);
+  margin: 0 auto;
+  color: var(--white-color1);
+  text-decoration: none;
+  transition: var(--transition);
+  box-sizing: border-box;
+}
 
-  .navbar__link i.material-symbols-outlined {
-    font-size: 1vw;;
-    color: var(--white-color2);
-  }
+.navbar__link i.material-symbols-outlined {
+  font-size: 1vw;;
+  color: var(--white-color2);
+}
 
-  .navbar__link span {
-    position: absolute;
-    left: 80%;
-    white-space: nowrap;
-    margin-left: 1vw;
-    opacity: 0;
-    pointer-events: auto;
-    color: var(--white-color1);
-    padding: 0.3vw 0.5vw;
-    transform: translateX(0);
-    transition: var(--transition);
+.navbar__link span {
+  position: absolute;
+  left: 80%;
+  white-space: nowrap;
+  margin-left: 1vw;
+  opacity: 0;
+  pointer-events: auto;
+  color: var(--white-color1);
+  padding: 0.3vw 0.5vw;
+  transform: translateX(0);
+  transition: var(--transition);
   font-size: 0.3vw;;
   background: rgba(255, 255, 255, 0.19);
   border-radius: 10px;
@@ -179,97 +201,487 @@
   backdrop-filter: blur(13px);
   -webkit-backdrop-filter: blur(13px);
   border: 1px solid rgba(255, 255, 255, 0.3);
-  }
-
-  .navbar__item:hover .navbar__link span {
-    opacity: 1;
-    transform: translateX(0);
-    pointer-events: auto;
-  }
-
-  .navbar__link:hover {
-    background: var(--white-color1);
-    border-radius: 10px;
-    height: 1.7vw;
-    width: 1.7vw;
-    height: var(--linkHeight);
-  }
-
-  .navbar__link i.material-symbols-outlined:hover {
-    color: var(--black-color);
 }
 
-  /* __________________ СТИЛИ МОДАЛЬНЫХ ОКОН ОСНОВНЫХ СТРАНИЦ приложения __________________ */
-  .modal {
-    display: none;
-    position: fixed;
-    top: 1vw;
-    left: calc(100vw - (var(--spacer)*95));
-    background: rgba(255, 255, 255, 0.04);
-    padding: 1vw;
-    border-radius: 0.4vw;
-    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
-    height: calc(100vh - (var(--spacer)*2));
-    width: calc(100vw - (var(--spacer)*6));
-    color: black;
-    z-index: 2000;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
+.navbar__item:hover .navbar__link span {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
 
-  .modal.show {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-  }
+.navbar__link:hover {
+  background: var(--white-color1);
+  border-radius: 10px;
+  height: 1.7vw;
+  width: 1.7vw;
+  height: var(--linkHeight);
+}
 
-  .modal.hide {
-    display: block;
-    opacity: 0;
-    transform: translateY(20px);
-  }
+.navbar__link i.material-symbols-outlined:hover {
+  color: var(--black-color);
+}
 
-  .fade-out {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  .fade-in {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  h2 {
+/* __________________ СТИЛИ МОДАЛЬНЫХ ОКОН ОСНОВНЫХ СТРАНИЦ приложения __________________ */
+.modal {
+  display: none;
   position: fixed;
-    top: 1vw;
-    left: 1vw;
-    font-size: 0.65vw;;
-    color: var(--white-color2);
+  top: 1vw;
+  left: calc(100vw - (var(--spacer)*95));
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1vw;
+  border-radius: 0.4vw;
+  box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+  height: calc(100vh - (var(--spacer)*2));
+  width: calc(100vw - (var(--spacer)*6));
+  color: black;
+  z-index: 2000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.modal .modal-content {
+  opacity: 1;
+}
+
+.modal.show {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.modal.hide {
+  display: block;
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-out {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.fade-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+h2 {
+  position: fixed;
+  top: 1vw;
+  left: 1vw;
+  font-size: 0.65vw;;
+  color: var(--white-color2);
 }
 
 p {
   position: fixed;
-    top: 1.85vw;
-    left: 1vw;
-    font-size: 0.4vw;;
-    color: var(--white-color2);
+  top: 1.85vw;
+  left: 1vw;
+  font-size: 0.4vw;;
+  color: var(--white-color2);
 }
 
-/* __________________ СТИЛИ ИКОНОК __________________ */
-  .material-symbols-outlined {
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
-  }
+/* Модальное окно с прокруткой */
+.modalVNUT {
+  display: flex;
+  position: fixed;
+  background: none;
+  padding: 1vw;
+  border-radius: 0.4vw;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: black;
+  z-index: 1000;
+  overflow: hidden; 
+  box-sizing: border-box;
+}
+
+.modalVNUT-content {
+  padding: 0.5vh 2vh 0vw 0vw;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+
+.modalVNUT-content::-webkit-scrollbar {
+  width: 4px;
+  background-color: var(--scrollbar-color);
+}
+
+.modalVNUT-content::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color);
+  border-radius: 10px;
+}
+
+.modalVNUT-content::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-color);
+}
+
+/* Контейнеры внутри модального окна */
+.modalCONTEINER {
+  display: flex;
+  position: relative;
+  padding: 0.4vw;
+  height: auto;
+  border-radius: 0.4vw;
+  color: black;
+  z-index: 1100;
+  box-sizing: border-box;
+  vertical-align: middle;
+  
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.modalCONTEINER:not(:last-child) {
+  margin-bottom: 0.8vw; 
+}
+
+.modalCONTEINER:hover,
+.modalCONTEINER:focus {
+  border: 1px solid var(--white-color2);
+}
+
+/* input с LABEL */
+.input-group{
+  position: relative;
+  font-family: "Comfortaa", sans-serif;
+}
+
+.input-group label {
+  background: none;
+  color: rgba(255, 255, 255, 0.18);
+  position: absolute;
+  top: 0.86vw;
+  left: 0.4vw;
+  transform: translateY(-50%);
+  text-transform: uppercase;
+  font-weight: 700;
+  pointer-events: none;
+  font-size: 0.6vw;
+  transition: all 0.3s;
+}
+
+.input-group input {
+  padding: 0.4vw 0.4vw;
+  width: 3vw;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  outline: none;
+  color: var(--white-color2);
+  font-size: 0.7vw;
+  font-family: inherit;
+  background-color: transparent;
+  border-radius: 10px;
+}
+
+.input-group input:hover,
+.input-group input:focus {
+  border: 1px solid var(--white-color2);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: 0;
+  font-size: 0.4vw;
+  padding: 0 0.4vw;
+  font-weight: 700;
+  background: none;
+  
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 10px;
+  border: 1px solid rgba( 255, 255, 255, 0.18 );
+  color: var(--back-color);
+}
+
+/* input ЗАГОЛОВОК без границ */
+.input-TYPE1 {
+  position: relative;
+  font-family: "Comfortaa", sans-serif;
+  width: 2vw;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.18);
+  font-family: inherit;
+  background-color: transparent;
+  margin-top: 1vw;
+}
+
+/* иконка для контейнера */
+.iconTYPE1 {
+  color: rgba(255, 255, 255, 0.18);
+  font-size: 1vw;
+  z-index: 1200;
+}
+
+.iconTYPE1:hover {
+  color: var(--white-color2);
+  transform: font-size(0.6vw);
+}
+
+.iconTYPE1:active {
+  transform: scale(0.92);
+}
+
+/* выпадающий список (меню) */
+nav menuitem {
+    position: relative;
+    display: block;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10000;   
+}
+
+nav menuitem > menu {
+    position: absolute;
+    pointer-events: none;
+}
+
+nav > menu {
+    display: flex;
+}
+
+nav > menu > menuitem {
+    pointer-events: all;
+    opacity: 1;
+}
+
+menu menuitem a {
+    white-space: nowrap;
+    display: block;
+    user-select: none;
+}
+
+menuitem:hover > menu {
+    pointer-events: initial;
+}
+
+menuitem:hover > menu > menuitem,
+menu:hover > menuitem {
+    opacity: 1;
+}
+
+nav > menu > menuitem menuitem menu {
+    transform: translateX(100%);
+    top: 0;
+    right: 0;
+}
+
+nav {
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+nav a {
+    background: var(--color1);
+    color: var(--white-color2);
+    min-width: 190px;
+    transition: background 0.5s, color 0.5s, transform 0.5s;
+    margin: 0px 10px 10px 0px;
+    padding: 10px 40px;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid var(--white-color2);
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+    position: relative;
+    height: 40px;
+}
+
+nav a:hover {
+    color: var(--color1);
+    background: var(--white-color2);
+    box-shadow: 0 0 6px var(--white-color2);
+}
+
+nav a:active {
+    box-shadow: 0 0 3px var(--white-color2);
+    color: var(--white-color2);
+    transform: scale(0.95); 
+    background: var(--color1);
+}
+
+nav > menu > menuitem > a + menu:after {
+    content: '';
+    position: absolute;
+    border: 6px solid transparent;
+    border-top: 6px solid var(--white-color2);
+    left: 14px;
+    top: -32px;
+}
+
+nav menuitem > menu > menuitem > a + menu:after {
+    content: '';
+    position: absolute;
+    border: 6px solid transparent;
+    border-left: 6px solid var(--white-color2);
+    top: 14px;
+    left: -218px;
+    transition: opacity 0.3, transform 0s;
+}
+
+nav > menu > menuitem > menu > menuitem {
+    transition: transform 0.3s, opacity 0.3s;
+    transform: translateY(150%);
+    opacity: 0;
+}
+
+nav > menu > menuitem:hover > menu > menuitem,
+nav > menu > menuitem.hover > menu > menuitem {
+    transform: translateY(0%);
+    opacity: 1;
+    
+}
+
+menuitem > menu > menuitem > menu > menuitem {
+    transition: transform 0.3s, opacity 0.3s;
+    transform: translateX(195px) translateY(0%);
+    opacity: 0;
+}
+
+menuitem > menu > menuitem:hover > menu > menuitem,
+menuitem > menu > menuitem.hover > menu > menuitem {
+    transform: translateX(0) translateY(0%);
+    opacity: 1;
+}
+
+/* модальное окно для полей карточки проекта */
+.modalProjectCARD {
+  display: flex;
+  position: relative;
+  width: auto;
+  border-radius: 0.4vw;
+  color: black;
+  z-index: 1100;
+  box-sizing: border-box;
+  gap: 1vw;
+  align-content: start;
+  padding: 1vw;
+  
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.modalProjectCARD:hover,
+.modalProjectCARD:focus {
+  border: 1px solid var(--white-color2);
+}
+
+.modalRow {
+  display: flex;
+  position: relative;
+  flex-direction: row;
+  background: none;
+  gap: 1vw;
+}
+
+.modalColumn {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  background: none;
+  gap: 1vw;
+}
+
+.button {
+  height: 1.5vw;
+  width: 15vw;
+  position: relative;
+  background-color: transparent;
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+  border-radius: 15px;
+  color: var(--white-color2);
+  transition: all 0.5s ease-in-out;
+  text-transform: uppercase;
+}
+
+.btn-txt {
+  z-index: 1;
+  font-weight: 800;
+  letter-spacing: 4px;
+  font-family: "Comfortaa", sans-serif;
+}
+
+.type1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: all 0.1s ease-in-out;
+  background-color: #333;
+  border-radius: 30px;
+  visibility: hidden;
+  height: 10px;
+  width: 10px;
+  z-index: -1;
+}
+
+.button:hover {
+  color: #fff;
+  border: 1px solid var(--white-color2);
+}
+
+.type1:hover::after {
+  visibility: visible;
+  transform: scale(100) translateX(2px);
+}
+
+.button:active {
+  transform: scale(0.92);
+  background: var(--white-color2);
+}
+
+.modalCONTEINERpost {
+  display: flex;
+  position: relative;
+  padding: 0.4vw;
+  height: auto;
+  border-radius: 0.4vw;
+  color: black;
+  z-index: 1100;
+  box-sizing: border-box;
+  vertical-align: middle;
+  
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.modalCONTEINERpost:hover,
+.modalCONTEINERpost:focus {
+  border: 1px solid var(--white-color2);
+}
+
+.modalCONTEINERpost:not(:last-child) {
+  margin-bottom: 0.8vw;
+}
 </style>
+
+  
 </head>
 <body>
 <div id="app">
-   
-   <!-- РАЗМЕТКА для полей пин-кода -->
+   <!-- ПИН-КОД -->
   <div id="pin-wrapper">
     <div id="pin">
       <input type="password" maxlength="1" class="pin-input" />
@@ -284,7 +696,7 @@ p {
   </div>
   <div id="error-message"></div>
 
-  <!-- РАЗМЕТКА МЕНЮ -->
+  <!-- МЕНЮ -->
   <nav class="navbar" id="success-modal">
     <ul class="navbar__menu">
       <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal1')">
@@ -315,11 +727,63 @@ p {
     </ul>
   </nav>
 
-  <!-- РАЗМЕТКА модальных окон вызываемых МЕНЮ -->
+  <!-- Модальные окна -->
   <div class="modal" id="modal1">
     <h2>ELABORATION</h2>
     <p>проекты компании</p>
+    
+    <nav>
+      <menu>
+          <menuitem id="demo1" style="left: 17.6vw">
+              <a>status</a>
+              <menu>
+                  <menuitem><a>idea</a></menuitem>
+                  <menuitem><a>planned</a></menuitem>
+                  <menuitem><a>elaboration</a></menuitem>
+                  <menuitem><a>proposal sent</a></menuitem>
+                  <menuitem><a>signing an agreement</a></menuitem>
+                  <menuitem><a>contract is concluded</a></menuitem>
+                  <menuitem><a>invoice issued</a></menuitem>
+                  <menuitem><a>payment received</a></menuitem>
+              </menu>
+          </menuitem>
+      </menu>
+    </nav>
+
+    <nav>
+      <menu>
+          <menuitem id="demo2" style="left: 43.2vw">
+              <a>seller</a>
+              <menu>
+                  <menuitem><a>LLC TABIA Group</a></menuitem>
+                  <menuitem><a>LLC MPSteel</a></menuitem>
+                  <menuitem><a>LLC ST</a></menuitem>
+                  <menuitem><a>LLC SMK</a></menuitem>
+              </menu>
+          </menuitem>
+      </menu>
+    </nav>
+
+    <nav>
+      <menu>
+          <menuitem id="demo3" style="left: 52.1vw">
+              <a>buyer</a>
+              <menu>
+                  <menuitem><a>Knauf Insulation г. Тюмень</a></menuitem>
+                  <menuitem><a>ФГУП ПО Маяк</a></menuitem>
+              </menu>
+          </menuitem>
+      </menu>
+    </nav>
+
+    <!-- Модальное окно проектов -->
+    <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 7vw); width: 92vw;">
+      <div class="modalVNUT-content" id="projects-container">
+        <!-- Контейнеры проектов будут добавляться динамически -->
+      </div>
+    </div>
   </div>
+  
   <div class="modal" id="modal2">
     <h2>ANALYTICS</h2>
     <p>текущая аналитика</p>
@@ -338,11 +802,76 @@ p {
   </div>
 </div>
 
+<!-- Шаблон контейнера проекта -->
+<template id="project-template">
+  <div class="modalCONTEINER">
+    <!-- Отображение имени пользователя, редактирующего поле -->
+    <div class="editing-info" style="position:absolute; top:-1.5vw; left:1vw; font-size:0.7vw; color:var(--white-color2);"></div>
+    <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw;">developer_guide</i></span>
+    <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw; margin-left: 0.25vw;">data_table</i></span>
+    
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+      <input type="text" class="project_ID" placeholder=" " style="width: 4.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+      <label>project ID</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+      <input type="text" class="project_name" placeholder=" " style="width: 11vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+      <label>project name</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+      <input type="text" class="project_status" placeholder=" " style="width: 7.4vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+      <label>status</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+      <input type="text" class="contract_amount" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+      <label>contract amount</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+      <input type="text" class="contract_costs" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+      <label>contract costs</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+      <input type="text" class="contract_profit" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+      <label>contract profit</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+      <input type="text" class="profit" placeholder=" " style="width: 3vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+      <label>profit %</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+      <input type="text" class="company_seller" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+      <label>company seller</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+      <input type="text" class="TIN_seller" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+      <label>TIN seller</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+      <input type="text" class="buyer_company" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+      <label>buyer company</label>
+    </div>
+
+    <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+      <input type="text" class="TIN_buyer" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+      <label>TIN buyer</label>
+    </div>
+  </div>
+</template>
+
 <script type="module">
 import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
 const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
+const SUPABASE_ANON_KEY = 'eyJhbGci...YOURKEY'; // Замените на ваш ключ
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const pinInputs = document.querySelectorAll('.pin-input');
@@ -352,8 +881,11 @@ const successModal = document.getElementById('success-modal');
 
 let currentUser = null;
 let currentModal = null;
+let presenceChannel = null;
+let presenceState = {};
+let projectsData = [];
 
-  // Фокус на первый инпут (без стартового символа)
+// Фокус на первый инпут
 pinInputs[0].focus();
 
 // Переход к следующему полю при вводе символа
@@ -386,7 +918,7 @@ async function checkPinCode() {
     showError("Код авторизации введён неверно");
     clearInputs();
   } else {
-    currentUser = data;
+    currentUser = data; // Сохраняем данные пользователя (имя, уровень доступа)
     hidePinAndShowMenu(currentUser);
   }
 }
@@ -428,10 +960,16 @@ function filterMenuByAccess(accessLevel) {
   });
 }
 
-// Функции работы с модальными окнами
+// Работа с модальными окнами
 function fadeInModal(modal) {
   modal.classList.add('show');
   modal.classList.remove('hide');
+
+  if (modal.id === 'modal1') {
+    // Подключаемся к presence каналу при открытии modal1
+    initPresence();
+    loadProjectsFromDB();
+  }
 }
 
 function fadeOutModal(modal, callback) {
@@ -456,6 +994,206 @@ function openModal(modalId) {
   }
   currentModal = newModal;
 }
+
+// Загрузка проектов
+async function loadProjectsFromDB() {
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*');
+
+  if (error) {
+    console.error("Error loading projects:", error);
+    return;
+  }
+
+  projectsData = data || [];
+  renderProjects();
+}
+
+// Рендер проектов
+function renderProjects() {
+  const container = document.getElementById('projects-container');
+  container.innerHTML = '';
+  const template = document.getElementById('project-template');
+
+  projectsData.forEach(project => {
+    const clone = template.content.cloneNode(true);
+
+    fillProjectFields(clone, project);
+
+    // Навешиваем обработчики focus/blur для реального времени
+    const inputs = clone.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => handleFieldFocus(input, project));
+      input.addEventListener('blur', () => handleFieldBlur(input, project));
+    });
+
+    container.appendChild(clone);
+  });
+
+  updateEditingIndicators();
+}
+
+// Заполняем поля проекта
+function fillProjectFields(container, project) {
+  container.querySelector('.project_ID').value = project.project_id || '';
+  container.querySelector('.project_name').value = project.project_name || '';
+  container.querySelector('.project_status').value = project.project_status || '';
+  container.querySelector('.contract_amount').value = project.contract_amount || '';
+  container.querySelector('.contract_costs').value = project.contract_costs || '';
+  container.querySelector('.contract_profit').value = project.contract_profit || '';
+  container.querySelector('.profit').value = project.profit || '';
+  container.querySelector('.company_seller').value = project.company_seller || '';
+  container.querySelector('.TIN_seller').value = project.tin_seller || '';
+  container.querySelector('.buyer_company').value = project.buyer_company || '';
+  container.querySelector('.TIN_buyer').value = project.tin_buyer || '';
+}
+
+// Обработчик фокуса
+function handleFieldFocus(input, project) {
+  if (!presenceChannel) return;
+  const fieldClass = getFieldClass(input);
+  presenceChannel.track({
+    userName: currentUser.name,
+    editing: { project_id: project.project_id, field: fieldClass }
+  });
+}
+
+// Обработчик потери фокуса (обновление в БД)
+async function handleFieldBlur(input, project) {
+  if (!presenceChannel) return;
+  // Снимаем фокус в presence
+  presenceChannel.track({ userName: currentUser.name, editing: null });
+
+  // Обновляем БД по изменившемуся полю
+  const fieldClass = getFieldClass(input);
+  const newValue = input.value;
+  const updateObj = {};
+  const columnName = fieldClassToColumn(fieldClass);
+  if (!columnName) return;
+
+  updateObj[columnName] = newValue;
+
+  const { error } = await supabase
+    .from('projects')
+    .update(updateObj)
+    .eq('project_id', project.project_id);
+
+  if (error) console.error("Update error:", error);
+}
+
+// Преобразуем class поля в имя столбца
+function fieldClassToColumn(fieldClass) {
+  const map = {
+    'project_ID': 'project_id',
+    'project_name': 'project_name',
+    'project_status': 'project_status',
+    'contract_amount': 'contract_amount',
+    'contract_costs': 'contract_costs',
+    'contract_profit': 'contract_profit',
+    'profit': 'profit',
+    'company_seller': 'company_seller',
+    'TIN_seller': 'tin_seller',
+    'buyer_company': 'buyer_company',
+    'TIN_buyer': 'tin_buyer'
+  };
+  return map[fieldClass] || null;
+}
+
+function getFieldClass(input) {
+  const classes = input.classList;
+  for (const c of classes) {
+    if (c !== 'project_ID' && c !== 'project_name' && c !== 'project_status' &&
+        c !== 'contract_amount' && c !== 'contract_costs' && c !== 'contract_profit' &&
+        c !== 'profit' && c !== 'company_seller' && c !== 'TIN_seller' && c !== 'buyer_company' && c !== 'TIN_buyer') {
+      continue;
+    }
+    return c;
+  }
+  return null;
+}
+
+// Инициализация presence
+function initPresence() {
+  if (presenceChannel) return;
+
+  presenceChannel = supabase.channel('realtime-presence', {
+    config: {
+      presence: {
+        key: currentUser.pin_code // уникальный ключ
+      }
+    }
+  });
+
+  presenceChannel.on('presence', { event: 'sync' }, () => {
+    presenceState = presenceChannel.presenceState();
+    updateEditingIndicators();
+  });
+
+  presenceChannel.on('presence', { event: 'join' }, () => {
+    presenceState = presenceChannel.presenceState();
+    updateEditingIndicators();
+  });
+
+  presenceChannel.on('presence', { event: 'leave' }, () => {
+    presenceState = presenceChannel.presenceState();
+    updateEditingIndicators();
+  });
+
+  presenceChannel.subscribe((status) => {
+    if (status === 'SUBSCRIBED') {
+      presenceChannel.track({ userName: currentUser.name, editing: null });
+    }
+  });
+
+  // Подписка на изменения в таблице projects (реaltime)
+  supabase.channel('projects_changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, payload => {
+      // При изменении в БД перезагружаем данные
+      loadProjectsFromDB();
+    })
+    .subscribe();
+}
+
+// Обновляем отображение кто редактирует какие поля
+function updateEditingIndicators() {
+  const container = document.getElementById('projects-container');
+  const allProjects = container.querySelectorAll('.modalCONTEINER');
+
+  // Собираем все состояния presence
+  // state[userPin] = [{userName, editing: {project_id, field}} ...]
+  let editingMap = {}; 
+  for (const userPin in presenceState) {
+    const metas = presenceState[userPin];
+    metas.forEach(meta => {
+      if (meta.editing && meta.userName) {
+        const key = meta.editing.project_id + '|' + meta.editing.field;
+        editingMap[key] = meta.userName;
+      }
+    });
+  }
+
+  // Для каждого проекта проставляем над редактируемым полем имя пользователя
+  allProjects.forEach(projectEl => {
+    const project_id = projectEl.querySelector('.project_ID').value;
+    const editingInfoEl = projectEl.querySelector('.editing-info');
+    editingInfoEl.textContent = ''; // Очищаем
+
+    // Проверим каждое поле ввода
+    const inputs = projectEl.querySelectorAll('input');
+    inputs.forEach(input => {
+      const fieldClass = getFieldClass(input);
+      if (!fieldClass) return;
+      const key = project_id + '|' + fieldClass;
+      const userEditing = editingMap[key];
+      // Если кто-то редактирует
+      if (userEditing) {
+        editingInfoEl.textContent = userEditing + ' is editing: ' + fieldClass;
+      }
+    });
+  });
+}
+
 
 // Делаем функции глобально доступными
 window.openModal = openModal;
