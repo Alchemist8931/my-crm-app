@@ -1,22 +1,22 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Авторизация по пин-коду</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+<style>
+
   :root {
-    /* основные цвета */
     --black-color: #121212;
     --white-color1: #F4F5F0;
     --white-color2: #D1D5D0;
-    --akcent-color1: #46647E;
- 
-    /* из нового */
     --borderRadius: 10px;
     --spacer: 1vw;
     --linkHeight: 3.5rem;
     --timing: 250ms;
     --transition: 250ms ease all;
-    
-  /* СКРОЛЛ */
-  --scrollbar-color: rgba(255, 255, 255, 0.04); /* Цвет скроллбара */
-  --scrollbar-thumb-color: #D1D5D0; /* Цвет ползунка */
-  --scroll-y-position: 10%;
-  --reflection-y-position: 50%;
   }
 
   * {
@@ -25,8 +25,6 @@
     margin: 0;
     padding: 0;
     font-optical-sizing: auto;
-    font-weight: <weight>;
-    font-style: normal;
   }
 
   body, html {
@@ -38,15 +36,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-  }
-  
-  /* __________________ СТИЛИ ИКОНОК __________________ */
-  .material-symbols-outlined {
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
   }
 
   #app {
@@ -228,11 +217,6 @@
     transform: translateY(20px);
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
-  
-  /* Показываем содержимое, когда модальное окно отображено */
-.modal .modal-content {
-  opacity: 1;
-}
 
   .modal.show {
     display: block;
@@ -255,16 +239,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-  
-  @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes fadeOut {
-  from { opacity: 1; }
-  to { opacity: 0; }
-}
 
   h2 {
   position: fixed;
@@ -282,407 +256,211 @@ p {
     color: var(--white-color2);
 }
 
+/* __________________ СТИЛИ ИКОНОК __________________ */
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+  }
+</style>
+</head>
+<body>
+<div id="app">
+   
+   <!-- РАЗМЕТКА для полей пин-кода -->
+  <div id="pin-wrapper">
+    <div id="pin">
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+      <input type="password" maxlength="1" class="pin-input" />
+    </div>
+  </div>
+  <div id="error-message"></div>
 
-/* Модальное окно с прокруткой */
-.modalVNUT {
-  display: flex;
-  position: fixed;
-  background: none;
-  padding: 1vw;
-  border-radius: 0.4vw;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: black;
-  z-index: 1000;
-  overflow: hidden; /* Отключаем общий скролл */
-  box-sizing: border-box;
+  <!-- РАЗМЕТКА МЕНЮ -->
+  <nav class="navbar" id="success-modal">
+    <ul class="navbar__menu">
+      <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal1')">
+        <a href="#" class="navbar__link">
+          <i class="material-symbols-outlined">analytics</i><span>ELABORATION</span>
+        </a>
+      </li>
+      <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal2')">
+        <a href="#" class="navbar__link">
+          <i class="material-symbols-outlined">finance_mode</i><span>ANALYTICS</span>
+        </a>
+      </li>
+      <li class="navbar__item" data-levels="A,B" onclick="openModal('modal3')">
+        <a href="#" class="navbar__link">
+          <i class="material-symbols-outlined">data_table</i><span>TASKS</span>
+        </a>
+      </li>
+      <li class="navbar__item" data-levels="A,B" onclick="openModal('modal4')">
+        <a href="#" class="navbar__link">
+          <i class="material-symbols-outlined">full_stacked_bar_chart</i><span>in_development</span>
+        </a>
+      </li>
+      <li class="navbar__item" data-levels="A,B" onclick="openModal('modal5')">
+        <a href="#" class="navbar__link">
+          <i class="material-symbols-outlined">full_stacked_bar_chart</i><span>in_development</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- РАЗМЕТКА модальных окон вызываемых МЕНЮ -->
+  <div class="modal" id="modal1">
+    <h2>ELABORATION</h2>
+    <p>проекты компании</p>
+  </div>
+  <div class="modal" id="modal2">
+    <h2>ANALYTICS</h2>
+    <p>текущая аналитика</p>
+  </div>
+  <div class="modal" id="modal3">
+    <h2>TASKS</h2>
+    <p>проектные задачи</p>
+  </div>
+  <div class="modal" id="modal4">
+    <h2>in_development</h2>
+    <p>страница в разработке</p>
+  </div>
+  <div class="modal" id="modal5">
+    <h2>in_development</h2>
+    <p>страница в разработке</p>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const pinInputs = document.querySelectorAll('.pin-input');
+const errorMessage = document.getElementById('error-message');
+const pinWrapper = document.getElementById('pin-wrapper');
+const successModal = document.getElementById('success-modal');
+
+let currentUser = null;
+let currentModal = null;
+
+// Фокус на первый инпут (без стартового символа)
+pinInputs[0].focus();
+
+// Переход к следующему полю при вводе символа
+pinInputs.forEach((input, index) => {
+  input.addEventListener('input', () => {
+    if (input.value.length === 1 && index < pinInputs.length - 1) {
+      pinInputs[index+1].focus();
+    } else if (index === pinInputs.length - 1 && input.value.length === 1) {
+      checkPinCode();
+    }
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Backspace' && input.value === '' && index > 0) {
+      pinInputs[index-1].focus();
+    }
+  });
+});
+
+async function checkPinCode() {
+  const pinCode = Array.from(pinInputs).map(i => i.value).join('');
+
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('pin_code', pinCode)
+    .single();
+
+  if (error || !data) {
+    showError("Код авторизации введён неверно");
+    clearInputs();
+  } else {
+    currentUser = data;
+    hidePinAndShowMenu(currentUser);
+  }
 }
 
-/* Внутренний контейнер с прокруткой */
-.modalVNUT-content {
-  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
-  height: 100%;
-  width: 100%;
-  overflow-y: auto; /* Включаем вертикальную прокрутку */
-  box-sizing: border-box;
+function clearInputs() {
+  pinInputs.forEach(i => i.value = '');
+  pinInputs[0].focus();
 }
 
-/* Стилизация скроллбара */
-.modalVNUT-content::-webkit-scrollbar {
-  width: 4px; /* Ширина скроллбара */
-  background-color: var(--scrollbar-color);
+function showError(msg) {
+  errorMessage.textContent = msg;
+  errorMessage.style.opacity = '1';
+  errorMessage.classList.add('shake');
+  setTimeout(() => {
+    errorMessage.classList.remove('shake');
+    errorMessage.style.opacity = '0';
+  }, 1000);
 }
 
-.modalVNUT-content::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
-  border-radius: 10px; /* Скругление */
+function hidePinAndShowMenu(user) {
+  pinWrapper.style.opacity = '0';
+  pinWrapper.style.transform = 'translateY(20px)';
+  setTimeout(() => {
+    pinWrapper.style.display = 'none';
+    successModal.classList.add('fade-in');
+    filterMenuByAccess(user.access_level);
+  }, 500);
 }
 
-.modalVNUT-content::-webkit-scrollbar-track {
-  background-color: var(--scrollbar-color);
+function filterMenuByAccess(accessLevel) {
+  const menuItems = successModal.querySelectorAll('.navbar__item');
+  menuItems.forEach(item => {
+    const levels = item.getAttribute('data-levels');
+    if (levels && !levels.split(',').includes(accessLevel)) {
+      item.style.display = 'none';
+    } else {
+      item.style.display = 'list-item';
+    }
+  });
 }
 
-/* Контейнеры внутри модального окна */
-.modalCONTEINER {
-  display: flex;
-  position: relative;
-  padding: 0.4vw;
-  height: auto;
-  border-radius: 0.4vw;
-  color: black;
-  z-index: 1100;
-  box-sizing: border-box;
-  vertical-align: middle;
-  
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+// Функции работы с модальными окнами
+function fadeInModal(modal) {
+  modal.classList.add('show');
+  modal.classList.remove('hide');
 }
 
-.modalCONTEINER:hover,
-.modalCONTEINER:focus {
-  border: 1px solid var(--white-color2);
+function fadeOutModal(modal, callback) {
+  modal.classList.add('hide');
+  setTimeout(() => {
+    modal.classList.remove('show');
+    modal.classList.remove('hide');
+    if (callback) callback();
+  }, 500);
 }
 
-/* Отступы только между контейнерами */
-.modalCONTEINER:not(:last-child) {
-  margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
+function openModal(modalId) {
+  const newModal = document.getElementById(modalId);
+  if (!newModal) return;
+
+  if (currentModal && currentModal !== newModal) {
+    fadeOutModal(currentModal, () => {
+      fadeInModal(newModal);
+    });
+  } else if (!currentModal) {
+    fadeInModal(newModal);
+  }
+  currentModal = newModal;
 }
 
-
-
-
-/* input с LABEL */
-.input-group{
-  position: relative;
-  font-family: "Comfortaa", sans-serif;
-}
-
-.input-group label {
-  background: none;
-  color: rgba(255, 255, 255, 0.18);
-  position: absolute;
-  top: 0.86vw;
-  left: 0.4vw;
-  transform: translateY(-50%);
-  text-transform: uppercase;
-  font-weight: 700;
-  pointer-events: none;
-  font-size: 0.6vw;
-  transition: all 0.3s;
-}
-
-.input-group input {
-  padding: 0.4vw 0.4vw;
-  width: 3vw;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  outline: none;
-  color: var(--white-color2);
-  font-size: 0.7vw;
-  font-family: inherit;
-  background-color: transparent;
-  border-radius: 10px;
-}
-
-.input-group input:hover,
-.input-group input:focus {
-  border: 1px solid var(--white-color2);
-}
-
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label {
-  top: 0;
-  font-size: 0.4vw;
-  padding: 0 0.4vw;
-  font-weight: 700;
-  background: none;
-  
-backdrop-filter: blur(20px);
--webkit-backdrop-filter: blur(20px);
-border-radius: 10px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
-color: var(--back-color);
-}
-
-
-
-/* input ЗАГОЛОВОК без границ */
-.input-TYPE1 {
-  position: relative;
-  font-family: "Comfortaa", sans-serif;
-  width: 2vw;
-  border: none;
-  outline: none;
-  color: rgba(255, 255, 255, 0.18);
-  font-family: inherit;
-  background-color: transparent;
-  margin-top: 1vw;
-}
-
-/* иконка для контейнера */
-.iconTYPE1 {
-  color: rgba(255, 255, 255, 0.18);
-  font-size: 1vw;
-  z-index: 1200;
-}
-
-.iconTYPE1:hover {
-  color: var(--white-color2);
-  transform: font-size(0.6vw);
-}
-
-.iconTYPE1:active {
-  transform: scale(0.92);
-}
-
-
-
-/* выпадающий список (меню) */
-nav menuitem {
-    position: relative;
-    display: block;
-    opacity: 0;
-    cursor: pointer;
-    z-index: 10000;   
-}
-
-nav menuitem > menu {
-    position: absolute;
-    pointer-events: none;
-}
-
-nav > menu {
-    display: flex;
-}
-
-nav > menu > menuitem {
-    pointer-events: all;
-    opacity: 1;
-}
-
-menu menuitem a {
-    white-space: nowrap;
-    display: block;
-    user-select: none; /* Запрет выделения текста */
-}
-
-menuitem:hover > menu {
-    pointer-events: initial;
-}
-
-menuitem:hover > menu > menuitem,
-menu:hover > menuitem {
-    opacity: 1;
-}
-
-nav > menu > menuitem menuitem menu {
-    transform: translateX(100%);
-    top: 0;
-    right: 0;
-}
-
-nav {
-    margin-top: 10px;
-    margin-left: 10px;
-}
-
-nav a {
-    background: var(--color1);
-    color: var(--white-color2);
-    min-width: 190px;
-    transition: background 0.5s, color 0.5s, transform 0.5s;
-    margin: 0px 10px 10px 0px;
-    padding: 10px 40px;
-    box-sizing: border-box;
-    border-radius: 12px;
-    border: 1px solid var(--white-color2);
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
-    position: relative;
-    height: 40px;
-}
-
-nav a:hover {
-    color: var(--color1);
-    background: var(--white-color2);
-    box-shadow: 0 0 6px var(--white-color2);
-}
-
-nav a:active {
-    box-shadow: 0 0 3px var(--white-color2);
-    color: var(--white-color2);
-    transform: scale(0.95); /* Сжатие кнопки при нажатии */
-    background: var(--color1);
-}
-
-nav > menu > menuitem > a + menu:after {
-    content: '';
-    position: absolute;
-    border: 6px solid transparent;
-    border-top: 6px solid var(--white-color2);
-    left: 14px;
-    top: -32px;
-}
-
-nav menuitem > menu > menuitem > a + menu:after {
-    content: '';
-    position: absolute;
-    border: 6px solid transparent;
-    border-left: 6px solid var(--white-color2);
-    top: 14px;
-    left: -218px;
-    transition: opacity 0.3, transform 0s;
-}
-
-nav > menu > menuitem > menu > menuitem {
-    transition: transform 0.3s, opacity 0.3s;
-    transform: translateY(150%);
-    opacity: 0;
-}
-
-nav > menu > menuitem:hover > menu > menuitem,
-nav > menu > menuitem.hover > menu > menuitem {
-    transform: translateY(0%);
-    opacity: 1;
-    
-}
-
-menuitem > menu > menuitem > menu > menuitem {
-    transition: transform 0.3s, opacity 0.3s;
-    transform: translateX(195px) translateY(0%);
-    opacity: 0;
-}
-
-menuitem > menu > menuitem:hover > menu > menuitem,
-menuitem > menu > menuitem.hover > menu > menuitem {
-    transform: translateX(0) translateY(0%);
-    opacity: 1;
-}
-
-
-
-
-
-
-
-/* модальное окно для полей карточки проекта */
-.modalProjectCARD {
-  display: flex;
-  position: relative;
-  width: auto;
-  border-radius: 0.4vw;
-  color: black;
-  z-index: 1100;
-  box-sizing: border-box;
-  gap: 1vw;
-  align-content: start;
-  padding: 1vw;
-  
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.modalProjectCARD:hover,
-.modalProjectCARD:focus {
-  border: 1px solid var(--white-color2);
-}
-
-.modalRow {
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  background: none;
-  gap: 1vw;
-}
-
-.modalColumn {
-  display: flex;
-  position: relative;
-  flex-direction: column;
-  background: none;
-  gap: 1vw;
-}
-
-
-.button {
-  height: 1.5vw;
-  width: 15vw;
-  position: relative;
-  background-color: transparent;
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  overflow: hidden;
-  border-radius: 15px;
-  color: var(--white-color2);
-  transition: all 0.5s ease-in-out;
-  text-transform: uppercase;
-}
-
-.btn-txt {
-  z-index: 1;
-  font-weight: 800;
-  letter-spacing: 4px;
-  font-family: "Comfortaa", sans-serif;
-}
-
-.type1::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  transition: all 0.1s ease-in-out;
-  background-color: #333;
-  border-radius: 30px;
-  visibility: hidden;
-  height: 10px;
-  width: 10px;
-  z-index: -1;
-}
-
-.button:hover {
-  color: #fff;
-  border: 1px solid var(--white-color2);
-}
-
-.type1:hover::after {
-  visibility: visible;
-  transform: scale(100) translateX(2px);
-}
-
-.button:active {
-  transform: scale(0.92);
-  background: var(--white-color2);
-}
-
-
-/* Контейнеры внутри модального окна */
-.modalCONTEINERpost {
-  display: flex;
-  position: relative;
-  padding: 0.4vw;
-  height: auto;
-  border-radius: 0.4vw;
-  color: black;
-  z-index: 1100;
-  box-sizing: border-box;
-  vertical-align: middle;
-  
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.modalCONTEINERpost:hover,
-.modalCONTEINERpost:focus {
-  border: 1px solid var(--white-color2);
-}
-
-/* Отступы только между контейнерами */
-.modalCONTEINERpost:not(:last-child) {
-  margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
-}
+// Делаем функции глобально доступными
+window.openModal = openModal;
+window.fadeInModal = fadeInModal;
+window.fadeOutModal = fadeOutModal;
+</script>
+</body>
+</html>
