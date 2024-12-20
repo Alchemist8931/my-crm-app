@@ -7,14 +7,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 <style>
+
   :root {
     --black-color: #121212;
     --white-color1: #F4F5F0;
     --white-color2: #D1D5D0;
     --borderRadius: 10px;
     --spacer: 1vw;
-    --primary: #406ff3;
-    --text: #6a778e;
     --linkHeight: 3.5rem;
     --timing: 250ms;
     --transition: 250ms ease all;
@@ -50,7 +49,8 @@
     position: relative;
     overflow: hidden;
   }
-
+  
+  /* __________________ СТИЛИ для полей ПИН-КОДА __________________ */
   #pin-wrapper {
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
@@ -105,7 +105,7 @@
     100% { transform: translateX(0); }
   }
 
-  /* Новое меню */
+  /* __________________ СТИЛИ МЕНЮ ПРИЛОЖНИЯ __________________ */
   .navbar {
     display: flex;
     position: fixed;
@@ -149,7 +149,7 @@
     height: var(--linkHeight);
     width: calc(var(--spacer)*3);
     margin: 0 auto;
-    color: var(--text);
+    color: var(--white-color1);
     text-decoration: none;
     transition: var(--transition);
 
@@ -181,7 +181,6 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   }
 
-  /* Подсказка появляется только у наведённого пункта, а не у всех */
   .navbar__item:hover .navbar__link span {
     opacity: 1;
     transform: translateX(0);
@@ -200,7 +199,7 @@
     color: var(--black-color);
 }
 
-  /* Модальные окна */
+  /* __________________ СТИЛИ МОДАЛЬНЫХ ОКОН ОСНОВНЫХ СТРАНИЦ приложения __________________ */
   .modal {
     display: none;
     position: fixed;
@@ -257,6 +256,7 @@ p {
     color: var(--white-color2);
 }
 
+/* __________________ СТИЛИ ИКОНОК __________________ */
   .material-symbols-outlined {
     font-variation-settings:
     'FILL' 0,
@@ -268,9 +268,10 @@ p {
 </head>
 <body>
 <div id="app">
+   
+   <!-- РАЗМЕТКА для полей пин-кода -->
   <div id="pin-wrapper">
     <div id="pin">
-      <!-- Убедились, что поля ввода пусты по умолчанию (без стартовых символов) -->
       <input type="password" maxlength="1" class="pin-input" />
       <input type="password" maxlength="1" class="pin-input" />
       <input type="password" maxlength="1" class="pin-input" />
@@ -283,7 +284,7 @@ p {
   </div>
   <div id="error-message"></div>
 
-  <!-- Новое меню -->
+  <!-- РАЗМЕТКА МЕНЮ -->
   <nav class="navbar" id="success-modal">
     <ul class="navbar__menu">
       <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal1')">
@@ -314,7 +315,7 @@ p {
     </ul>
   </nav>
 
-  <!-- Модальные окна -->
+  <!-- РАЗМЕТКА модальных окон вызываемых МЕНЮ -->
   <div class="modal" id="modal1">
     <h2>ELABORATION</h2>
     <p>проекты компании</p>
@@ -353,7 +354,7 @@ let currentUser = null;
 let currentModal = null;
 
 // Фокус на первый инпут (без стартового символа)
-pinInputs[0].focus();
+// pinInputs[0].focus();
 
 // Переход к следующему полю при вводе символа
 pinInputs.forEach((input, index) => {
