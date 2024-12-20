@@ -538,34 +538,40 @@ function filterMenuByAccess(accessLevel) {
 
 //функция загрузки HTML контента в конкретный контейнер
 async function loadModalContent(modalId) {
-    const fileName = modalId + '.html';
-    const url = `./pages/${fileName}`;
-    const contentDiv = document.getElementById(modalId + '-content');
-    if (!contentDiv) return;
+  const fileName = modalId + '.html';
+  const url = `./pages/${fileName}?t=${Date.now()}`; // предотвращение кэширования
+  console.log("Загружаемый путь:", url);
 
-    const loader = contentDiv.querySelector('.lines-loader');
+  const contentDiv = document.getElementById(modalId + '-content');
+  if (!contentDiv) return;
 
-    // Показываем прелоадер
-    loader.style.display = 'flex';
+  const loader = contentDiv.querySelector('.lines-loader');
+  contentDiv.style.display = 'flex';
+  contentDiv.style.flexDirection = 'column';
+  contentDiv.style.alignItems = 'center';
+  contentDiv.style.justifyContent = 'center';
 
-    try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Ошибка загрузки контента');
-        const html = await response.text();
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Ошибка загрузки контента');
 
-        // Ждем 1.5 секунды
-        await new Promise(resolve => setTimeout(resolve, 1500));
+    const html = await response.text();
 
-        // Скрываем прелоадер
-        loader.style.display = 'none';
+    // Ждём 1.5 секунды, имитируя прелоадер
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Показываем загруженный контент
-        contentDiv.innerHTML = html;
-        contentDiv.classList.add('show-content'); // Плавное отображение
-    } catch (e) {
-        console.error(e);
-    }
+    // Скрываем лоадер
+    loader.classList.add('hide');
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Показываем загруженный контент
+    contentDiv.innerHTML = html;
+    contentDiv.classList.add('show-content');
+  } catch (e) {
+    console.error(e);
+  }
 }
+
 
 
 
