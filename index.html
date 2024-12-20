@@ -73,14 +73,21 @@
     transition: border-color 0.3s, background-color 0.3s;
   }
 
-  .pin-input:focus {
-    border-color: lightblue;
+  .pin-input:hover {
+    border-color: var(--white-color1);
     background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 16px 2px var(--white-color1);
+  }
+
+  .pin-input:focus {
+    border-color: var(--white-color2);
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 32px 4px var(--white-color1);
   }
 
   #error-message {
     margin-top: 20px;
-    color: red;
+    color: var(--white-color2);
     font-size: 20px;
     opacity: 0;
     transition: opacity 0.5s ease;
