@@ -270,6 +270,58 @@
     /* Можно добавить стили для скрытия при загрузке */
     display: none;
   }
+
+  /* Загрузчик */
+.lines-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.line {
+  width: 10px;
+  height: 70px;
+  background-color: #ffffff;
+  animation: bounce 1.5s infinite ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.line:nth-child(2) { animation-delay: 0.3s; }
+.line:nth-child(3) { animation-delay: 0.6s; }
+.line:nth-child(5) { animation-delay: 1.2s; }
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Скрытие загрузчика */
+.lines-loader.hide {
+  opacity: 0; 
+  pointer-events: none;
+}
+
+/* Плавное появление контента */
+.modal-content.fade-in {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.modal-content.fade-in.show-content {
+  opacity: 1;
+}
+
+  
 </style>
 </head>
 <body>
@@ -326,35 +378,71 @@
     <h2>ELABORATION</h2>
     <p>проекты компании</p>
     <!--контейнер для подгружаемого контента modal1-->
-    <div class="modal-content" id="modal1-content"></div>
+    <div class="modal-content fade-in" id="modal1-content">
+      <div class="lines-loader">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+  </div>
+    </div>
   </div>
 
   <div class="modal" id="modal2">
     <h2>ANALYTICS</h2>
     <p>текущая аналитика</p>
     <!--контейнер для подгружаемого контента modal2-->
-    <div class="modal-content" id="modal2-content"></div>
+    <div class="modal-content fade-in" id="modal2-content">
+      <div class="lines-loader">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
   </div>
 
   <div class="modal" id="modal3">
     <h2>TASKS</h2>
     <p>проектные задачи</p>
     <!--контейнер для подгружаемого контента modal3-->
-    <div class="modal-content" id="modal3-content"></div>
+    <div class="modal-content fade-in" id="modal3-content">
+      <div class="lines-loader">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
   </div>
 
   <div class="modal" id="modal4">
     <h2>in_development</h2>
     <p>страница в разработке</p>
     <!--контейнер для подгружаемого контента modal4-->
-    <div class="modal-content" id="modal4-content"></div>
+    <div class="modal-content fade-in" id="modal4-content">
+      <div class="lines-loader">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
   </div>
 
   <div class="modal" id="modal5">
     <h2>in_development</h2>
     <p>страница в разработке</p>
     <!--контейнер для подгружаемого контента modal5-->
-    <div class="modal-content" id="modal5-content"></div>
+    <div class="modal-content fade-in" id="modal5-content">
+      <div class="lines-loader">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
   </div>
 </div>
 
@@ -450,22 +538,38 @@ function filterMenuByAccess(accessLevel) {
 
 //функция загрузки HTML контента в конкретный контейнер
 async function loadModalContent(modalId) {
-  //формируем имя html файла (пример: modal1 -> modal1.html)
   const fileName = modalId + '.html';
-  const url = `./pages/${fileName}`; //путь к вашим html файлам в репозитории
+  const url = `./pages/${fileName}`;
+  const contentDiv = document.getElementById(modalId + '-content');
+  if (!contentDiv) return;
+
+  // Показываем загрузчик
+  const loader = contentDiv.querySelector('.lines-loader');
+  contentDiv.style.display = 'flex';
+  contentDiv.style.flexDirection = 'column';
+  contentDiv.style.alignItems = 'center';
+  contentDiv.style.justifyContent = 'center';
+  
   try {
     const response = await fetch(url);
     if (!response.ok) throw new Error('Ошибка загрузки контента');
     const html = await response.text();
-    const contentDiv = document.getElementById(modalId + '-content');
-    if (contentDiv) {
-      contentDiv.innerHTML = html;
-      contentDiv.style.display = 'block'; // показываем контент после загрузки
-    }
+
+    // Ждем 1.5 секунды (продолжительность анимации загрузки)
+    await new Promise(resolve => setTimeout(resolve, 1500));
+
+    // Скрываем загрузчик (0.5с)
+    loader.classList.add('hide');
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    // Показываем загруженный контент
+    contentDiv.innerHTML = html;
+    contentDiv.classList.add('show-content'); // запускает переход в opacity
   } catch (e) {
     console.error(e);
   }
 }
+
 
 // Функции работы с модальными окнами
 function fadeInModal(modal) {
