@@ -10,190 +10,191 @@
 
 <style>
 /* Стили, предоставленные ранее, без изменений */
-:root {
-  /* основные цвета */
-  --black-color: #121212;
-  --white-color1: #F4F5F0;
-  --white-color2: #D1D5D0;
-  --akcent-color1: #46647E;
+  :root {
+    /* основные цвета */
+    --black-color: #121212;
+    --white-color1: #F4F5F0;
+    --white-color2: #D1D5D0;
+    --akcent-color1: #46647E;
  
-  /* из нового */
-  --borderRadius: 10px;
-  --spacer: 1vw;
-  --linkHeight: 3.5rem;
-  --timing: 250ms;
-  --transition: 250ms ease all;
+    /* из нового */
+    --borderRadius: 10px;
+    --spacer: 1vw;
+    --linkHeight: 3.5rem;
+    --timing: 250ms;
+    --transition: 250ms ease all;
     
   /* СКРОЛЛ */
-  --scrollbar-color: rgba(255, 255, 255, 0.04);
-  --scrollbar-thumb-color: #D1D5D0;
+  --scrollbar-color: rgba(255, 255, 255, 0.04); /* Цвет скроллбара */
+  --scrollbar-thumb-color: #D1D5D0; /* Цвет ползунка */
   --scroll-y-position: 10%;
   --reflection-y-position: 50%;
-}
+  }
 
-* {
-  box-sizing: border-box;
-  font-family: "Comfortaa", sans-serif;
-  margin: 0;
-  padding: 0;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-}
+  * {
+    box-sizing: border-box;
+    font-family: "Comfortaa", sans-serif;
+    margin: 0;
+    padding: 0;
+    font-optical-sizing: auto;
+    font-weight: <weight>;
+    font-style: normal;
+  }
 
-body, html {
-  margin: 0;
-  padding: 0;
-  background-color: var(--black-color);
-  color: var(--white-color1);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  body, html {
+    margin: 0;
+    padding: 0;
+    background-color: var(--black-color);
+    color: var(--white-color1);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* __________________ СТИЛИ ИКОНОК __________________ */
+  .material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24
+  }
 
-/* __________________ СТИЛИ ИКОНОК __________________ */
-.material-symbols-outlined {
-  font-variation-settings:
-  'FILL' 0,
-  'wght' 400,
-  'GRAD' 0,
-  'opsz' 24
-}
+  #app {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  /* __________________ СТИЛИ для полей ПИН-КОДА __________________ */
+  #pin-wrapper {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
 
-#app {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  height: 100vh;
-  width: 100vw;
-  position: relative;
-  overflow: hidden;
-}
+  #pin {
+    display: flex;
+    gap: 10px;
+  }
 
-/* __________________ СТИЛИ для полей ПИН-КОДА __________________ */
-#pin-wrapper {
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
+  .pin-input {
+    width: 60px;
+    height: 70px;
+    font-size: 30px;
+    text-align: center;
+    background-color: transparent;
+    border: 2px solid var(--white-color1);
+    color: var(--white-color1);
+    outline: none;
+    border-radius: 10px;
+    transition: border-color 0.3s, background-color 0.3s;
+  }
 
-#pin {
-  display: flex;
-  gap: 10px;
-}
+  .pin-input:hover {
+    border-color: var(--white-color1);
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 16px 2px var(--white-color1);
+  }
 
-.pin-input {
-  width: 60px;
-  height: 70px;
-  font-size: 30px;
-  text-align: center;
-  background-color: transparent;
-  border: 2px solid var(--white-color1);
-  color: var(--white-color1);
-  outline: none;
-  border-radius: 10px;
-  transition: border-color 0.3s, background-color 0.3s;
-}
+  .pin-input:focus {
+    border-color: var(--white-color2);
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 32px 4px var(--white-color1);
+  }
 
-.pin-input:hover {
-  border-color: var(--white-color1);
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 16px 2px var(--white-color1);
-}
+  #error-message {
+    margin-top: 20px;
+    color: var(--white-color2);
+    font-size: 20px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
 
-.pin-input:focus {
-  border-color: var(--white-color2);
-  background-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 0 32px 4px var(--white-color1);
-}
+  .shake {
+    animation: shake 0.5s;
+  }
 
-#error-message {
-  margin-top: 20px;
-  color: var(--white-color2);
-  font-size: 20px;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
 
-.shake {
-  animation: shake 0.5s;
-}
+  /* __________________ СТИЛИ МЕНЮ ПРИЛОЖНИЯ __________________ */
+  .navbar {
+    display: flex;
+    position: fixed;
+    top: var(--spacer);
+    left: var(--spacer);
+    background: rgba(255, 255, 255, 0.04);
+    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+    border-radius: var(--borderRadius);
+    padding: var(--spacer) 0;
+    box-shadow: 0 0 40px rgba(0,0,0,0.03);
+    height: calc(100vh - (var(--spacer)*2));
+    width: 3vw;
+    z-index: 3000;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
-}
+  .navbar.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-/* __________________ СТИЛИ МЕНЮ ПРИЛОЖЕНИЯ __________________ */
-.navbar {
-  display: flex;
-  position: fixed;
-  top: var(--spacer);
-  left: var(--spacer);
-  background: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
-  border-radius: var(--borderRadius);
-  padding: var(--spacer) 0;
-  box-shadow: 0 0 40px rgba(0,0,0,0.03);
-  height: calc(100vh - (var(--spacer)*2));
-  width: 3vw;
-  z-index: 3000;
-  opacity: 0;
-  transform: translateY(-20px);
-  transition: opacity 1s ease, transform 1s ease;
-}
+  .navbar__menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
 
-.navbar.fade-in {
-  opacity: 1;
-  transform: translateY(0);
-}
+  .navbar__item {
+    position: relative;
+    margin-bottom: 1vw;
+    height: var(--linkHeight);
+  }
 
-.navbar__menu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
+  .navbar__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--linkHeight);
+    width: calc(var(--spacer)*3);
+    margin: 0 auto;
+    color: var(--white-color1);
+    text-decoration: none;
+    transition: var(--transition);
 
-.navbar__item {
-  position: relative;
-  margin-bottom: 1vw;
-  height: var(--linkHeight);
-}
+    box-sizing: border-box;
+  }
 
-.navbar__link {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: var(--linkHeight);
-  width: calc(var(--spacer)*3);
-  margin: 0 auto;
-  color: var(--white-color1);
-  text-decoration: none;
-  transition: var(--transition);
-  box-sizing: border-box;
-}
+  .navbar__link i.material-symbols-outlined {
+    font-size: 1vw;;
+    color: var(--white-color2);
+  }
 
-.navbar__link i.material-symbols-outlined {
-  font-size: 1vw;;
-  color: var(--white-color2);
-}
-
-.navbar__link span {
-  position: absolute;
-  left: 80%;
-  white-space: nowrap;
-  margin-left: 1vw;
-  opacity: 0;
-  pointer-events: auto;
-  color: var(--white-color1);
-  padding: 0.3vw 0.5vw;
-  transform: translateX(0);
-  transition: var(--transition);
+  .navbar__link span {
+    position: absolute;
+    left: 80%;
+    white-space: nowrap;
+    margin-left: 1vw;
+    opacity: 0;
+    pointer-events: auto;
+    color: var(--white-color1);
+    padding: 0.3vw 0.5vw;
+    transform: translateX(0);
+    transition: var(--transition);
   font-size: 0.3vw;;
   background: rgba(255, 255, 255, 0.19);
   border-radius: 10px;
@@ -201,72 +202,73 @@ body, html {
   backdrop-filter: blur(13px);
   -webkit-backdrop-filter: blur(13px);
   border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .navbar__item:hover .navbar__link span {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+  }
+
+  .navbar__link:hover {
+    background: var(--white-color1);
+    border-radius: 10px;
+    height: 1.7vw;
+    width: 1.7vw;
+    height: var(--linkHeight);
+  }
+
+  .navbar__link i.material-symbols-outlined:hover {
+    color: var(--black-color);
 }
 
-.navbar__item:hover .navbar__link span {
-  opacity: 1;
-  transform: translateX(0);
-  pointer-events: auto;
-}
-
-.navbar__link:hover {
-  background: var(--white-color1);
-  border-radius: 10px;
-  height: 1.7vw;
-  width: 1.7vw;
-  height: var(--linkHeight);
-}
-
-.navbar__link i.material-symbols-outlined:hover {
-  color: var(--black-color);
-}
-
-/* __________________ СТИЛИ МОДАЛЬНЫХ ОКОН ОСНОВНЫХ СТРАНИЦ приложения __________________ */
-.modal {
-  display: none;
-  position: fixed;
-  top: 1vw;
-  left: calc(100vw - (var(--spacer)*95));
-  background: rgba(255, 255, 255, 0.04);
-  padding: 1vw;
-  border-radius: 0.4vw;
-  box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
-  height: calc(100vh - (var(--spacer)*2));
-  width: calc(100vw - (var(--spacer)*6));
-  color: black;
-  z-index: 2000;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
-}
-
+  /* __________________ СТИЛИ МОДАЛЬНЫХ ОКОН ОСНОВНЫХ СТРАНИЦ приложения __________________ */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 1vw;
+    left: calc(100vw - (var(--spacer)*95));
+    background: rgba(255, 255, 255, 0.04);
+    padding: 1vw;
+    border-radius: 0.4vw;
+    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+    height: calc(100vh - (var(--spacer)*2));
+    width: calc(100vw - (var(--spacer)*6));
+    color: black;
+    z-index: 2000;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  
+  /* Показываем содержимое, когда модальное окно отображено */
 .modal .modal-content {
   opacity: 1;
 }
 
-.modal.show {
-  display: block;
-  opacity: 1;
-  transform: translateY(0);
-}
+  .modal.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+  }
 
-.modal.hide {
-  display: block;
-  opacity: 0;
-  transform: translateY(20px);
-}
+  .modal.hide {
+    display: block;
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
-.fade-out {
-  opacity: 0;
-  transform: translateY(20px);
-}
+  .fade-out {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 
-.fade-in {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@keyframes fadeIn {
+  .fade-in {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
@@ -276,21 +278,22 @@ body, html {
   to { opacity: 0; }
 }
 
-h2 {
+  h2 {
   position: fixed;
-  top: 1vw;
-  left: 1vw;
-  font-size: 0.65vw;;
-  color: var(--white-color2);
+    top: 1vw;
+    left: 1vw;
+    font-size: 0.65vw;;
+    color: var(--white-color2);
 }
 
 p {
   position: fixed;
-  top: 1.85vw;
-  left: 1vw;
-  font-size: 0.4vw;;
-  color: var(--white-color2);
+    top: 1.85vw;
+    left: 1vw;
+    font-size: 0.4vw;;
+    color: var(--white-color2);
 }
+
 
 /* Модальное окно с прокруткой */
 .modalVNUT {
@@ -302,26 +305,28 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: black;
   z-index: 1000;
-  overflow: hidden; 
+  overflow: hidden; /* Отключаем общий скролл */
   box-sizing: border-box;
 }
 
+/* Внутренний контейнер с прокруткой */
 .modalVNUT-content {
-  padding: 0.5vh 2vh 0vw 0vw;
+  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
   height: 100%;
   width: 100%;
-  overflow-y: auto;
+  overflow-y: auto; /* Включаем вертикальную прокрутку */
   box-sizing: border-box;
 }
 
+/* Стилизация скроллбара */
 .modalVNUT-content::-webkit-scrollbar {
-  width: 4px;
+  width: 4px; /* Ширина скроллбара */
   background-color: var(--scrollbar-color);
 }
 
 .modalVNUT-content::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb-color);
-  border-radius: 10px;
+  background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
+  border-radius: 10px; /* Скругление */
 }
 
 .modalVNUT-content::-webkit-scrollbar-track {
@@ -347,14 +352,18 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.modalCONTEINER:not(:last-child) {
-  margin-bottom: 0.8vw; 
-}
-
 .modalCONTEINER:hover,
 .modalCONTEINER:focus {
   border: 1px solid var(--white-color2);
 }
+
+/* Отступы только между контейнерами */
+.modalCONTEINER:not(:last-child) {
+  margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
+}
+
+
+
 
 /* input с LABEL */
 .input-group{
@@ -401,12 +410,14 @@ p {
   font-weight: 700;
   background: none;
   
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 10px;
-  border: 1px solid rgba( 255, 255, 255, 0.18 );
-  color: var(--back-color);
+backdrop-filter: blur(20px);
+-webkit-backdrop-filter: blur(20px);
+border-radius: 10px;
+border: 1px solid rgba( 255, 255, 255, 0.18 );
+color: var(--back-color);
 }
+
+
 
 /* input ЗАГОЛОВОК без границ */
 .input-TYPE1 {
@@ -437,6 +448,8 @@ p {
   transform: scale(0.92);
 }
 
+
+
 /* выпадающий список (меню) */
 nav menuitem {
     position: relative;
@@ -463,7 +476,7 @@ nav > menu > menuitem {
 menu menuitem a {
     white-space: nowrap;
     display: block;
-    user-select: none;
+    user-select: none; /* Запрет выделения текста */
 }
 
 menuitem:hover > menu {
@@ -510,7 +523,7 @@ nav a:hover {
 nav a:active {
     box-shadow: 0 0 3px var(--white-color2);
     color: var(--white-color2);
-    transform: scale(0.95); 
+    transform: scale(0.95); /* Сжатие кнопки при нажатии */
     background: var(--color1);
 }
 
@@ -558,6 +571,12 @@ menuitem > menu > menuitem.hover > menu > menuitem {
     opacity: 1;
 }
 
+
+
+
+
+
+
 /* модальное окно для полей карточки проекта */
 .modalProjectCARD {
   display: flex;
@@ -598,6 +617,7 @@ menuitem > menu > menuitem.hover > menu > menuitem {
   background: none;
   gap: 1vw;
 }
+
 
 .button {
   height: 1.5vw;
@@ -649,6 +669,8 @@ menuitem > menu > menuitem.hover > menu > menuitem {
   background: var(--white-color2);
 }
 
+
+/* Контейнеры внутри модального окна */
 .modalCONTEINERpost {
   display: flex;
   position: relative;
@@ -672,9 +694,12 @@ menuitem > menu > menuitem.hover > menu > menuitem {
   border: 1px solid var(--white-color2);
 }
 
+/* Отступы только между контейнерами */
 .modalCONTEINERpost:not(:last-child) {
-  margin-bottom: 0.8vw;
+  margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
 }
+
+  
 </style>
 
   
