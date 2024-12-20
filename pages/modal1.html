@@ -1,10 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
+/* Оборачиваем всё в .modal1-container, чтобы изолировать стили от глобальных */
+.modal1-container {
+  font-family: "Comfortaa", sans-serif; 
+}
 
 /* Модальное окно с прокруткой */
-.modalVNUT {
+.modal1-container .modalVNUT {
   display: flex;
   position: fixed;
   background: none;
@@ -18,31 +24,36 @@
 }
 
 /* Внутренний контейнер с прокруткой */
-.modalVNUT-content {
+.modal1-container .modalVNUT-content {
+  position: relative;
   padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
   height: 100%;
   width: 100%;
   overflow-y: auto; /* Включаем вертикальную прокрутку */
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Стилизация скроллбара */
-.modalVNUT-content::-webkit-scrollbar {
+.modal1-container .modalVNUT-content::-webkit-scrollbar {
   width: 4px; /* Ширина скроллбара */
   background-color: var(--scrollbar-color);
 }
 
-.modalVNUT-content::-webkit-scrollbar-thumb {
+.modal1-container .modalVNUT-content::-webkit-scrollbar-thumb {
   background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
   border-radius: 10px; /* Скругление */
 }
 
-.modalVNUT-content::-webkit-scrollbar-track {
+.modal1-container .modalVNUT-content::-webkit-scrollbar-track {
   background-color: var(--scrollbar-color);
 }
 
 /* Контейнеры внутри модального окна */
-.modalCONTEINER {
+.modal1-container .modalCONTEINER {
   display: flex;
   position: relative;
   padding: 0.4vw;
@@ -60,26 +71,23 @@
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.modalCONTEINER:hover,
-.modalCONTEINER:focus {
+.modal1-container .modalCONTEINER:hover,
+.modal1-container .modalCONTEINER:focus {
   border: 1px solid var(--white-color2);
 }
 
 /* Отступы только между контейнерами */
-.modalCONTEINER:not(:last-child) {
-  margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
+.modal1-container .modalCONTEINER:not(:last-child) {
+  margin-bottom: 0.8vw;
 }
 
-
-
-
 /* input с LABEL */
-.input-group{
+.modal1-container .input-group {
   position: relative;
   font-family: "Comfortaa", sans-serif;
 }
 
-.input-group label {
+.modal1-container .input-group label {
   background: none;
   color: rgba(255, 255, 255, 0.18);
   position: absolute;
@@ -93,7 +101,7 @@
   transition: all 0.3s;
 }
 
-.input-group input {
+.modal1-container .input-group input {
   padding: 0.4vw 0.4vw;
   width: 3vw;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -105,30 +113,27 @@
   border-radius: 10px;
 }
 
-.input-group input:hover,
-.input-group input:focus {
+.modal1-container .input-group input:hover,
+.modal1-container .input-group input:focus {
   border: 1px solid var(--white-color2);
 }
 
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label {
+.modal1-container .input-group input:focus + label,
+.modal1-container .input-group input:not(:placeholder-shown) + label {
   top: 0;
   font-size: 0.4vw;
   padding: 0 0.4vw;
   font-weight: 700;
   background: none;
-  
-backdrop-filter: blur(20px);
--webkit-backdrop-filter: blur(20px);
-border-radius: 10px;
-border: 1px solid rgba( 255, 255, 255, 0.18 );
-color: var(--white-color2);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--white-color2);
 }
 
-
-
 /* input ЗАГОЛОВОК без границ */
-.input-TYPE1 {
+.modal1-container .input-TYPE1 {
   position: relative;
   font-family: "Comfortaa", sans-serif;
   width: 2vw;
@@ -141,25 +146,18 @@ color: var(--white-color2);
 }
 
 /* иконка для контейнера */
-.iconTYPE1 {
+.modal1-container .iconTYPE1 {
   color: rgba(255, 255, 255, 0.18);
   font-size: 1vw;
   z-index: 1200;
 }
 
-.iconTYPE1:hover {
+.modal1-container .iconTYPE1:hover {
   color: var(--white-color2);
-  transform: font-size(0.6vw);
 }
-
-.iconTYPE1:active {
-  transform: scale(0.92);
-}
-
-
 
 /* выпадающий список (меню) */
-nav menuitem {
+.modal1-container nav menuitem {
     position: relative;
     display: block;
     opacity: 0;
@@ -167,47 +165,47 @@ nav menuitem {
     z-index: 10000;   
 }
 
-nav menuitem > menu {
+.modal1-container nav menuitem > menu {
     position: absolute;
     pointer-events: none;
 }
 
-nav > menu {
+.modal1-container nav > menu {
     display: flex;
 }
 
-nav > menu > menuitem {
+.modal1-container nav > menu > menuitem {
     pointer-events: all;
     opacity: 1;
 }
 
-menu menuitem a {
+.modal1-container menu menuitem a {
     white-space: nowrap;
     display: block;
     user-select: none; /* Запрет выделения текста */
 }
 
-menuitem:hover > menu {
+.modal1-container menuitem:hover > menu {
     pointer-events: initial;
 }
 
-menuitem:hover > menu > menuitem,
-menu:hover > menuitem {
+.modal1-container menuitem:hover > menu > menuitem,
+.modal1-container menu:hover > menuitem {
     opacity: 1;
 }
 
-nav > menu > menuitem menuitem menu {
+.modal1-container nav > menu > menuitem menuitem menu {
     transform: translateX(100%);
     top: 0;
     right: 0;
 }
 
-nav {
+.modal1-container nav {
     margin-top: 10px;
     margin-left: 10px;
 }
 
-nav a {
+.modal1-container nav a {
     background: var(--color1);
     color: var(--white-color2);
     min-width: 190px;
@@ -222,20 +220,20 @@ nav a {
     height: 40px;
 }
 
-nav a:hover {
+.modal1-container nav a:hover {
     color: var(--color1);
     background: var(--white-color2);
     box-shadow: 0 0 6px var(--white-color2);
 }
 
-nav a:active {
+.modal1-container nav a:active {
     box-shadow: 0 0 3px var(--white-color2);
     color: var(--white-color2);
-    transform: scale(0.95); /* Сжатие кнопки при нажатии */
+    transform: scale(0.95);
     background: var(--color1);
 }
 
-nav > menu > menuitem > a + menu:after {
+.modal1-container nav > menu > menuitem > a + menu:after {
     content: '';
     position: absolute;
     border: 6px solid transparent;
@@ -244,7 +242,7 @@ nav > menu > menuitem > a + menu:after {
     top: -32px;
 }
 
-nav menuitem > menu > menuitem > a + menu:after {
+.modal1-container nav menuitem > menu > menuitem > a + menu:after {
     content: '';
     position: absolute;
     border: 6px solid transparent;
@@ -254,37 +252,78 @@ nav menuitem > menu > menuitem > a + menu:after {
     transition: opacity 0.3, transform 0s;
 }
 
-nav > menu > menuitem > menu > menuitem {
+.modal1-container nav > menu > menuitem > menu > menuitem {
     transition: transform 0.3s, opacity 0.3s;
     transform: translateY(150%);
     opacity: 0;
 }
 
-nav > menu > menuitem:hover > menu > menuitem,
-nav > menu > menuitem.hover > menu > menuitem {
+.modal1-container nav > menu > menuitem:hover > menu > menuitem,
+.modal1-container nav > menu > menuitem.hover > menu > menuitem {
     transform: translateY(0%);
     opacity: 1;
-    
 }
 
-menuitem > menu > menuitem > menu > menuitem {
+.modal1-container menuitem > menu > menuitem > menu > menuitem {
     transition: transform 0.3s, opacity 0.3s;
     transform: translateX(195px) translateY(0%);
     opacity: 0;
 }
 
-menuitem > menu > menuitem:hover > menu > menuitem,
-menuitem > menu > menuitem.hover > menu > menuitem {
+.modal1-container menuitem > menu > menuitem:hover > menu > menuitem,
+.modal1-container menuitem > menu > menuitem.hover > menu > menuitem {
     transform: translateX(0) translateY(0%);
     opacity: 1;
 }
-  
+
+/* Лоадер */
+.modal1-container .lines-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+  margin-top: 10vh; /* чтобы лоадер был заметен в центре окна */
+}
+
+.modal1-container .line {
+  width: 10px;
+  height: 70px;
+  background-color: #ffffff;
+  animation: bounce 1.5s infinite ease-in-out;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); 
+  border-radius: 10px;
+}
+
+.modal1-container .line:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.modal1-container .line:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.modal1-container .line:nth-child(5) {
+  animation-delay: 1.2s;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-30px); }
+  60% { transform: translateY(-15px); }
+}
+
+.modal1-container .lines-loader.hide {
+  opacity: 0; 
+  pointer-events: none;
+}
 </style>
 </head>
-  
 <body>
+<div class="modal1-container">
   
- <nav>
+  <nav>
     <menu>
         <menuitem id="demo1" style="left: 17.6vw">
             <a>status</a>
@@ -300,7 +339,7 @@ menuitem > menu > menuitem.hover > menu > menuitem {
             </menu>
         </menuitem>
     </menu>
-</nav>
+  </nav>
 
   <nav>
     <menu>
@@ -314,8 +353,8 @@ menuitem > menu > menuitem.hover > menu > menuitem {
             </menu>
         </menuitem>
     </menu>
-</nav>
-  
+  </nav>
+
   <nav>
     <menu>
         <menuitem id="demo3" style="left: 52.1vw">
@@ -326,82 +365,29 @@ menuitem > menu > menuitem.hover > menu > menuitem {
             </menu>
         </menuitem>
     </menu>
-</nav>
-  
+  </nav>
+
   <!-- модальное окно проектов -->
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 7vw); width: 92vw;">
     <div class="modalVNUT-content">
-      <!-- Контент внутри нижнего окна -->
       
+      <!-- Лоадер, который отображается до появления контента -->
+      <div class="lines-loader">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
       
-      <div id="modalCONTEINER" class="modalCONTEINER">
-        
-        <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw;">developer_guide</i></span>
-        <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw; margin-left: 0.25vw;">data_table</i></span>
-        
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
-            <input type="text" class="input" placeholder=" " style="width: 4.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="fffff">project ID</label>
-          </div>
-        
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 11vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="fffff">project name</label>
-          </div>
-        
-           <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 7.4vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="fffff">status</label>
-          </div>
-        
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="fffff">contract amount</label>
-          </div>
-        
-         <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="fffff">contract costs</label>
-          </div>
-        
-        <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="fffff">contract profit</label>
-          </div>
-        
-        <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 3vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="fffff">profit %</label>
-          </div>
-        
-           <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="fffff">company seller</label>
-          </div>
-        
-        <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="fffff">TIN seller</label>
-          </div>
-        
-        <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="fffff">buyer company</label>
-          </div>
-        
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="fffff" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="fffff">TIN buyer</label>
-          </div>
-        
-      </div>         
+      <!-- Контент будет загружен сюда скриптом Index.html и заменит лоадер -->
+      <div id="modalCONTEINER" class="modalCONTEINER" style="display:none;">
+        <!-- Здесь будет подгружаемый контент (заменится скриптом после скрытия лоадера) -->
+      </div>
       
-
-      
-      
-      <!-- Добавлен еще контент -->
     </div>
   </div>
 
-  </body>
-</html> 
+</div>
+</body>
+</html>
