@@ -317,10 +317,24 @@
       color: red;
     }
 
-    /* Удалите глобальные стили для h2 и p */
+/* Стили фоновой анимации */
+canvas#canvas {
+  position: fixed; /* Фиксированное позиционирование для покрытия всего экрана */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Разместить канвас позади всех остальных элементов */
+  background-color: #121212; /* Фоновый цвет, совпадающий с основным */
+}
+    
   </style>
 </head>
 <body>
+
+  <!-- анимация на фон -->
+  <canvas id="canvas"></canvas>
+  
   <div id="app">
     <!-- РАЗМЕТКА для полей пин-кода -->
     <div id="pin-wrapper">
@@ -620,6 +634,190 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         });
       });
     });
+
+
+
+
+
+    /* Интеграция анимации фона */
+  (function() {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const numPointsX = 50;
+    const numPointsY = 50;
+    const pointSize = 10;
+    const gap = 5;
+    const displayPercent1 = 0.02;
+    const displayPercent2 = 0.006;
+    const speedFactor = 0.07;
+    const borderRadius = 2; // Радиус скругления углов квадратных точек
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      initializePoints();
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas(); // Инициализация размеров канваса
+
+    let points = [];
+    let startX, startY;
+
+    function Point(x, y) {
+      this.x = x;
+      this.y = y;
+      this.isLayer1 = false;
+      this.isLayer2 = false;
+      this.isAnimating = false;
+      this.targetX = x;
+      this.targetY = y;
+      this.velX = 0;
+      this.velY = 0;
+    }
+
+    Point.prototype.draw = function() {
+      ctx.fillStyle = this.isLayer1 ? '#41413E' : this.isLayer2 ? '#D1D5D0' : 'rgba(0,0,0,0)';
+      ctx.beginPath();
+      // Начинаем с верхнего левого угла
+      ctx.moveTo(this.x + borderRadius, this.y);
+      // Рисуем горизонтальную линию вправо
+      ctx.lineTo(this.x + pointSize - borderRadius, this.y);
+      // Скругляем угол
+      ctx.arcTo(this.x + pointSize, this.y, this.x + pointSize, this.y + borderRadius, borderRadius);
+      // Рисуем вертикальную линию вниз
+      ctx.lineTo(this.x + pointSize, this.y + pointSize - borderRadius);
+      // Скругляем угол
+      ctx.arcTo(this.x + pointSize, this.y + pointSize, this.x + pointSize - borderRadius, this.y + pointSize, borderRadius);
+      // Рисуем горизонтальную линию влево
+      ctx.lineTo(this.x + borderRadius, this.y + pointSize);
+      // Скругляем угол
+      ctx.arcTo(this.x, this.y + pointSize, this.x, this.y + pointSize - borderRadius, borderRadius);
+      // Рисуем вертикальную линию вверх
+      ctx.lineTo(this.x, this.y + borderRadius);
+      // Скругляем угол
+      ctx.arcTo(this.x, this.y, this.x + borderRadius, this.y, borderRadius);
+      // Заканчиваем путь
+      ctx.closePath();
+      // Закрашиваем фигуру
+      ctx.fill();
+    };
+
+    function initializePoints() {
+      points = [];
+      startX = (canvas.width - numPointsX * (pointSize + gap) + gap) / 2;
+      startY = (canvas.height - numPointsY * (pointSize + gap) + gap) / 2;
+
+      for (let x = 0; x < numPointsX; x++) {
+        for (let y = 0; y < numPointsY; y++) {
+          let posX = startX + x * (pointSize + gap);
+          let posY = startY + y * (pointSize + gap);
+          points.push(new Point(posX, posY));
+        }
+      }
+
+      let activePoints1 = Math.floor(numPointsX * numPointsY * displayPercent1);
+      let activePoints2 = Math.floor(numPointsX * numPointsY * displayPercent2);
+
+      while (activePoints1 > 0) {
+        let index = Math.floor(Math.random() * points.length);
+        if (!points[index].isLayer1 && !points[index].isLayer2) {
+          points[index].isLayer1 = true;
+          activePoints1--;
+        }
+      }
+
+      while (activePoints2 > 0) {
+        let index = Math.floor(Math.random() * points.length);
+        if (!points[index].isLayer1 && !points[index].isLayer2) {
+          points[index].isLayer2 = true;
+          activePoints2--;
+        }
+      }
+    }
+
+    function updatePoints() {
+      points.forEach(point => {
+        if (point.isLayer2 && !point.isAnimating && Math.random() < 0.005) {
+          point.isAnimating = true;
+          let direction = Math.floor(Math.random() * 4);
+          let distance = (pointSize + gap) * (Math.floor(Math.random() * 3) + 1); // 1 to 3 cells
+          point.targetX = point.x;
+          point.targetY = point.y;
+
+          switch (direction) {
+            case 0: // up
+              if (point.y - distance >= startY) {
+                point.targetY -= distance;
+              }
+              break;
+            case 1: // down
+              if (point.y + distance <= startY + (numPointsY - 1) * (pointSize + gap)) {
+                point.targetY += distance;
+              }
+              break;
+            case 2: // left
+              if (point.x - distance >= startX) {
+                point.targetX -= distance;
+              }
+              break;
+            case 3: // right
+              if (point.x + distance <= startX + (numPointsX - 1) * (pointSize + gap)) {
+                point.targetX += distance;
+              }
+              break;
+          }
+
+          if (point.targetX !== point.x || point.targetY !== point.y) {
+            point.velX = (point.targetX - point.x) * speedFactor;
+            point.velY = (point.targetY - point.y) * speedFactor;
+          } else {
+            point.isAnimating = false;
+          }
+        }
+
+        if (point.isAnimating) {
+          if (Math.abs(point.targetX - point.x) > Math.abs(point.velX)) {
+            point.x += point.velX;
+          } else {
+            point.x = point.targetX;
+          }
+
+          if (Math.abs(point.targetY - point.y) > Math.abs(point.velY)) {
+            point.y += point.velY;
+          } else {
+            point.y = point.targetY;
+          }
+
+          if (point.x === point.targetX && point.y === point.targetY) {
+            point.isAnimating = false;
+          }
+        }
+      });
+    }
+
+    function drawPoints() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      points.forEach(point => {
+        point.draw();
+      });
+    }
+
+    function animate() {
+      updatePoints();
+      drawPoints();
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    function initAnimation() {
+      initializePoints();
+    }
+
+    initAnimation();
+  })();
+    
   </script>
 </body>
 </html>
