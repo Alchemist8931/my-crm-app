@@ -206,8 +206,8 @@
     .totalmodal {
       position: fixed;
       top: 0;
-      right: 0;
-      width: 70vw; /* Настройте по необходимости */
+      left: calc(var(--spacer) + 3vw); /* Отступ слева равен ширине navbar + spacer */
+      width: calc(100vw - var(--spacer)*2 - 3vw); /* Общая ширина минус отступы и ширина navbar */
       height: 100vh;
       background-color: rgba(0, 0, 0, 0.8); /* Полупрозрачный фон */
       display: flex;
@@ -333,27 +333,27 @@
     <!-- РАЗМЕТКА МЕНЮ -->
     <nav class="navbar" id="success-modal">
       <ul class="navbar__menu">
-        <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal1')">
+        <li class="navbar__item" data-levels="A,B,C,D" data-modal="modal1">
           <a href="#" class="navbar__link">
             <i class="material-symbols-outlined">analytics</i><span>ELABORATION</span>
           </a>
         </li>
-        <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal2')">
+        <li class="navbar__item" data-levels="A,B,C,D" data-modal="modal2">
           <a href="#" class="navbar__link">
             <i class="material-symbols-outlined">finance_mode</i><span>ANALYTICS</span>
           </a>
         </li>
-        <li class="navbar__item" data-levels="A,B" onclick="openModal('modal3')">
+        <li class="navbar__item" data-levels="A,B" data-modal="modal3">
           <a href="#" class="navbar__link">
             <i class="material-symbols-outlined">data_table</i><span>TASKS</span>
           </a>
         </li>
-        <li class="navbar__item" data-levels="A,B" onclick="openModal('modal4')">
+        <li class="navbar__item" data-levels="A,B" data-modal="modal4">
           <a href="#" class="navbar__link">
             <i class="material-symbols-outlined">full_stacked_bar_chart</i><span>in_development</span>
           </a>
         </li>
-        <li class="navbar__item" data-levels="A,B" onclick="openModal('modal5')">
+        <li class="navbar__item" data-levels="A,B" data-modal="modal5">
           <a href="#" class="navbar__link">
             <i class="material-symbols-outlined">full_stacked_bar_chart</i><span>in_development</span>
           </a>
@@ -548,12 +548,7 @@
       }
     });
 
-    // Делаем функции глобально доступными
-    window.openModal = openModal;
-    window.fadeInModal = fadeInModal;
-    window.fadeOutModal = fadeOutModal;
-
-    // Определяем fadeInModal и fadeOutModal, если они используются
+    // Определяем функции fadeInModal и fadeOutModal, если они используются
     function fadeInModal(modal) {
       modal.classList.add('show');
       modal.classList.remove('hide');
@@ -567,6 +562,23 @@
         if (callback) callback();
       }, 500);
     }
+
+    // Делаем функции глобально доступными
+    window.openModal = openModal;
+    window.fadeInModal = fadeInModal;
+    window.fadeOutModal = fadeOutModal;
+
+    // Добавляем обработчики событий для пунктов меню
+    document.addEventListener('DOMContentLoaded', () => {
+      const menuItems = document.querySelectorAll('.navbar__item');
+      menuItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault(); // Предотвращаем переход по ссылке
+          const modalId = item.getAttribute('data-modal');
+          openModal(modalId);
+        });
+      });
+    });
   </script>
 </body>
 </html>
