@@ -278,7 +278,7 @@
     }
 
     /* Контейнер для подгружаемого контента */
-    .modal-content {
+    .content-area {
       opacity: 0;
       transition: opacity 0.5s ease;
       width: 100%;
@@ -288,7 +288,7 @@
       z-index: 1; /* Под прелоадером */
     }
 
-    .modal-content.visible {
+    .content-area.visible {
       opacity: 1;
     }
 
@@ -363,16 +363,19 @@
     <!-- МОДАЛЬНОЕ ОКНО totalmodal -->
     <div id="totalmodal" class="totalmodal">
       <div class="totalmodal-content">
-        <!-- Прелоадер -->
-        <div class="lines-loader">
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-        </div>
         <!-- Контейнер для подгружаемого контента -->
-        <div id="modalContent" class="modal-content"></div>
+        <div id="modalContent" class="modal-content">
+          <!-- Прелоадер -->
+          <div class="lines-loader">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
+          <!-- Контейнер для контента -->
+          <div class="content-area"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -381,7 +384,7 @@
     import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
     const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
+    const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Замените на ваш ключ
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     const pinInputs = document.querySelectorAll('.pin-input');
@@ -486,9 +489,13 @@
       try {
         // Показываем прелоадер
         const loader = modalContent.querySelector('.lines-loader');
-        loader.classList.add('visible'); // Показываем прелоадер
+        if (loader) {
+          loader.classList.add('visible'); // Показываем прелоадер
+        } else {
+          console.warn('Прелоадер не найден внутри modalContent.');
+        }
 
-        // Показать totalmodal
+        // Показываем totalmodal
         totalmodal.classList.add('show');
 
         // Начинаем загрузку контента
@@ -506,29 +513,34 @@
         console.log("Контент загружен");
 
         // Вставляем загруженный контент
-        modalContent.innerHTML = html;
+        const contentArea = modalContent.querySelector('.content-area');
+        if (contentArea) {
+          contentArea.innerHTML = html;
+          // Показываем контент плавно
+          contentArea.classList.add('visible');
+        } else {
+          console.warn('Контейнер .content-area не найден внутри modalContent.');
+        }
 
         // Скрываем прелоадер плавно
-        loader.classList.remove('visible');
-
-        // Показываем контент плавно
-        const contentDiv = modalContent.querySelector('.modal-content');
-        if (contentDiv) {
-          contentDiv.classList.add('visible');
-        } else {
-          // Если класс 'modal-content' отсутствует, просто добавляем 'visible'
-          modalContent.classList.add('visible');
+        if (loader) {
+          loader.classList.remove('visible');
         }
 
       } catch (e) {
         console.error(e);
         // Скрываем прелоадер
         const loader = modalContent.querySelector('.lines-loader');
-        loader.classList.remove('visible');
+        if (loader) {
+          loader.classList.remove('visible');
+        }
 
         // Показываем сообщение об ошибке
-        modalContent.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
-        modalContent.classList.add('visible');
+        const contentArea = modalContent.querySelector('.content-area');
+        if (contentArea) {
+          contentArea.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
+          contentArea.classList.add('visible');
+        }
       }
     }
 
@@ -558,11 +570,9 @@
       if (!currentModal) return;
 
       // Скрываем контент плавно
-      const contentDiv = modalContent.querySelector('.modal-content');
-      if (contentDiv) {
-        contentDiv.classList.remove('visible');
-      } else {
-        modalContent.classList.remove('visible');
+      const contentArea = modalContent.querySelector('.content-area');
+      if (contentArea) {
+        contentArea.classList.remove('visible');
       }
 
       // Ждём окончания анимации (0.5s)
@@ -572,8 +582,10 @@
       totalmodal.classList.remove('show');
 
       // Очищаем содержимое модального окна
-      modalContent.innerHTML = '';
-      modalContent.classList.remove('visible');
+      if (contentArea) {
+        contentArea.innerHTML = '';
+        contentArea.classList.remove('visible');
+      }
 
       currentModal = null;
     }
