@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
 <style>
+
   :root {
     --black-color: #121212;
     --white-color1: #F4F5F0;
@@ -49,7 +50,7 @@
     overflow: hidden;
   }
   
-  /*функция фильтрации данных*/
+  /* __________________ СТИЛИ для полей ПИН-КОДА __________________ */
   #pin-wrapper {
     transition: opacity 0.5s ease, transform 0.5s ease;
   }
@@ -104,6 +105,7 @@
     100% { transform: translateX(0); }
   }
 
+  /* __________________ СТИЛИ МЕНЮ ПРИЛОЖНИЯ __________________ */
   .navbar {
     display: flex;
     position: fixed;
@@ -188,17 +190,16 @@
   .navbar__link:hover {
     background: var(--white-color1);
     border-radius: 10px;
-    min-height: 1.7vw;
-    min-width: 1.7vw;
+    height: 1.7vw;
+    width: 1.7vw;
     height: var(--linkHeight);
-    width: var(--linkHeight);
   }
 
   .navbar__link i.material-symbols-outlined:hover {
     color: var(--black-color);
 }
 
-  /*ключи для рендеринга карточек с данными*/
+  /* __________________ СТИЛИ МОДАЛЬНЫХ ОКОН ОСНОВНЫХ СТРАНИЦ приложения __________________ */
   .modal {
     display: none;
     position: fixed;
@@ -215,7 +216,6 @@
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.5s ease, transform 0.5s ease;
-    overflow-y: auto;
   }
 
   .modal.show {
@@ -241,21 +241,22 @@
   }
 
   h2 {
-    position: fixed;
+  position: fixed;
     top: 1vw;
     left: 1vw;
     font-size: 0.65vw;;
     color: var(--white-color2);
-  }
+}
 
-  p {
-    position: fixed;
+p {
+  position: fixed;
     top: 1.85vw;
     left: 1vw;
     font-size: 0.4vw;;
     color: var(--white-color2);
-  }
+}
 
+/* __________________ СТИЛИ ИКОНОК __________________ */
   .material-symbols-outlined {
     font-variation-settings:
     'FILL' 0,
@@ -263,77 +264,6 @@
     'GRAD' 0,
     'opsz' 24
   }
-
-  /*Стили для блока загрузки подгружаемых html*/
-  .modal-content {
-    margin-top: 4vw; /* отодвигаем ниже заголовка и описания */
-    /* Можно добавить стили для скрытия при загрузке */
-    display: none;
-  }
-
-  /* Загрузчик */
-.lines-loader {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  opacity: 1;
-  transition: opacity 0.5s ease;
-}
-
-.line {
-  width: 10px;
-  height: 70px;
-  background-color: #ffffff;
-  animation: bounce 1.5s infinite ease-in-out;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  border-radius: 10px;
-}
-
-.line:nth-child(2) { animation-delay: 0.3s; }
-.line:nth-child(3) { animation-delay: 0.6s; }
-.line:nth-child(5) { animation-delay: 1.2s; }
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-30px);
-  }
-  60% {
-    transform: translateY(-15px);
-  }
-}
-
-/* Скрытие загрузчика */
-.lines-loader.hide {
-  opacity: 0; 
-  pointer-events: none;
-}
-
-  .modal-content .lines-loader {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.modal-content .show-content {
-  display: block;
-  opacity: 1;
-  transition: opacity 0.5s ease-in-out;
-}
-
-/* Плавное появление контента */
-.modal-content.fade-in {
-  opacity: 0;
-  transition: opacity 0.5s ease;
-}
-.modal-content.fade-in.show-content {
-  opacity: 1;
-}
-
-  
 </style>
 </head>
 <body>
@@ -389,72 +319,22 @@
   <div class="modal" id="modal1">
     <h2>ELABORATION</h2>
     <p>проекты компании</p>
-    <!--контейнер для подгружаемого контента modal1-->
-    <div class="modal-content fade-in" id="modal1-content">
-      <div class="lines-loader">
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
   </div>
-    </div>
-  </div>
-
   <div class="modal" id="modal2">
     <h2>ANALYTICS</h2>
     <p>текущая аналитика</p>
-    <!--контейнер для подгружаемого контента modal2-->
-    <div class="modal-content fade-in" id="modal2-content">
-      <div class="lines-loader">
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-    </div>
   </div>
-
   <div class="modal" id="modal3">
     <h2>TASKS</h2>
     <p>проектные задачи</p>
-    <!--контейнер для подгружаемого контента modal3-->
-    <div class="modal-content fade-in" id="modal3-content">
-      <div class="lines-loader">
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-    </div>
   </div>
-
   <div class="modal" id="modal4">
     <h2>in_development</h2>
     <p>страница в разработке</p>
-    <!--контейнер для подгружаемого контента modal4-->
-    <div class="modal-content fade-in" id="modal4-content">
-      <div class="lines-loader">
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-    </div>
   </div>
-
   <div class="modal" id="modal5">
     <h2>in_development</h2>
     <p>страница в разработке</p>
-    <!--контейнер для подгружаемого контента modal5-->
-    <div class="modal-content fade-in" id="modal5-content">
-      <div class="lines-loader">
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-    </div>
   </div>
 </div>
 
@@ -548,59 +428,6 @@ function filterMenuByAccess(accessLevel) {
   });
 }
 
-//функция загрузки HTML контента в конкретный контейнер
-async function loadModalContent(modalId) {
-
-  contentDiv.innerHTML = `
-  <div class="lines-loader">
-    <div class="line"></div>
-    <div class="line"></div>
-    <div class="line"></div>
-    <div class="line"></div>
-    <div class="line"></div>
-  </div>
-`;
-  
-  const fileName = modalId + '.html';
-  const url = `./pages/${fileName}?t=${Date.now()}`;
-  console.log("Загружаемый путь:", url);
-
-  const contentDiv = document.getElementById(modalId + '-content');
-  if (!contentDiv) return;
-
-  const loader = contentDiv.querySelector('.lines-loader');
-
-  // Показываем лоадер
-  contentDiv.style.display = 'flex';
-  loader.classList.remove('hide');
-
-  try {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error('Ошибка загрузки контента');
-
-    const html = await response.text();
-
-    // Ждём, чтобы показать анимацию загрузки
-    await new Promise(resolve => setTimeout(resolve, 1500));
-
-    // Убираем лоадер
-    loader.classList.add('hide');
-
-    // Отображаем контент
-    contentDiv.innerHTML = html;
-    contentDiv.classList.add('show-content'); // Показываем содержимое
-    contentDiv.style.display = 'block';
-  } catch (e) {
-    console.error(e);
-    loader.classList.add('hide'); // Убираем лоадер в случае ошибки
-    contentDiv.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
-  }
-}
-
-
-
-
-
 // Функции работы с модальными окнами
 function fadeInModal(modal) {
   modal.classList.add('show');
@@ -617,22 +444,18 @@ function fadeOutModal(modal, callback) {
 }
 
 function openModal(modalId) {
-    const newModal = document.getElementById(modalId);
-    if (!newModal) return;
+  const newModal = document.getElementById(modalId);
+  if (!newModal) return;
 
-    if (currentModal && currentModal !== newModal) {
-        fadeOutModal(currentModal, () => {
-            currentModal = newModal;
-            fadeInModal(newModal);
-            loadModalContent(modalId);
-        });
-    } else if (!currentModal) {
-        currentModal = newModal;
-        fadeInModal(newModal);
-        loadModalContent(modalId);
-    }
+  if (currentModal && currentModal !== newModal) {
+    fadeOutModal(currentModal, () => {
+      fadeInModal(newModal);
+    });
+  } else if (!currentModal) {
+    fadeInModal(newModal);
+  }
+  currentModal = newModal;
 }
-
 
 // Делаем функции глобально доступными
 window.openModal = openModal;
