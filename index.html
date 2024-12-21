@@ -532,7 +532,7 @@
       // Если уже открыта другая модалка, просто загрузим новый контент
       if (currentModal && currentModal !== modalId) {
         // Здесь можно добавить логику для закрытия текущей модалки перед открытием новой
-        
+        // Например, скрыть текущую модалку и показать новую
       }
 
       loadModalContent(modalId);
@@ -547,7 +547,26 @@
         modalContent.classList.remove('hide');
       }
     });
+
+    // Делаем функции глобально доступными
+    window.openModal = openModal;
+    window.fadeInModal = fadeInModal;
+    window.fadeOutModal = fadeOutModal;
+
+    // Определяем fadeInModal и fadeOutModal, если они используются
+    function fadeInModal(modal) {
+      modal.classList.add('show');
+      modal.classList.remove('hide');
+    }
+
+    function fadeOutModal(modal, callback) {
+      modal.classList.add('hide');
+      setTimeout(() => {
+        modal.classList.remove('show');
+        modal.classList.remove('hide');
+        if (callback) callback();
+      }, 500);
+    }
   </script>
 </body>
 </html>
-
