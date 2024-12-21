@@ -1,467 +1,552 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Авторизация по пин-коду</title>
-<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
-<style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Авторизация по пин-коду</title>
+  <!-- Подключение шрифтов -->
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+  <style>
+    /* Основные переменные CSS */
+    :root {
+      --black-color: #121212;
+      --white-color1: #F4F5F0;
+      --white-color2: #D1D5D0;
+      --borderRadius: 10px;
+      --spacer: 1vw;
+      --linkHeight: 3.5rem;
+      --timing: 250ms;
+      --transition: 250ms ease all;
+    }
 
-  :root {
-    --black-color: #121212;
-    --white-color1: #F4F5F0;
-    --white-color2: #D1D5D0;
-    --borderRadius: 10px;
-    --spacer: 1vw;
-    --linkHeight: 3.5rem;
-    --timing: 250ms;
-    --transition: 250ms ease all;
-  }
+    /* Общие стили */
+    * {
+      box-sizing: border-box;
+      font-family: "Comfortaa", sans-serif;
+      margin: 0;
+      padding: 0;
+      font-optical-sizing: auto;
+    }
 
-  * {
-    box-sizing: border-box;
-    font-family: "Comfortaa", sans-serif;
-    margin: 0;
-    padding: 0;
-    font-optical-sizing: auto;
-  }
+    body, html {
+      margin: 0;
+      padding: 0;
+      background-color: var(--black-color);
+      color: var(--white-color1);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-  body, html {
-    margin: 0;
-    padding: 0;
-    background-color: var(--black-color);
-    color: var(--white-color1);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    #app {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      height: 100vh;
+      width: 100vw;
+      position: relative;
+      overflow: hidden;
+    }
 
-  #app {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    height: 100vh;
-    width: 100vw;
-    position: relative;
-    overflow: hidden;
-  }
-  
-  /* __________________ СТИЛИ для полей ПИН-КОДА __________________ */
-  #pin-wrapper {
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
+    /* Стили для полей PIN-кода */
+    #pin-wrapper {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
 
-  #pin {
-    display: flex;
-    gap: 10px;
-  }
+    #pin {
+      display: flex;
+      gap: 10px;
+    }
 
-  .pin-input {
-    width: 60px;
-    height: 70px;
-    font-size: 30px;
-    text-align: center;
-    background-color: transparent;
-    border: 2px solid var(--white-color1);
-    color: var(--white-color1);
-    outline: none;
-    border-radius: 10px;
-    transition: border-color 0.3s, background-color 0.3s;
-  }
+    .pin-input {
+      width: 60px;
+      height: 70px;
+      font-size: 30px;
+      text-align: center;
+      background-color: transparent;
+      border: 2px solid var(--white-color1);
+      color: var(--white-color1);
+      outline: none;
+      border-radius: 10px;
+      transition: border-color 0.3s, background-color 0.3s;
+    }
 
-  .pin-input:hover {
-    border-color: var(--white-color1);
-    background-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 16px 2px var(--white-color1);
-  }
+    .pin-input:hover {
+      border-color: var(--white-color1);
+      background-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 16px 2px var(--white-color1);
+    }
 
-  .pin-input:focus {
-    border-color: var(--white-color2);
-    background-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 0 32px 4px var(--white-color1);
-  }
+    .pin-input:focus {
+      border-color: var(--white-color2);
+      background-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 32px 4px var(--white-color1);
+    }
 
-  #error-message {
-    margin-top: 20px;
-    color: var(--white-color2);
-    font-size: 20px;
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
+    #error-message {
+      margin-top: 20px;
+      color: var(--white-color2);
+      font-size: 20px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
 
-  .shake {
-    animation: shake 0.5s;
-  }
+    .shake {
+      animation: shake 0.5s;
+    }
 
-  @keyframes shake {
-    0% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    50% { transform: translateX(5px); }
-    75% { transform: translateX(-5px); }
-    100% { transform: translateX(0); }
-  }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
 
-  /* __________________ СТИЛИ МЕНЮ ПРИЛОЖНИЯ __________________ */
-  .navbar {
-    display: flex;
-    position: fixed;
-    top: var(--spacer);
-    left: var(--spacer);
-    background: rgba(255, 255, 255, 0.04);
-    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
-    border-radius: var(--borderRadius);
-    padding: var(--spacer) 0;
-    box-shadow: 0 0 40px rgba(0,0,0,0.03);
-    height: calc(100vh - (var(--spacer)*2));
-    width: 3vw;
-    z-index: 3000;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 1s ease, transform 1s ease;
-  }
+    /* Стили меню приложения */
+    .navbar {
+      display: flex;
+      position: fixed;
+      top: var(--spacer);
+      left: var(--spacer);
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+      border-radius: var(--borderRadius);
+      padding: var(--spacer) 0;
+      box-shadow: 0 0 40px rgba(0,0,0,0.03);
+      height: calc(100vh - (var(--spacer)*2));
+      width: 3vw;
+      z-index: 3000;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: opacity 1s ease, transform 1s ease;
+    }
 
-  .navbar.fade-in {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    .navbar.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
 
-  .navbar__menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
+    .navbar__menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
 
-  .navbar__item {
-    position: relative;
-    margin-bottom: 1vw;
-    height: var(--linkHeight);
-  }
+    .navbar__item {
+      position: relative;
+      margin-bottom: 1vw;
+      height: var(--linkHeight);
+      cursor: pointer;
+    }
 
-  .navbar__link {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: var(--linkHeight);
-    width: calc(var(--spacer)*3);
-    margin: 0 auto;
-    color: var(--white-color1);
-    text-decoration: none;
-    transition: var(--transition);
+    .navbar__link {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--linkHeight);
+      width: calc(var(--spacer)*3);
+      margin: 0 auto;
+      color: var(--white-color1);
+      text-decoration: none;
+      transition: var(--transition);
+      box-sizing: border-box;
+    }
 
-    box-sizing: border-box;
-  }
+    .navbar__link i.material-symbols-outlined {
+      font-size: 1vw;
+      color: var(--white-color2);
+    }
 
-  .navbar__link i.material-symbols-outlined {
-    font-size: 1vw;;
-    color: var(--white-color2);
-  }
+    .navbar__link span {
+      position: absolute;
+      left: 80%;
+      white-space: nowrap;
+      margin-left: 1vw;
+      opacity: 0;
+      pointer-events: auto;
+      color: var(--white-color1);
+      padding: 0.3vw 0.5vw;
+      transform: translateX(0);
+      transition: var(--transition);
+      font-size: 0.3vw;
+      background: rgba(255, 255, 255, 0.19);
+      border-radius: 10px;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(13px);
+      -webkit-backdrop-filter: blur(13px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
 
-  .navbar__link span {
-    position: absolute;
-    left: 80%;
-    white-space: nowrap;
-    margin-left: 1vw;
-    opacity: 0;
-    pointer-events: auto;
-    color: var(--white-color1);
-    padding: 0.3vw 0.5vw;
-    transform: translateX(0);
-    transition: var(--transition);
-  font-size: 0.3vw;;
-  background: rgba(255, 255, 255, 0.19);
-  border-radius: 10px;
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(13px);
-  -webkit-backdrop-filter: blur(13px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  }
+    .navbar__item:hover .navbar__link span {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
 
-  .navbar__item:hover .navbar__link span {
-    opacity: 1;
-    transform: translateX(0);
-    pointer-events: auto;
-  }
+    .navbar__link:hover {
+      background: var(--white-color1);
+      border-radius: 10px;
+      min-height: 1.7vw;
+      min-width: 1.7vw;
+      height: var(--linkHeight);
+      width: var(--linkHeight);
+    }
 
-  .navbar__link:hover {
-    background: var(--white-color1);
-    border-radius: 10px;
-    min-height: 1.7vw;
-    min-width: 1.7vw;
-    height: var(--linkHeight);
-    width: var(--linkHeight);
-  }
+    .navbar__link i.material-symbols-outlined:hover {
+      color: var(--black-color);
+    }
 
-  .navbar__link i.material-symbols-outlined:hover {
-    color: var(--black-color);
-}
+    /* Стили для totalmodal */
+    .totalmodal {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 70vw; /* Настройте по необходимости */
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8); /* Полупрозрачный фон */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 4000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
 
-  /* __________________ СТИЛИ МОДАЛЬНЫХ ОКОН ОСНОВНЫХ СТРАНИЦ приложения __________________ */
-  .modal {
-    display: none;
-    position: fixed;
-    top: 1vw;
-    left: calc(100vw - (var(--spacer)*95));
-    background: rgba(255, 255, 255, 0.04);
-    padding: 1vw;
-    border-radius: 0.4vw;
-    box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
-    height: calc(100vh - (var(--spacer)*2));
-    width: calc(100vw - (var(--spacer)*6));
-    color: black;
-    z-index: 2000;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-  }
+    .totalmodal.show {
+      opacity: 1;
+      visibility: visible;
+    }
 
-  .modal.show {
-    display: block;
-    opacity: 1;
-    transform: translateY(0);
-  }
+    .totalmodal-content {
+      position: relative;
+      width: 90%;
+      height: 90%;
+      background-color: var(--white-color1);
+      border-radius: var(--borderRadius);
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
 
-  .modal.hide {
-    display: block;
-    opacity: 0;
-    transform: translateY(20px);
-  }
+    /* Прелоадер */
+    .lines-loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
 
-  .fade-out {
-    opacity: 0;
-    transform: translateY(20px);
-  }
+    .line {
+      width: 10px;
+      height: 70px;
+      background-color: #ffffff;
+      animation: bounce 1.5s infinite ease-in-out;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      border-radius: 10px;
+    }
 
-  .fade-in {
-    opacity: 1;
-    transform: translateY(0);
-  }
+    .line:nth-child(2) { animation-delay: 0.3s; }
+    .line:nth-child(3) { animation-delay: 0.6s; }
+    .line:nth-child(5) { animation-delay: 1.2s; }
 
-  h2 {
-  position: fixed;
-    top: 1vw;
-    left: 1vw;
-    font-size: 0.65vw;;
-    color: var(--white-color2);
-}
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-30px); }
+      60% { transform: translateY(-15px); }
+    }
 
-p {
-  position: fixed;
-    top: 1.85vw;
-    left: 1vw;
-    font-size: 0.4vw;;
-    color: var(--white-color2);
-}
+    .lines-loader.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
 
-/* __________________ СТИЛИ ИКОНОК __________________ */
-  .material-symbols-outlined {
-    font-variation-settings:
-    'FILL' 0,
-    'wght' 400,
-    'GRAD' 0,
-    'opsz' 24
-  }
-</style>
+    /* Контейнер для подгружаемого контента */
+    .modal-content {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      width: 100%;
+      height: 100%;
+      overflow-y: auto;
+    }
+
+    .modal-content.show {
+      display: block;
+      opacity: 1;
+    }
+
+    /* Дополнительные стили */
+    h2 {
+      position: fixed;
+      top: 1vw;
+      left: 1vw;
+      font-size: 0.65vw;
+      color: var(--white-color2);
+    }
+
+    p {
+      position: fixed;
+      top: 1.85vw;
+      left: 1vw;
+      font-size: 0.4vw;
+      color: var(--white-color2);
+    }
+
+    .material-symbols-outlined {
+      font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24
+    }
+  </style>
 </head>
 <body>
-<div id="app">
-   
-   <!-- РАЗМЕТКА для полей пин-кода -->
-  <div id="pin-wrapper">
-    <div id="pin">
-      <input type="password" maxlength="1" class="pin-input" />
-      <input type="password" maxlength="1" class="pin-input" />
-      <input type="password" maxlength="1" class="pin-input" />
-      <input type="password" maxlength="1" class="pin-input" />
-      <input type="password" maxlength="1" class="pin-input" />
-      <input type="password" maxlength="1" class="pin-input" />
-      <input type="password" maxlength="1" class="pin-input" />
-      <input type="password" maxlength="1" class="pin-input" />
+  <div id="app">
+    <!-- РАЗМЕТКА для полей пин-кода -->
+    <div id="pin-wrapper">
+      <div id="pin">
+        <input type="password" maxlength="1" class="pin-input" />
+        <input type="password" maxlength="1" class="pin-input" />
+        <input type="password" maxlength="1" class="pin-input" />
+        <input type="password" maxlength="1" class="pin-input" />
+        <input type="password" maxlength="1" class="pin-input" />
+        <input type="password" maxlength="1" class="pin-input" />
+        <input type="password" maxlength="1" class="pin-input" />
+        <input type="password" maxlength="1" class="pin-input" />
+      </div>
+    </div>
+    <div id="error-message"></div>
+
+    <!-- РАЗМЕТКА МЕНЮ -->
+    <nav class="navbar" id="success-modal">
+      <ul class="navbar__menu">
+        <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal1')">
+          <a href="#" class="navbar__link">
+            <i class="material-symbols-outlined">analytics</i><span>ELABORATION</span>
+          </a>
+        </li>
+        <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal2')">
+          <a href="#" class="navbar__link">
+            <i class="material-symbols-outlined">finance_mode</i><span>ANALYTICS</span>
+          </a>
+        </li>
+        <li class="navbar__item" data-levels="A,B" onclick="openModal('modal3')">
+          <a href="#" class="navbar__link">
+            <i class="material-symbols-outlined">data_table</i><span>TASKS</span>
+          </a>
+        </li>
+        <li class="navbar__item" data-levels="A,B" onclick="openModal('modal4')">
+          <a href="#" class="navbar__link">
+            <i class="material-symbols-outlined">full_stacked_bar_chart</i><span>in_development</span>
+          </a>
+        </li>
+        <li class="navbar__item" data-levels="A,B" onclick="openModal('modal5')">
+          <a href="#" class="navbar__link">
+            <i class="material-symbols-outlined">full_stacked_bar_chart</i><span>in_development</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- МОДАЛЬНОЕ ОКНО totalmodal -->
+    <div id="totalmodal" class="totalmodal">
+      <div class="totalmodal-content">
+        <!-- Прелоадер -->
+        <div class="lines-loader">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+        <!-- Контейнер для подгружаемого контента -->
+        <div id="modalContent" class="modal-content"></div>
+      </div>
     </div>
   </div>
-  <div id="error-message"></div>
 
-  <!-- РАЗМЕТКА МЕНЮ -->
-  <nav class="navbar" id="success-modal">
-    <ul class="navbar__menu">
-      <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal1')">
-        <a href="#" class="navbar__link">
-          <i class="material-symbols-outlined">analytics</i><span>ELABORATION</span>
-        </a>
-      </li>
-      <li class="navbar__item" data-levels="A,B,C,D" onclick="openModal('modal2')">
-        <a href="#" class="navbar__link">
-          <i class="material-symbols-outlined">finance_mode</i><span>ANALYTICS</span>
-        </a>
-      </li>
-      <li class="navbar__item" data-levels="A,B" onclick="openModal('modal3')">
-        <a href="#" class="navbar__link">
-          <i class="material-symbols-outlined">data_table</i><span>TASKS</span>
-        </a>
-      </li>
-      <li class="navbar__item" data-levels="A,B" onclick="openModal('modal4')">
-        <a href="#" class="navbar__link">
-          <i class="material-symbols-outlined">full_stacked_bar_chart</i><span>in_development</span>
-        </a>
-      </li>
-      <li class="navbar__item" data-levels="A,B" onclick="openModal('modal5')">
-        <a href="#" class="navbar__link">
-          <i class="material-symbols-outlined">full_stacked_bar_chart</i><span>in_development</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
-  <!-- РАЗМЕТКА модальных окон вызываемых МЕНЮ -->
-  <div class="modal" id="modal1">
-    <h2>ELABORATION</h2>
-    <p>проекты компании</p>
-  </div>
-  <div class="modal" id="modal2">
-    <h2>ANALYTICS</h2>
-    <p>текущая аналитика</p>
-  </div>
-  <div class="modal" id="modal3">
-    <h2>TASKS</h2>
-    <p>проектные задачи</p>
-  </div>
-  <div class="modal" id="modal4">
-    <h2>in_development</h2>
-    <p>страница в разработке</p>
-  </div>
-  <div class="modal" id="modal5">
-    <h2>in_development</h2>
-    <p>страница в разработке</p>
-  </div>
-</div>
+    const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+    const pinInputs = document.querySelectorAll('.pin-input');
+    const errorMessage = document.getElementById('error-message');
+    const pinWrapper = document.getElementById('pin-wrapper');
+    const successModal = document.getElementById('success-modal');
+    const totalmodal = document.getElementById('totalmodal');
+    const modalContent = document.getElementById('modalContent');
 
-const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
-const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    let currentUser = null;
+    let currentModal = null;
 
-const pinInputs = document.querySelectorAll('.pin-input');
-const errorMessage = document.getElementById('error-message');
-const pinWrapper = document.getElementById('pin-wrapper');
-const successModal = document.getElementById('success-modal');
+    /* Фокус на первый инпут */
+    pinInputs[0].focus();
 
-let currentUser = null;
-let currentModal = null;
+    /* Переход к следующему полю при вводе символа */
+    pinInputs.forEach((input, index) => {
+      input.addEventListener('input', () => {
+        if (input.value.length === 1 && index < pinInputs.length - 1) {
+          pinInputs[index+1].focus();
+        } else if (index === pinInputs.length - 1 && input.value.length === 1) {
+          checkPinCode();
+        }
+      });
 
-// Фокус на первый инпут (без стартового символа)
-pinInputs[0].focus();
-
-// Переход к следующему полю при вводе символа
-pinInputs.forEach((input, index) => {
-  input.addEventListener('input', () => {
-    if (input.value.length === 1 && index < pinInputs.length - 1) {
-      pinInputs[index+1].focus();
-    } else if (index === pinInputs.length - 1 && input.value.length === 1) {
-      checkPinCode();
-    }
-  });
-
-  input.addEventListener('keydown', (e) => {
-    if (e.key === 'Backspace' && input.value === '' && index > 0) {
-      pinInputs[index-1].focus();
-    }
-  });
-});
-
-async function checkPinCode() {
-  const pinCode = Array.from(pinInputs).map(i => i.value).join('');
-
-  const { data, error } = await supabase
-    .from('users')
-    .select('*')
-    .eq('pin_code', pinCode)
-    .single();
-
-  if (error || !data) {
-    showError("Код авторизации введён неверно");
-    clearInputs();
-  } else {
-    currentUser = data;
-    hidePinAndShowMenu(currentUser);
-  }
-}
-
-function clearInputs() {
-  pinInputs.forEach(i => i.value = '');
-  pinInputs[0].focus();
-}
-
-function showError(msg) {
-  errorMessage.textContent = msg;
-  errorMessage.style.opacity = '1';
-  errorMessage.classList.add('shake');
-  setTimeout(() => {
-    errorMessage.classList.remove('shake');
-    errorMessage.style.opacity = '0';
-  }, 1000);
-}
-
-function hidePinAndShowMenu(user) {
-  pinWrapper.style.opacity = '0';
-  pinWrapper.style.transform = 'translateY(20px)';
-  setTimeout(() => {
-    pinWrapper.style.display = 'none';
-    successModal.classList.add('fade-in');
-    filterMenuByAccess(user.access_level);
-  }, 500);
-}
-
-function filterMenuByAccess(accessLevel) {
-  const menuItems = successModal.querySelectorAll('.navbar__item');
-  menuItems.forEach(item => {
-    const levels = item.getAttribute('data-levels');
-    if (levels && !levels.split(',').includes(accessLevel)) {
-      item.style.display = 'none';
-    } else {
-      item.style.display = 'list-item';
-    }
-  });
-}
-
-// Функции работы с модальными окнами
-function fadeInModal(modal) {
-  modal.classList.add('show');
-  modal.classList.remove('hide');
-}
-
-function fadeOutModal(modal, callback) {
-  modal.classList.add('hide');
-  setTimeout(() => {
-    modal.classList.remove('show');
-    modal.classList.remove('hide');
-    if (callback) callback();
-  }, 500);
-}
-
-function openModal(modalId) {
-  const newModal = document.getElementById(modalId);
-  if (!newModal) return;
-
-  if (currentModal && currentModal !== newModal) {
-    fadeOutModal(currentModal, () => {
-      fadeInModal(newModal);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && input.value === '' && index > 0) {
+          pinInputs[index-1].focus();
+        }
+      });
     });
-  } else if (!currentModal) {
-    fadeInModal(newModal);
-  }
-  currentModal = newModal;
-}
 
-// Делаем функции глобально доступными
-window.openModal = openModal;
-window.fadeInModal = fadeInModal;
-window.fadeOutModal = fadeOutModal;
-</script>
+    /* Проверка PIN-кода */
+    async function checkPinCode() {
+      const pinCode = Array.from(pinInputs).map(i => i.value).join('');
+
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('pin_code', pinCode)
+        .single();
+
+      if (error || !data) {
+        showError("Код авторизации введён неверно");
+        clearInputs();
+      } else {
+        currentUser = data;
+        hidePinAndShowMenu(currentUser);
+      }
+    }
+
+    /* Очистка инпутов */
+    function clearInputs() {
+      pinInputs.forEach(i => i.value = '');
+      pinInputs[0].focus();
+    }
+
+    /* Показ сообщения об ошибке */
+    function showError(msg) {
+      errorMessage.textContent = msg;
+      errorMessage.style.opacity = '1';
+      errorMessage.classList.add('shake');
+      setTimeout(() => {
+        errorMessage.classList.remove('shake');
+        errorMessage.style.opacity = '0';
+      }, 1000);
+    }
+
+    /* Скрытие PIN-кода и показ меню */
+    function hidePinAndShowMenu(user) {
+      pinWrapper.style.opacity = '0';
+      pinWrapper.style.transform = 'translateY(20px)';
+      setTimeout(() => {
+        pinWrapper.style.display = 'none';
+        successModal.classList.add('fade-in');
+        successModal.style.opacity = '1';
+        successModal.style.transform = 'translateY(0)';
+        filterMenuByAccess(user.access_level);
+      }, 500);
+    }
+
+    /* Фильтрация меню по уровню доступа */
+    function filterMenuByAccess(accessLevel) {
+      const menuItems = successModal.querySelectorAll('.navbar__item');
+      menuItems.forEach(item => {
+        const levels = item.getAttribute('data-levels');
+        if (levels && !levels.split(',').includes(accessLevel)) {
+          item.style.display = 'none';
+        } else {
+          item.style.display = 'list-item';
+        }
+      });
+    }
+
+    /* Функция загрузки HTML контента */
+    async function loadModalContent(modalId) {
+      const fileName = modalId + '.html';
+      const url = `./pages/${fileName}?t=${Date.now()}`; // предотвращение кэширования
+      console.log("Загружаемый путь:", url);
+
+      try {
+        // Показываем прелоадер
+        modalContent.innerHTML = ''; // Очищаем предыдущий контент
+        const loader = document.createElement('div');
+        loader.classList.add('lines-loader');
+        loader.innerHTML = `
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        `;
+        modalContent.appendChild(loader);
+        modalContent.classList.remove('show');
+        loader.classList.remove('hide');
+
+        // Показать totalmodal
+        totalmodal.classList.add('show');
+
+        // Ждем 1 секунду (минимальная длительность прелоадера)
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Загружаем контент
+        console.log("Загрузка контента...");
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Ошибка загрузки контента');
+        const html = await response.text();
+        console.log("Контент загружен");
+
+        // Вставляем загруженный контент
+        modalContent.innerHTML = html;
+        modalContent.classList.add('show');
+      } catch (e) {
+        console.error(e);
+        modalContent.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
+        modalContent.classList.add('show');
+      }
+    }
+
+    /* Функция открытия totalmodal с загрузкой контента */
+    function openModal(modalId) {
+      if (!currentUser) {
+        showError("Пользователь не авторизован");
+        return;
+      }
+
+      // Если уже открыта другая модалка, просто загрузим новый контент
+      if (currentModal && currentModal !== modalId) {
+        // Здесь можно добавить логику для закрытия текущей модалки перед открытием новой
+      }
+
+      loadModalContent(modalId);
+      currentModal = modalId;
+    }
+
+    /* Закрытие totalmodal при клике вне контента */
+    totalmodal.addEventListener('click', (e) => {
+      if (e.target === totalmodal) {
+        totalmodal.classList.remove('show');
+        modalContent.classList.remove('show');
+        modalContent.classList.remove('hide');
+      }
+    });
+  </script>
 </body>
 </html>
+
