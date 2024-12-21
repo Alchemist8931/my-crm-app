@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Авторизация по пин-коду</title>
-  <!--Подключение шрифтов-->
+  <!-- Подключение шрифтов -->
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
   <style>
@@ -239,12 +239,23 @@
 
     /* Прелоадер */
     .lines-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+      z-index: 2; /* Поверх контента */
+    }
+
+    .lines-loader.visible {
       opacity: 1;
-      transition: opacity 0.5s ease;
+      visibility: visible;
     }
 
     .line {
@@ -266,27 +277,39 @@
       60% { transform: translateY(-15px); }
     }
 
-    .lines-loader.hide {
-      opacity: 0;
-    }
-
     /* Контейнер для подгружаемого контента */
     .modal-content {
-      display: none;
       opacity: 0;
       transition: opacity 0.5s ease;
       width: 100%;
       height: 100%;
       overflow-y: auto;
+      position: relative;
+      z-index: 1; /* Под прелоадером */
     }
 
-    .modal-content.show {
-      display: block;
+    .modal-content.visible {
       opacity: 1;
     }
 
     /* Дополнительные стили */
-    /* Удалите глобальные стили для h2 и p, чтобы предотвратить фиксированное позиционирование */
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 20px;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--black-color);
+      z-index: 3; /* Поверх прелоадера и контента */
+    }
+
+    .close-modal:hover {
+      color: red;
+    }
+
+    /* Удалите глобальные стили для h2 и p */
   </style>
 </head>
 <body>
@@ -341,7 +364,7 @@
     <div id="totalmodal" class="totalmodal">
       <div class="totalmodal-content">
         <!-- Прелоадер -->
-        <div class="lines-loader show">
+        <div class="lines-loader">
           <div class="line"></div>
           <div class="line"></div>
           <div class="line"></div>
@@ -462,58 +485,50 @@
 
       try {
         // Показываем прелоадер
-        modalContent.innerHTML = ''; // Очищаем предыдущий контент
-        const loader = document.createElement('div');
-        loader.classList.add('lines-loader', 'show'); // Добавляем классы
-        loader.innerHTML = `
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-          <div class="line"></div>
-        `;
-        modalContent.appendChild(loader);
+        const loader = modalContent.querySelector('.lines-loader');
+        loader.classList.add('visible'); // Показываем прелоадер
 
         // Показать totalmodal
         totalmodal.classList.add('show');
 
-        // Ждем 1 секунду (минимальная длительность прелоадера)
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Начинаем загрузку контента
+        const fetchPromise = fetch(url).then(response => {
+          if (!response.ok) throw new Error('Ошибка загрузки контента');
+          return response.text();
+        });
 
-        // Плавно скрываем прелоадер
-        loader.classList.add('hide');
+        // Создаём Promise для 1.5 секунд задержки
+        const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
 
-        // Ждем время перехода (0.5s, как в CSS)
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Ожидаем оба Promise
+        const [html] = await Promise.all([fetchPromise, delayPromise]);
 
-        // Удаляем прелоадер
-        if (modalContent.contains(loader)) {
-          modalContent.removeChild(loader);
-        }
-
-        // Загружаем контент
-        console.log("Загрузка контента...");
-        const response = await fetch(url);
-        if (!response.ok) throw new Error('Ошибка загрузки контента');
-        const html = await response.text();
         console.log("Контент загружен");
 
         // Вставляем загруженный контент
         modalContent.innerHTML = html;
 
-        // Плавно показываем контент
+        // Скрываем прелоадер плавно
+        loader.classList.remove('visible');
+
+        // Показываем контент плавно
         const contentDiv = modalContent.querySelector('.modal-content');
         if (contentDiv) {
-          // Если есть контейнер с классом 'modal-content', показываем его
-          contentDiv.classList.add('show');
+          contentDiv.classList.add('visible');
         } else {
-          // Если класс 'modal-content' отсутствует, просто добавляем 'show'
-          modalContent.classList.add('show');
+          // Если класс 'modal-content' отсутствует, просто добавляем 'visible'
+          modalContent.classList.add('visible');
         }
+
       } catch (e) {
         console.error(e);
+        // Скрываем прелоадер
+        const loader = modalContent.querySelector('.lines-loader');
+        loader.classList.remove('visible');
+
+        // Показываем сообщение об ошибке
         modalContent.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
-        modalContent.classList.add('show');
+        modalContent.classList.add('visible');
       }
     }
 
@@ -534,7 +549,7 @@
       }
 
       // Открываем новую модалку
-      loadModalContent(modalId);
+      await loadModalContent(modalId);
       currentModal = modalId;
     }
 
@@ -542,16 +557,23 @@
     async function closeModal() {
       if (!currentModal) return;
 
-      // Плавно скрываем модальное окно
-      totalmodal.classList.remove('show');
+      // Скрываем контент плавно
+      const contentDiv = modalContent.querySelector('.modal-content');
+      if (contentDiv) {
+        contentDiv.classList.remove('visible');
+      } else {
+        modalContent.classList.remove('visible');
+      }
 
-      // Ждем время перехода (0.5s, как в CSS)
+      // Ждём окончания анимации (0.5s)
       await new Promise(resolve => setTimeout(resolve, 500));
 
-      // Очистка содержимого модального окна
+      // Скрываем модальное окно
+      totalmodal.classList.remove('show');
+
+      // Очищаем содержимое модального окна
       modalContent.innerHTML = '';
-      modalContent.classList.remove('show');
-      modalContent.classList.remove('hide');
+      modalContent.classList.remove('visible');
 
       currentModal = null;
     }
@@ -581,17 +603,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
