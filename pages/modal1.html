@@ -1,67 +1,49 @@
 <!-- /pages/modal1.html -->
 <button class="close-modal" onclick="closeModal()">×</button>
-<div class="modal1-content">
+<div class="modalVNUT-content">
   <h2>ELABORATION</h2>
   <p>Проекты компании</p>
   <!-- Дополнительный контент -->
-  <div class="project-list">
-    <ul>
-      <li>Проект А</li>
-      <li>Проект Б</li>
-      <li>Проект В</li>
-    </ul>
-  </div>
+
+  
 </div>
 
 <style>
-  .close-modal {
+.close-modal {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 1vw;
+    right: 1vw;
     background: none;
     border: none;
-    font-size: 2rem;
+    font-size: 2vw;
     cursor: pointer;
-    color: var(--black-color);
+    color: var(--white-color2);
   }
 
   .close-modal:hover {
-    color: red;
+    color: #393E41;
   }
 
-  .modal1-content {
+  .modalVNUT-content {
     font-family: "Comfortaa", sans-serif;
-    color: var(--black-color);
+    color: var(--white-color2);
     padding: 20px;
-    background-color: #fff; /* Белый фон для контента */
+    background-color: none; /* Белый фон для контента */
     border-radius: var(--borderRadius);
     height: 100%;
+    width: 100%;
     box-sizing: border-box;
     position: relative;
   }
 
-  .modal1-content h2 {
-    color: var(--black-color);
+  .modalVNUT-content h2 {
+    color: var(--white-color2);
     margin-bottom: 10px;
   }
 
-  .modal1-content p {
-    color: var(--black-color);
-    font-size: 1rem;
-    margin-bottom: 20px;
-  }
-
-  .modal1-content .project-list ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  .modal1-content .project-list li {
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .modal1-content .project-list li:last-child {
-    border-bottom: none;
+  .modalVNUT-content p {
+    color: var(--white-color2);
+    font-size: 1vw;
+    margin-bottom: 10px;
   }
 </style>
