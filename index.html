@@ -288,29 +288,7 @@
     }
 
     /* Дополнительные стили */
-    h2 {
-      position: fixed;
-      top: 1vw;
-      left: 1vw;
-      font-size: 0.65vw;
-      color: var(--white-color2);
-    }
-
-    p {
-      position: fixed;
-      top: 1.85vw;
-      left: 1vw;
-      font-size: 0.4vw;
-      color: var(--white-color2);
-    }
-
-    .material-symbols-outlined {
-      font-variation-settings:
-      'FILL' 0,
-      'wght' 400,
-      'GRAD' 0,
-      'opsz' 24
-    }
+    /* Удалите глобальные стили для h2 и p, чтобы предотвратить фиксированное позиционирование */
   </style>
 </head>
 <body>
@@ -365,7 +343,7 @@
     <div id="totalmodal" class="totalmodal">
       <div class="totalmodal-content">
         <!-- Прелоадер -->
-        <div class="lines-loader">
+        <div class="lines-loader preloader show">
           <div class="line"></div>
           <div class="line"></div>
           <div class="line"></div>
@@ -487,7 +465,7 @@
         // Показываем прелоадер
         modalContent.innerHTML = ''; // Очищаем предыдущий контент
         const loader = document.createElement('div');
-        loader.classList.add('lines-loader');
+        loader.classList.add('lines-loader', 'preloader', 'show'); // добавляем классы
         loader.innerHTML = `
           <div class="line"></div>
           <div class="line"></div>
@@ -496,14 +474,22 @@
           <div class="line"></div>
         `;
         modalContent.appendChild(loader);
-        modalContent.classList.remove('show');
-        loader.classList.remove('hide');
 
         // Показать totalmodal
         totalmodal.classList.add('show');
 
-        // Ждем 1 секунду (минимальная длительность прелоадера)
+        // Ждем 1 секунду
         await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Плавно скрываем прелоадер
+        loader.classList.remove('show');
+        loader.classList.add('hide');
+
+        // Ждем время перехода (0.5s, как в CSS)
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Удаляем прелоадер
+        modalContent.removeChild(loader);
 
         // Загружаем контент
         console.log("Загрузка контента...");
@@ -514,7 +500,15 @@
 
         // Вставляем загруженный контент
         modalContent.innerHTML = html;
-        modalContent.classList.add('show');
+
+        // Плавно показываем контент
+        const contentDiv = modalContent.querySelector('.modal-content');
+        if (contentDiv) {
+          contentDiv.classList.add('show');
+        } else {
+          // Если класс 'modal-content' отсутствует, просто добавляем 'show'
+          modalContent.classList.add('show');
+        }
       } catch (e) {
         console.error(e);
         modalContent.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
@@ -542,33 +536,22 @@
     /* Закрытие totalmodal при клике вне контента */
     totalmodal.addEventListener('click', (e) => {
       if (e.target === totalmodal) {
-        totalmodal.classList.remove('show');
-        modalContent.classList.remove('show');
-        modalContent.classList.remove('hide');
+        closeModal();
       }
     });
 
-    // Определяем функции fadeInModal и fadeOutModal, если они используются
-    function fadeInModal(modal) {
-      modal.classList.add('show');
-      modal.classList.remove('hide');
+    /* Функция закрытия модального окна */
+    function closeModal() {
+      totalmodal.classList.remove('show');
+      modalContent.classList.remove('show');
+      modalContent.classList.remove('hide');
     }
-
-    function fadeOutModal(modal, callback) {
-      modal.classList.add('hide');
-      setTimeout(() => {
-        modal.classList.remove('show');
-        modal.classList.remove('hide');
-        if (callback) callback();
-      }, 500);
-    }
+    window.closeModal = closeModal;
 
     // Делаем функции глобально доступными
     window.openModal = openModal;
-    window.fadeInModal = fadeInModal;
-    window.fadeOutModal = fadeOutModal;
 
-    // Добавляем обработчики событий для пунктов меню
+    /* Добавляем обработчики событий для пунктов меню */
     document.addEventListener('DOMContentLoaded', () => {
       const menuItems = document.querySelectorAll('.navbar__item');
       menuItems.forEach(item => {
