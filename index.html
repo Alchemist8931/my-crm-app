@@ -440,7 +440,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       });
     });
 
-    /* Проверка PIN-кода */
+    /* Проверка PIN-кода & */
     async function checkPinCode() {
       const pinCode = Array.from(pinInputs).map(i => i.value).join('');
 
