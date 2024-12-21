@@ -235,7 +235,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
     }
 
     /* Прелоадер */
@@ -269,7 +268,6 @@
 
     .lines-loader.hide {
       opacity: 0;
-      pointer-events: none;
     }
 
     /* Контейнер для подгружаемого контента */
@@ -343,7 +341,7 @@
     <div id="totalmodal" class="totalmodal">
       <div class="totalmodal-content">
         <!-- Прелоадер -->
-        <div class="lines-loader preloader show">
+        <div class="lines-loader show">
           <div class="line"></div>
           <div class="line"></div>
           <div class="line"></div>
@@ -372,6 +370,7 @@
 
     let currentUser = null;
     let currentModal = null;
+    let isClosing = false; // Флаг для предотвращения одновременных операций
 
     /* Фокус на первый инпут */
     pinInputs[0].focus();
@@ -465,7 +464,7 @@
         // Показываем прелоадер
         modalContent.innerHTML = ''; // Очищаем предыдущий контент
         const loader = document.createElement('div');
-        loader.classList.add('lines-loader', 'preloader', 'show'); // добавляем классы
+        loader.classList.add('lines-loader', 'show'); // Добавляем классы
         loader.innerHTML = `
           <div class="line"></div>
           <div class="line"></div>
@@ -478,18 +477,19 @@
         // Показать totalmodal
         totalmodal.classList.add('show');
 
-        // Ждем 1 секунду
+        // Ждем 1 секунду (минимальная длительность прелоадера)
         await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Плавно скрываем прелоадер
-        loader.classList.remove('show');
         loader.classList.add('hide');
 
         // Ждем время перехода (0.5s, как в CSS)
         await new Promise(resolve => setTimeout(resolve, 500));
 
         // Удаляем прелоадер
-        modalContent.removeChild(loader);
+        if (modalContent.contains(loader)) {
+          modalContent.removeChild(loader);
+        }
 
         // Загружаем контент
         console.log("Загрузка контента...");
@@ -504,6 +504,7 @@
         // Плавно показываем контент
         const contentDiv = modalContent.querySelector('.modal-content');
         if (contentDiv) {
+          // Если есть контейнер с классом 'modal-content', показываем его
           contentDiv.classList.add('show');
         } else {
           // Если класс 'modal-content' отсутствует, просто добавляем 'show'
@@ -517,20 +518,42 @@
     }
 
     /* Функция открытия totalmodal с загрузкой контента */
-    function openModal(modalId) {
+    async function openModal(modalId) {
+      if (isClosing) return; // Предотвращаем одновременные операции
+
       if (!currentUser) {
         showError("Пользователь не авторизован");
         return;
       }
 
-      // Если уже открыта другая модалка, просто загрузим новый контент
+      // Если уже открыта другая модалка, сначала закрываем текущую
       if (currentModal && currentModal !== modalId) {
-        // Здесь можно добавить логику для закрытия текущей модалки перед открытием новой
-        // Например, скрыть текущую модалку и показать новую
+        isClosing = true;
+        await closeModal();
+        isClosing = false;
       }
 
+      // Открываем новую модалку
       loadModalContent(modalId);
       currentModal = modalId;
+    }
+
+    /* Функция закрытия модального окна с анимацией */
+    async function closeModal() {
+      if (!currentModal) return;
+
+      // Плавно скрываем модальное окно
+      totalmodal.classList.remove('show');
+
+      // Ждем время перехода (0.5s, как в CSS)
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Очистка содержимого модального окна
+      modalContent.innerHTML = '';
+      modalContent.classList.remove('show');
+      modalContent.classList.remove('hide');
+
+      currentModal = null;
     }
 
     /* Закрытие totalmodal при клике вне контента */
@@ -540,16 +563,9 @@
       }
     });
 
-    /* Функция закрытия модального окна */
-    function closeModal() {
-      totalmodal.classList.remove('show');
-      modalContent.classList.remove('show');
-      modalContent.classList.remove('hide');
-    }
-    window.closeModal = closeModal;
-
     // Делаем функции глобально доступными
     window.openModal = openModal;
+    window.closeModal = closeModal;
 
     /* Добавляем обработчики событий для пунктов меню */
     document.addEventListener('DOMContentLoaded', () => {
