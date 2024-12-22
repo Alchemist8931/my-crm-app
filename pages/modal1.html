@@ -3,74 +3,74 @@
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
-  <!-- Дополнительный контент -->
   
-  <!-- модальное окно проектов -->
+  <!-- Модальное окно проектов -->
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 100%;">
     <div id="projectsList" class="modalVNUT-content">
+      <!-- Сюда будут добавляться проекты -->
     </div>
   </div>
   
   <!-- Разметка КОНТЕЙНЕРА -->
   <template id="project-template">
     <div class="modal1-container" data-id="">
-      <span class="modal1-icon project_id"><i class="material-symbols-outlined">developer_guide</i></span>
-      <span class="modal1-icon project_name"><i class="material-symbols-outlined">data_table</i></span>
+      <span class="modal1-icon project_id_icon"><i class="material-symbols-outlined">developer_guide</i></span>
+      <span class="modal1-icon project_name_icon"><i class="material-symbols-outlined">data_table</i></span>
 
       <!-- Группы ввода данных -->
       <div class="modal1-input-group left">
-        <input type="text" class="modal1-input project_id" id="modal1-project-id" placeholder=" " />
-        <label for="modal1-project-id">project ID</label>
+        <input type="text" class="modal1-input project_id" placeholder=" " />
+        <label>project ID</label>
       </div>
 
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input project_name" id="modal1-project-name" placeholder=" " />
-        <label for="modal1-project-name">project name</label>
+        <input type="text" class="modal1-input project_name" placeholder=" " />
+        <label>project name</label>
       </div>
 
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input status" id="modal1-status" placeholder=" " />
-        <label for="modal1-status">status</label>
+        <input type="text" class="modal1-input status" placeholder=" " />
+        <label>status</label>
       </div>
 
       <div class="modal1-input-group left">
-        <input type="text" class="modal1-input contract_amount" id="modal1-contract-amount" placeholder=" " />
-        <label for="modal1-contract-amount">contract amount</label>
+        <input type="text" class="modal1-input contract_amount" placeholder=" " />
+        <label>contract amount</label>
       </div>
 
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input contract_costs" id="modal1-contract-costs" placeholder=" " />
-        <label for="modal1-contract-costs">contract costs</label>
+        <input type="text" class="modal1-input contract_costs" placeholder=" " />
+        <label>contract costs</label>
       </div>
 
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input contract_profit" id="modal1-contract-profit" placeholder=" " />
-        <label for="modal1-contract-profit">contract profit</label>
+        <input type="text" class="modal1-input contract_profit" placeholder=" " />
+        <label>contract profit</label>
       </div>
 
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input profit_percentage" id="modal1-profit-percentage" placeholder=" " />
-        <label for="modal1-profit-percentage">profit %</label>
+        <input type="text" class="modal1-input profit_percentage" placeholder=" " />
+        <label>profit %</label>
       </div>
 
       <div class="modal1-input-group left">
-        <input type="text" class="modal1-input company_seller" id="modal1-company-seller" placeholder=" " />
-        <label for="modal1-company-seller">company seller</label>
+        <input type="text" class="modal1-input company_seller" placeholder=" " />
+        <label>company seller</label>
       </div>
 
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input tin_seller" id="modal1-tin-seller" placeholder=" " />
-        <label for="modal1-tin-seller">TIN seller</label>
+        <input type="text" class="modal1-input tin_seller" placeholder=" " />
+        <label>TIN seller</label>
       </div>
 
       <div class="modal1-input-group left">
-        <input type="text" class="modal1-input buyer_company" id="modal1-buyer-company" placeholder=" " />
-        <label for="modal1-buyer-company">buyer company</label>
+        <input type="text" class="modal1-input buyer_company" placeholder=" " />
+        <label>buyer company</label>
       </div>
 
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input tin_buyer" id="modal1-tin-buyer" placeholder=" " />
-        <label for="modal1-tin-buyer">TIN buyer</label>
+        <input type="text" class="modal1-input tin_buyer" placeholder=" " />
+        <label>TIN buyer</label>
       </div>
 
       <!-- Кнопка удаления проекта -->
@@ -78,6 +78,7 @@
     </div>
   </template>
 </div>
+
 
 <style>
 .close-modal {
@@ -366,7 +367,7 @@
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
   const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxoZ3d4d3Nhd25tc3RwbHNlb2t6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzQzNzkxNDgsImV4cCI6MjA0OTk1NTE0OH0.yfvxLZEdkA2tGmz5ga5uZajT9xN-SbRqpy3t1S3jusA';  
+  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';  
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   const projectsList = document.getElementById('projectsList');
@@ -392,10 +393,10 @@
     projectContainer.querySelector('.tin_buyer').value = project.tin_buyer || '';
 
     // Добавление обработчиков событий для автосохранения
-    const inputs = projectContainer.querySelectorAll('input');
+    const inputs = projectContainer.querySelectorAll('.modal1-input');
     inputs.forEach(input => {
       input.addEventListener('input', () => {
-        const field = input.classList[1]; // предполагается, что второй класс соответствует полю
+        const field = input.classList[1]; // Предполагается, что второй класс соответствует полю
         handleInputChange(project.id, field, input.value);
       });
     });
