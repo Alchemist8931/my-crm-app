@@ -311,8 +311,8 @@
     container.dataset.id = project.id;
 
     container.innerHTML = `
-      <span class="modal1-icon" onclick="deleteProject('${project.id}')"><i class="material-symbols-outlined">delete</i></span>
-      <span class="modal1-icon"><i class="material-symbols-outlined">edit</i></span>
+      <span class="modal1-icon" data-action="delete" data-id="${project.id}"><i class="material-symbols-outlined">delete</i></span>
+      <span class="modal1-icon" data-action="edit" data-id="${project.id}"><i class="material-symbols-outlined">edit</i></span>
 
       <!-- Группы ввода данных -->
       <div class="modal1-input-group left">
@@ -370,9 +370,6 @@
         <label for="tin-buyer-${project.id}">TIN buyer</label>
       </div>
     `;
-
-    // Удаляем добавление индивидуальных обработчиков событий
-    // Теперь используем делегирование событий
 
     return container;
   }
@@ -460,18 +457,35 @@
   // Подписка на изменения в таблице projects
   function setupRealtime() {
     supabase.from('projects').on('*', payload => {
-      console.log('Изменение в projects:', payload);
+      // Удаляем console.log для улучшения производительности
+      // console.log('Изменение в projects:', payload);
+
+      let projectId;
+      if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+        projectId = payload.new.id;
+      } else if (payload.eventType === 'DELETE') {
+        projectId = payload.old.id;
+      }
+
+      if (!projectId) return; // Если projectId не определен, выходим
+
       if (payload.eventType === 'INSERT') {
         const projectElement = createProjectContainer(payload.new);
         projectsContainer.appendChild(projectElement);
       } else if (payload.eventType === 'UPDATE') {
-        const existingElement = projectsContainer.querySelector(`[data-id='${payload.new.id}']`);
+        const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
         if (existingElement) {
-          const updatedElement = createProjectContainer(payload.new);
-          projectsContainer.replaceChild(updatedElement, existingElement);
+          // Обновляем только измененные поля, вместо замены всего контейнера
+          Object.keys(payload.new).forEach(field => {
+            if (field === 'id') return; // Пропускаем поле id
+            const input = existingElement.querySelector(`[data-field='${field}']`);
+            if (input) {
+              input.value = payload.new[field] !== null ? payload.new[field] : '';
+            }
+          });
         }
       } else if (payload.eventType === 'DELETE') {
-        const existingElement = projectsContainer.querySelector(`[data-id='${payload.old.id}']`);
+        const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
         if (existingElement) {
           projectsContainer.removeChild(existingElement);
         }
@@ -490,8 +504,21 @@
     if (input.classList.contains('modal1-input')) {
       const field = input.dataset.field;
       const value = input.value;
-      const projectId = input.id.split('-').pop(); // Предполагается, что ID имеет формат 'field-projectId'
+      const projectId = input.id.substring(input.id.lastIndexOf('-') + 1);
       debouncedUpdateProjectField(projectId, field, value);
+    }
+  });
+
+  // Делегирование событий для иконок (delete и edit)
+  projectsContainer.addEventListener('click', (event) => {
+    const icon = event.target.closest('.modal1-icon');
+    if (icon) {
+      const action = icon.dataset.action;
+      const projectId = icon.dataset.id;
+      if (action === 'delete') {
+        deleteProject(projectId);
+      }
+      // Добавьте обработку 'edit', если необходимо
     }
   });
 
@@ -502,3 +529,4 @@
   // Экспортируем функции, чтобы они были доступны из HTML
   window.deleteProject = deleteProject;
 </script>
+
