@@ -499,8 +499,7 @@ canvas#canvas {
     });
   }
 
-  /* Функция загрузки HTML контента */
-  /* Функция загрузки HTML контента */
+/* Функция загрузки HTML контента */
 async function loadModalContent(modalId) {
   const fileName = modalId + '.html';
   const url = `./pages/${fileName}?t=${Date.now()}`; // предотвращение кэширования
@@ -534,13 +533,15 @@ async function loadModalContent(modalId) {
       const scripts = contentArea.querySelectorAll('script');
       scripts.forEach(oldScript => {
         const newScript = document.createElement('script');
+        if (oldScript.type === 'module') {
+          newScript.type = 'module';
+        }
         if (oldScript.src) {
           newScript.src = oldScript.src;
         } else {
           newScript.textContent = oldScript.textContent;
         }
         document.body.appendChild(newScript);
-        document.body.removeChild(newScript);
       });
     } else {
       console.warn('Контейнер .content-area не найден внутри modalContent.');
@@ -567,7 +568,6 @@ async function loadModalContent(modalId) {
     }
   }
 }
-
 
   /* Функция открытия totalmodal с загрузкой контента */
   async function openModal(modalId) {
