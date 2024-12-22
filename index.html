@@ -500,68 +500,74 @@ canvas#canvas {
   }
 
   /* Функция загрузки HTML контента */
-  async function loadModalContent(modalId) {
-    const fileName = modalId + '.html';
-    const url = `./pages/${fileName}?t=${Date.now()}`; // предотвращение кэширования
-    console.log("Загружаемый путь:", url);
+  /* Функция загрузки HTML контента */
+async function loadModalContent(modalId) {
+  const fileName = modalId + '.html';
+  const url = `./pages/${fileName}?t=${Date.now()}`; // предотвращение кэширования
+  console.log("Загружаемый путь:", url);
 
-    try {
-      // Показываем прелоадер
-      const loader = modalContent.querySelector('.lines-loader');
-      if (loader) {
-        loader.classList.add('visible'); // Показываем прелоадер
-      } else {
-        console.warn('Прелоадер не найден внутри modalContent.');
-      }
+  try {
+    // Показываем прелоадер
+    const loader = modalContent.querySelector('.lines-loader');
+    if (loader) {
+      loader.classList.add('visible'); // Показываем прелоадер
+    } else {
+      console.warn('Прелоадер не найден внутри modalContent.');
+    }
 
-      // Показываем totalmodal
-      totalmodal.classList.add('show');
+    // Показываем totalmodal
+    totalmodal.classList.add('show');
 
-      // Начинаем загрузку контента
-      const fetchPromise = fetch(url).then(response => {
-        if (!response.ok) throw new Error('Ошибка загрузки контента');
-        return response.text();
+    // Начинаем загрузку контента
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Ошибка загрузки контента');
+    const html = await response.text();
+
+    // Вставляем загруженный контент
+    const contentArea = modalContent.querySelector('.content-area');
+    if (contentArea) {
+      contentArea.innerHTML = html;
+      // Показываем контент плавно
+      contentArea.classList.add('visible');
+
+      // Извлекаем и выполняем встроенные скрипты
+      const scripts = contentArea.querySelectorAll('script');
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement('script');
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+        document.body.removeChild(newScript);
       });
+    } else {
+      console.warn('Контейнер .content-area не найден внутри modalContent.');
+    }
 
-      // Создаём Promise для 1.5 секунд задержки
-      const delayPromise = new Promise(resolve => setTimeout(resolve, 1500));
+    // Скрываем прелоадер плавно
+    if (loader) {
+      loader.classList.remove('visible');
+    }
 
-      // Ожидаем оба Promise
-      const [html] = await Promise.all([fetchPromise, delayPromise]);
+  } catch (e) {
+    console.error(e);
+    // Скрываем прелоадер
+    const loader = modalContent.querySelector('.lines-loader');
+    if (loader) {
+      loader.classList.remove('visible');
+    }
 
-      console.log("Контент загружен");
-
-      // Вставляем загруженный контент
-      const contentArea = modalContent.querySelector('.content-area');
-      if (contentArea) {
-        contentArea.innerHTML = html;
-        // Показываем контент плавно
-        contentArea.classList.add('visible');
-      } else {
-        console.warn('Контейнер .content-area не найден внутри modalContent.');
-      }
-
-      // Скрываем прелоадер плавно
-      if (loader) {
-        loader.classList.remove('visible');
-      }
-
-    } catch (e) {
-      console.error(e);
-      // Скрываем прелоадер
-      const loader = modalContent.querySelector('.lines-loader');
-      if (loader) {
-        loader.classList.remove('visible');
-      }
-
-      // Показываем сообщение об ошибке
-      const contentArea = modalContent.querySelector('.content-area');
-      if (contentArea) {
-        contentArea.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
-        contentArea.classList.add('visible');
-      }
+    // Показываем сообщение об ошибке
+    const contentArea = modalContent.querySelector('.content-area');
+    if (contentArea) {
+      contentArea.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
+      contentArea.classList.add('visible');
     }
   }
+}
+
 
   /* Функция открытия totalmodal с загрузкой контента */
   async function openModal(modalId) {
