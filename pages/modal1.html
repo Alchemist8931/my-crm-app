@@ -5,47 +5,437 @@
   <p>проекты компании</p>
   <!-- Дополнительный контент -->
 
-  
+  <!-- Новая разметка для демонстрации проектов -->
+  <div id="modalHome" class="modal">
+    <h2>ELABORATION SALES</h2>
+    <p style="margin-top: 0.8vw; margin-left: -8.5vw;">проекты в работе</p>
+    
+    <nav>
+      <menu>
+        <menuitem id="demo1" style="left: 17.6vw">
+          <a href="#">status</a>
+          <menu>
+            <menuitem><a href="#">idea</a></menuitem>
+            <menuitem><a href="#">planned</a></menuitem>
+            <menuitem><a href="#">elaboration</a></menuitem>
+            <menuitem><a href="#">proposal sent</a></menuitem>
+            <menuitem><a href="#">signing an agreement</a></menuitem>
+            <menuitem><a href="#">contract is concluded</a></menuitem>
+            <menuitem><a href="#">invoice issued</a></menuitem>
+            <menuitem><a href="#">payment received</a></menuitem>
+          </menu>
+        </menuitem>
+      </menu>
+    </nav>
+
+    <nav>
+      <menu>
+        <menuitem id="demo2" style="left: 43.2vw">
+          <a href="#">seller</a>
+          <menu>
+            <menuitem><a href="#">LLC TABIA Group</a></menuitem>
+            <menuitem><a href="#">LLC MPSteel</a></menuitem>
+            <menuitem><a href="#">LLC ST</a></menuitem>
+            <menuitem><a href="#">LLC SMK</a></menuitem>
+          </menu>
+        </menuitem>
+      </menu>
+    </nav>
+    
+    <nav>
+      <menu>
+        <menuitem id="demo3" style="left: 52.1vw">
+          <a href="#">buyer</a>
+          <menu>
+            <menuitem><a href="#">Knauf Insulation г. Тюмень</a></menuitem>
+            <menuitem><a href="#">ФГУП ПО Маяк</a></menuitem>
+          </menu>
+        </menuitem>
+      </menu>
+    </nav>
+    
+    <!-- Модальное окно проектов -->
+    <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 7vw); width: 92vw;">
+      <div class="modalVNUT-content">
+        <!-- Контент внутри нижнего окна -->
+        <div id="modalCONTEINER" class="modalCONTEINER">
+          <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw;">developer_guide</i></span>
+          <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw; margin-left: 0.25vw;">data_table</i></span>
+          
+          <!-- Группы ввода данных -->
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="input" id="project-id" placeholder=" " style="width: 4.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="project-id">project ID</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="project-name" placeholder=" " style="width: 11vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="project-name">project name</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="status" placeholder=" " style="width: 7.4vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="status">status</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="input" id="contract-amount" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="contract-amount">contract amount</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="contract-costs" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="contract-costs">contract costs</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="contract-profit" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="contract-profit">contract profit</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="profit-percentage" placeholder=" " style="width: 3vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="profit-percentage">profit %</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="input" id="company-seller" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="company-seller">company seller</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="tin-seller" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="tin-seller">TIN seller</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="input" id="buyer-company" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="buyer-company">buyer company</label>
+          </div>
+          
+          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="input" id="tin-buyer" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="tin-buyer">TIN buyer</label>
+          </div>
+        </div>
+        <!-- Дополнительный контент можно добавить здесь -->
+      </div>
+    </div>
+  </div>
 </div>
 
 <style>
-.close-modal {
-    position: absolute;
-    top: 0.5vw;
-    right: 0.5vw;
-    background: none;
-    border: none;
-    font-size: 1vw;
-    cursor: pointer;
-    color: var(--white-color2);
-  }
+/* Стилевые правила для modal1.html */
 
-  .close-modal:hover {
-    color: #393E41;
-  }
+/* Стили уже определены в index.html, поэтому используем их */
 
-  .modalVNUT-content {
-    font-family: "Comfortaa", sans-serif;
-    color: var(--white-color2);
-    background-color: none; /* Белый фон для контента */
-    border-radius: var(--borderRadius);
-    height: calc(100vh - (var(--spacer)*2));
-    width: calc(100vw - (var(--spacer)*6));
-    box-sizing: border-box;
-    position: relative;
-    pading: 1vw
-  }
+/* Стили для модальных окон */
+.modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 1vw;
+  border-radius: var(--borderRadius);
+  box-shadow: 0 0 1vw rgba(0, 0, 0, 0.5);
+  height: 96.5vh;
+  width: 94vw;
+  color: var(--white-color1);
+  z-index: 1000;
+}
 
-  .modalVNUT-content h2 {
-    color: var(--white-color2);
-    font-size: 0.8vw;
-    left: 1vw;
-  }
+/* Заголовки и параграфы */
+h2 {
+  color: var(--white-color1);
+  font-size: 1vw;
+}
 
-  .modalVNUT-content p {
-    color: var(--white-color2);
-    font-size: 0.5vw;
-    top: 1vw;
-    left: 1vw;
-  }
+p {
+  color: var(--white-color2);
+  font-size: 0.7vw;
+}
+
+/* Анимации */
+.show {
+  display: block;
+  animation: fadeIn 2s;
+}
+
+.hide {
+  animation: fadeOut 1s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Функциональное модальное окно */
+
+/* Модальное окно с прокруткой */
+.modalVNUT {
+  display: flex;
+  flex-direction: column;
+  background: none;
+  padding: 1vw;
+  border-radius: var(--borderRadius);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--white-color2);
+  z-index: 1000;
+  overflow: hidden; /* Отключаем общий скролл */
+  box-sizing: border-box;
+}
+
+/* Внутренний контейнер с прокруткой */
+.modalVNUT-content {
+  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
+  height: 100%;
+  width: 100%;
+  overflow-y: auto; /* Включаем вертикальную прокрутку */
+  box-sizing: border-box;
+}
+
+/* Стилизация скроллбара */
+.modalVNUT-content::-webkit-scrollbar {
+  width: 4px; /* Ширина скроллбара */
+  background-color: var(--white-color1);
+}
+
+.modalVNUT-content::-webkit-scrollbar-thumb {
+  background-color: var(--white-color2); /* Цвет ползунка */
+  border-radius: 10px; /* Скругление */
+}
+
+.modalVNUT-content::-webkit-scrollbar-track {
+  background-color: var(--white-color1);
+}
+
+/* Контейнеры внутри модального окна */
+.modalCONTEINER {
+  display: flex;
+  align-items: center;
+  padding: 0.4vw;
+  border-radius: var(--borderRadius);
+  color: var(--white-color2);
+  z-index: 1100;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.modalCONTEINER:hover,
+.modalCONTEINER:focus {
+  border: 1px solid var(--white-color2);
+}
+
+/* Отступы только между контейнерами */
+.modalCONTEINER:not(:last-child) {
+  margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
+}
+
+/* input с LABEL */
+.input-group {
+  position: relative;
+  font-family: "Comfortaa", sans-serif;
+}
+
+.input-group label {
+  background: none;
+  color: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  top: 0.86vw;
+  left: 0.4vw;
+  transform: translateY(-50%);
+  text-transform: uppercase;
+  font-weight: 700;
+  pointer-events: none;
+  font-size: 0.6vw;
+  transition: all 0.3s;
+}
+
+.input-group input {
+  padding: 0.4vw 0.4vw;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  outline: none;
+  color: var(--white-color2);
+  font-size: 0.7vw;
+  font-family: inherit;
+  background-color: transparent;
+  border-radius: var(--borderRadius);
+}
+
+.input-group input:hover,
+.input-group input:focus {
+  border: 1px solid var(--white-color2);
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label {
+  top: -0.5vw;
+  font-size: 0.4vw;
+  padding: 0 0.4vw;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: var(--borderRadius);
+  color: var(--white-color2);
+}
+
+/* input ЗАГОЛОВОК без границ */
+.input-TYPE1 {
+  position: relative;
+  font-family: "Comfortaa", sans-serif;
+  width: 2vw;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.6);
+  background-color: transparent;
+  margin-top: 1vw;
+}
+
+/* Иконка для контейнера */
+.iconTYPE1 {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1vw;
+  z-index: 1200;
+  cursor: pointer;
+}
+
+.iconTYPE1:hover {
+  color: var(--white-color2);
+  transform: scale(1.1); /* Увеличение иконки при наведении */
+}
+
+.iconTYPE1:active {
+  transform: scale(0.92); /* Сжатие иконки при клике */
+}
+
+/* Выпадающий список (меню) */
+nav menuitem {
+  position: relative;
+  display: block;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 10000;   
+}
+
+nav menuitem > menu {
+  position: absolute;
+  pointer-events: none;
+}
+
+nav > menu {
+  display: flex;
+}
+
+nav > menu > menuitem {
+  pointer-events: all;
+  opacity: 1;
+}
+
+menu menuitem a {
+  white-space: nowrap;
+  display: block;
+  user-select: none; /* Запрет выделения текста */
+}
+
+menuitem:hover > menu {
+  pointer-events: initial;
+}
+
+menuitem:hover > menu > menuitem,
+menu:hover > menuitem {
+  opacity: 1;
+}
+
+nav > menu > menuitem menuitem menu {
+  transform: translateX(100%);
+  top: 0;
+  right: 0;
+}
+
+nav {
+  margin-top: 10px;
+  margin-left: 10px;
+}
+
+nav a {
+  background: var(--white-color2);
+  color: var(--black-color);
+  min-width: 190px;
+  transition: background 0.5s, color 0.5s, transform 0.5s;
+  margin: 0px 10px 10px 0px;
+  padding: 10px 40px;
+  box-sizing: border-box;
+  border-radius: 12px;
+  border: 1px solid var(--white-color2);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  position: relative;
+  height: 40px;
+}
+
+nav a:hover {
+  color: var(--black-color);
+  background: var(--white-color2);
+  box-shadow: 0 0 6px var(--white-color2);
+}
+
+nav a:active {
+  box-shadow: 0 0 3px var(--white-color2);
+  color: var(--white-color2);
+  transform: scale(0.95); /* Сжатие кнопки при нажатии */
+  background: var(--white-color2);
+}
+
+nav > menu > menuitem > a + menu:after {
+  content: '';
+  position: absolute;
+  border: 6px solid transparent;
+  border-top: 6px solid var(--white-color2);
+  left: 14px;
+  top: -32px;
+}
+
+nav menuitem > menu > menuitem > a + menu:after {
+  content: '';
+  position: absolute;
+  border: 6px solid transparent;
+  border-left: 6px solid var(--white-color2);
+  top: 14px;
+  left: -218px;
+  transition: opacity 0.3s, transform 0s;
+}
+
+nav > menu > menuitem > menu > menuitem {
+  transition: transform 0.3s, opacity 0.3s;
+  transform: translateY(150%);
+  opacity: 0;
+}
+
+nav > menu > menuitem:hover > menu > menuitem,
+nav > menu > menuitem.hover > menu > menuitem {
+  transform: translateY(0%);
+  opacity: 1;
+}
+
+menuitem > menu > menuitem > menu > menuitem {
+  transition: transform 0.3s, opacity 0.3s;
+  transform: translateX(195px) translateY(0%);
+  opacity: 0;
+}
+
+menuitem > menu > menuitem:hover > menu > menuitem,
+menuitem > menu > menuitem.hover > menu > menuitem {
+  transform: translateX(0) translateY(0%);
+  opacity: 1;
+}
 </style>
+
