@@ -365,8 +365,15 @@
   const addProjectButton = document.getElementById('add-project-button');
   const projectTemplate = document.getElementById('project-template');
 
+  // Настройки виртуализации
+  const ITEM_HEIGHT = 60; // Высота одного элемента (в пикселях)
+  const BUFFER = 5; // Количество элементов, добавляемых сверху и снизу видимой области
+
   // Создаем Map для кэширования элементов проектов по их ID
   const projectElementsMap = new Map();
+
+  // Хранилище всех проектов
+  let allProjects = [];
 
   // Функция для генерации уникального project_id
   function generateProjectID() {
@@ -385,7 +392,7 @@
       const field = input.dataset.field;
       if (field && project.hasOwnProperty(field)) {
         input.value = project[field] !== null ? project[field] : '';
-        // Присваиваем уник ID только если необходимо
+        // Присваиваем уникальный ID только если необходимо
         // Например:
         // input.id = `${field}-${project.id}`;
       }
@@ -406,15 +413,8 @@
         return;
       }
 
-      // Очистка контейнера перед загрузкой
-      projectsContainer.innerHTML = '';
-
-      const fragment = document.createDocumentFragment();
-      data.forEach(project => {
-        const projectElement = createProjectElement(project);
-        fragment.appendChild(projectElement);
-      });
-      projectsContainer.appendChild(fragment);
+      allProjects = data;
+      renderVisibleProjects();
     } catch (err) {
       console.error('Ошибка при загрузке проектов:', err);
     }
@@ -491,7 +491,6 @@
   function updateProjectInDOM(project) {
     const existingElement = projectElementsMap.get(project.id);
     if (existingElement) {
-      // Используем requestAnimationFrame для группового обновления
       requestAnimationFrame(() => {
         const inputs = existingElement.querySelectorAll('.modal1-input');
         inputs.forEach(input => {
@@ -507,32 +506,77 @@
     }
   }
 
-  // Подписка на изменения в таблице projects
-  function setupRealtime() {
-    supabase.from('projects').on('*', payload => {
-      // Удаляем console.log для улучшения производительности
-      // console.log('Изменение в projects:', payload);
+  // Функция для рендеринга видимых проектов (виртуализация)
+  function renderVisibleProjects() {
+    // Получаем высоту контейнера
+    const containerHeight = projectsContainer.clientHeight;
+    // Получаем текущую позицию прокрутки
+    const scrollTop = projectsContainer.scrollTop;
+    // Вычисляем индекс первого видимого элемента
+    const startIndex = Math.floor(scrollTop / ITEM_HEIGHT) - BUFFER;
+    // Вычисляем индекс последнего видимого элемента
+    const endIndex = Math.ceil((scrollTop + containerHeight) / ITEM_HEIGHT) + BUFFER;
 
-      let projectId;
-      if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
-        projectId = payload.new.id;
-      } else if (payload.eventType === 'DELETE') {
-        projectId = payload.old.id;
+    // Ограничиваем индексы
+    const visibleStartIndex = Math.max(0, startIndex);
+    const visibleEndIndex = Math.min(allProjects.length, endIndex);
+
+    // Очищаем текущие элементы
+    projectsContainer.innerHTML = '';
+
+    // Создаем DocumentFragment для быстрого добавления элементов
+    const fragment = document.createDocumentFragment();
+
+    for (let i = visibleStartIndex; i < visibleEndIndex; i++) {
+      const project = allProjects[i];
+      let projectElement = projectElementsMap.get(project.id);
+
+      if (!projectElement) {
+        projectElement = createProjectElement(project);
       }
 
-      if (!projectId) return; // Если projectId не определен, выходим
+      // Устанавливаем позицию элемента
+      projectElement.style.position = 'absolute';
+      projectElement.style.top = `${i * ITEM_HEIGHT}px`;
+      projectElement.style.height = `${ITEM_HEIGHT}px`;
+      projectElement.style.width = '100%';
 
-      if (payload.eventType === 'INSERT') {
-        const projectElement = createProjectElement(payload.new);
-        projectsContainer.appendChild(projectElement);
-      } else if (payload.eventType === 'UPDATE') {
+      fragment.appendChild(projectElement);
+    }
+
+    // Устанавливаем общую высоту контейнера для правильной прокрутки
+    projectsContainer.style.position = 'relative';
+    projectsContainer.style.height = `${allProjects.length * ITEM_HEIGHT}px`;
+
+    projectsContainer.appendChild(fragment);
+  }
+
+  // Обработчик события прокрутки для рендеринга видимых проектов
+  function onScroll() {
+    renderVisibleProjects();
+  }
+
+  // Подписка на изменения в таблице projects
+  function setupRealtime() {
+    supabase.from('projects').on('INSERT', payload => {
+      allProjects.push(payload.new);
+      renderVisibleProjects();
+    }).on('UPDATE', payload => {
+      const index = allProjects.findIndex(p => p.id === payload.new.id);
+      if (index !== -1) {
+        allProjects[index] = payload.new;
         updateProjectInDOM(payload.new);
-      } else if (payload.eventType === 'DELETE') {
-        const existingElement = projectElementsMap.get(projectId);
+      }
+    }).on('DELETE', payload => {
+      const index = allProjects.findIndex(p => p.id === payload.old.id);
+      if (index !== -1) {
+        allProjects.splice(index, 1);
+        const existingElement = projectElementsMap.get(payload.old.id);
         if (existingElement) {
           projectsContainer.removeChild(existingElement);
-          projectElementsMap.delete(projectId);
+          projectElementsMap.delete(payload.old.id);
         }
+        renderVisibleProjects();
       }
     }).subscribe();
   }
@@ -569,6 +613,9 @@
   // Инициализация при загрузке модала
   loadProjects();
   setupRealtime();
+
+  // Добавляем обработчик события прокрутки
+  projectsContainer.addEventListener('scroll', onScroll);
 
   // Экспортируем функции, чтобы они были доступны из HTML (если необходимо)
   window.deleteProject = deleteProject;
