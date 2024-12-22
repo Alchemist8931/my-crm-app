@@ -299,6 +299,9 @@
   const projectsContainer = document.getElementById('projects-container');
   const addProjectButton = document.getElementById('add-project-button');
 
+  // Кэшируем часто используемые селекторы
+  const cachedSelectors = {};
+
   // Функция для генерации уникального project_id
   function generateProjectID() {
     return 'proj_' + Math.random().toString(36).substr(2, 9);
@@ -369,7 +372,7 @@
         <input type="text" class="modal1-input" id="tin-buyer-${project.id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" />
         <label for="tin-buyer-${project.id}">TIN buyer</label>
       </div>
-    `;
+`;
 
     return container;
   }
@@ -454,6 +457,20 @@
     // Удаление будет автоматически отражено через подписку на DELETE
   }
 
+  // Функция для обновления только измененных полей без замены всего контейнера
+  function updateProjectInDOM(project) {
+    const existingElement = projectsContainer.querySelector(`[data-id='${project.id}']`);
+    if (existingElement) {
+      Object.keys(project).forEach(field => {
+        if (field === 'id') return; // Пропускаем поле id
+        const input = existingElement.querySelector(`[data-field='${field}']`);
+        if (input) {
+          input.value = project[field] !== null ? project[field] : '';
+        }
+      });
+    }
+  }
+
   // Подписка на изменения в таблице projects
   function setupRealtime() {
     supabase.from('projects').on('*', payload => {
@@ -473,17 +490,7 @@
         const projectElement = createProjectContainer(payload.new);
         projectsContainer.appendChild(projectElement);
       } else if (payload.eventType === 'UPDATE') {
-        const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
-        if (existingElement) {
-          // Обновляем только измененные поля, вместо замены всего контейнера
-          Object.keys(payload.new).forEach(field => {
-            if (field === 'id') return; // Пропускаем поле id
-            const input = existingElement.querySelector(`[data-field='${field}']`);
-            if (input) {
-              input.value = payload.new[field] !== null ? payload.new[field] : '';
-            }
-          });
-        }
+        updateProjectInDOM(payload.new);
       } else if (payload.eventType === 'DELETE') {
         const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
         if (existingElement) {
@@ -529,4 +536,3 @@
   // Экспортируем функции, чтобы они были доступны из HTML
   window.deleteProject = deleteProject;
 </script>
-
