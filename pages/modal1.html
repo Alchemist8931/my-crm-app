@@ -3,82 +3,88 @@
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
+  <!-- Дополнительный контент -->
   
-  <!-- Модальное окно проектов -->
+    <!-- модальное окно проектов -->
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 100%;">
-    <div id="projectsList" class="modalVNUT-content">
-      <!-- Сюда будут добавляться проекты -->
-    </div>
-  </div>
+      <div class="modalVNUT-content">
+      
+      
+
+
+
+        <!-- Разметка КОНТЕЙНЕРА -->
+      <div id="modal1-container" class="modal1-container">
+        <span class="modal1-icon"><i class="material-symbols-outlined">developer_guide</i></span>
+        <span class="modal1-icon"><i class="material-symbols-outlined">data_table</i></span>
+
+        <!-- Группы ввода данных -->
+        <div class="modal1-input-group left">
+          <input type="text" class="modal1-input" id="modal1-project-id" placeholder=" " />
+          <label for="modal1-project-id">project ID</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="modal1-project-name" placeholder=" " />
+          <label for="modal1-project-name">project name</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="modal1-status" placeholder=" " />
+          <label for="modal1-status">status</label>
+        </div>
+
+        <div class="modal1-input-group left">
+          <input type="text" class="modal1-input" id="modal1-contract-amount" placeholder=" " />
+          <label for="modal1-contract-amount">contract amount</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="modal1-contract-costs" placeholder=" " />
+          <label for="modal1-contract-costs">contract costs</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="modal1-contract-profit" placeholder=" " />
+          <label for="modal1-contract-profit">contract profit</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="modal1-profit-percentage" placeholder=" " />
+          <label for="modal1-profit-percentage">profit %</label>
+        </div>
+
+        <div class="modal1-input-group left">
+          <input type="text" class="modal1-input" id="modal1-company-seller" placeholder=" " />
+          <label for="modal1-company-seller">company seller</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="modal1-tin-seller" placeholder=" " />
+          <label for="modal1-tin-seller">TIN seller</label>
+        </div>
+
+        <div class="modal1-input-group left">
+          <input type="text" class="modal1-input" id="modal1-buyer-company" placeholder=" " />
+          <label for="modal1-buyer-company">buyer company</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="modal1-tin-buyer" placeholder=" " />
+          <label for="modal1-tin-buyer">TIN buyer</label>
+        </div>
+      </div>
+              
+      
+
   
-  <!-- Разметка КОНТЕЙНЕРА -->
-  <template id="project-template">
-    <div class="modal1-container" data-id="">
-      <span class="modal1-icon project_id_icon"><i class="material-symbols-outlined">developer_guide</i></span>
-      <span class="modal1-icon project_name_icon"><i class="material-symbols-outlined">data_table</i></span>
-
-      <!-- Группы ввода данных -->
-      <div class="modal1-input-group left">
-        <input type="text" class="modal1-input project_id" placeholder=" " />
-        <label>project ID</label>
+  
+  
       </div>
+  </div>
 
-      <div class="modal1-input-group right">
-        <input type="text" class="modal1-input project_name" placeholder=" " />
-        <label>project name</label>
-      </div>
-
-      <div class="modal1-input-group right">
-        <input type="text" class="modal1-input status" placeholder=" " />
-        <label>status</label>
-      </div>
-
-      <div class="modal1-input-group left">
-        <input type="text" class="modal1-input contract_amount" placeholder=" " />
-        <label>contract amount</label>
-      </div>
-
-      <div class="modal1-input-group right">
-        <input type="text" class="modal1-input contract_costs" placeholder=" " />
-        <label>contract costs</label>
-      </div>
-
-      <div class="modal1-input-group right">
-        <input type="text" class="modal1-input contract_profit" placeholder=" " />
-        <label>contract profit</label>
-      </div>
-
-      <div class="modal1-input-group right">
-        <input type="text" class="modal1-input profit_percentage" placeholder=" " />
-        <label>profit %</label>
-      </div>
-
-      <div class="modal1-input-group left">
-        <input type="text" class="modal1-input company_seller" placeholder=" " />
-        <label>company seller</label>
-      </div>
-
-      <div class="modal1-input-group right">
-        <input type="text" class="modal1-input tin_seller" placeholder=" " />
-        <label>TIN seller</label>
-      </div>
-
-      <div class="modal1-input-group left">
-        <input type="text" class="modal1-input buyer_company" placeholder=" " />
-        <label>buyer company</label>
-      </div>
-
-      <div class="modal1-input-group right">
-        <input type="text" class="modal1-input tin_buyer" placeholder=" " />
-        <label>TIN buyer</label>
-      </div>
-
-      <!-- Кнопка удаления проекта -->
-      <span class="material-symbols-outlined delete-project" title="Удалить проект">delete</span>
-    </div>
-  </template>
+  
 </div>
-
 
 <style>
 .close-modal {
@@ -336,222 +342,7 @@
     transform: scale(0.92); /* Сжатие иконки при клике */
   }
 
-
-
-  /* __________________________________________________________ стили для нового функционала */
-
-  .add-project-button {
-    margin: 1vw;
-    padding: 0.5vw 1vw;
-    background-color: var(--white-color1);
-    color: var(--black-color);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.4vw;
-    transition: background-color 0.3s;
-  }
-
-  .add-project-button:hover {
-    background-color: var(--white-color2);
-  }
-
-
   
   
 </style>
 
-
-<script type="module">
-  // Инициализация Supabase
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
-
-  const SUPABASE_URL = 'https://lhgwxwsawnmstplseokz.supabase.co'; 
-  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';  
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  const projectsList = document.getElementById('projectsList');
-  const projectTemplate = document.getElementById('project-template');
-
-  // Функция для создания элемента проекта из шаблона
-  function createProjectElement(project) {
-    const projectClone = projectTemplate.content.cloneNode(true);
-    const projectContainer = projectClone.querySelector('.modal1-container');
-    projectContainer.setAttribute('data-id', project.id);
-
-    // Заполнение полей данными проекта
-    projectContainer.querySelector('.project_id').value = project.project_id || '';
-    projectContainer.querySelector('.project_name').value = project.project_name || '';
-    projectContainer.querySelector('.status').value = project.status || '';
-    projectContainer.querySelector('.contract_amount').value = project.contract_amount || '';
-    projectContainer.querySelector('.contract_costs').value = project.contract_costs || '';
-    projectContainer.querySelector('.contract_profit').value = project.contract_profit || '';
-    projectContainer.querySelector('.profit_percentage').value = project.profit_percentage || '';
-    projectContainer.querySelector('.company_seller').value = project.company_seller || '';
-    projectContainer.querySelector('.tin_seller').value = project.tin_seller || '';
-    projectContainer.querySelector('.buyer_company').value = project.buyer_company || '';
-    projectContainer.querySelector('.tin_buyer').value = project.tin_buyer || '';
-
-    // Добавление обработчиков событий для автосохранения
-    const inputs = projectContainer.querySelectorAll('.modal1-input');
-    inputs.forEach(input => {
-      input.addEventListener('input', () => {
-        const field = input.classList[1]; // Предполагается, что второй класс соответствует полю
-        handleInputChange(project.id, field, input.value);
-      });
-    });
-
-    // Добавление обработчика для удаления проекта
-    const deleteButton = projectContainer.querySelector('.delete-project');
-    deleteButton.addEventListener('click', () => deleteProject(project.id));
-
-    return projectClone;
-  }
-
-  // Загрузка проектов из Supabase
-  async function loadProjects() {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*');
-
-    if (error) {
-      console.error('Ошибка загрузки проектов:', error);
-      return;
-    }
-
-    projectsList.innerHTML = ''; // Очистка списка перед загрузкой
-
-    data.forEach(project => {
-      const projectElement = createProjectElement(project);
-      projectsList.appendChild(projectElement);
-    });
-  }
-
-  // Добавление нового проекта
-  async function addNewProject() {
-    const newProject = {
-      project_id: `PID-${Date.now()}`, // Пример уникального ID
-      project_name: '',
-      status: '',
-      contract_amount: 0,
-      contract_costs: 0,
-      contract_profit: 0,
-      profit_percentage: 0,
-      company_seller: '',
-      tin_seller: '',
-      buyer_company: '',
-      tin_buyer: ''
-    };
-
-    const { data, error } = await supabase
-      .from('projects')
-      .insert([newProject])
-      .single();
-
-    if (error) {
-      console.error('Ошибка добавления проекта:', error);
-      return;
-    }
-
-    // Проект автоматически добавится через подписку на реальное время
-  }
-
-  // Удаление проекта
-  async function deleteProject(projectId) {
-    const { error } = await supabase
-      .from('projects')
-      .delete()
-      .eq('id', projectId);
-
-    if (error) {
-      console.error('Ошибка удаления проекта:', error);
-    }
-    // Проект автоматически удалится через подписку на реальное время
-  }
-
-  // Обработка изменений в полях ввода (автосохранение)
-  async function handleInputChange(projectId, field, value) {
-    const updates = {};
-    updates[field] = value;
-    updates['updated_at'] = new Date().toISOString();
-
-    const { error } = await supabase
-      .from('projects')
-      .update(updates)
-      .eq('id', projectId);
-
-    if (error) {
-      console.error(`Ошибка обновления проекта ${projectId}:`, error);
-    }
-  }
-
-  // Подписка на изменения в таблице projects (реальное время)
-  function subscribeToProjects() {
-    supabase
-      .from('projects')
-      .on('*', payload => {
-        console.log('Изменение в projects:', payload);
-        switch (payload.eventType) {
-          case 'INSERT':
-            addProjectToList(payload.new);
-            break;
-          case 'UPDATE':
-            updateProjectInList(payload.new);
-            break;
-          case 'DELETE':
-            removeProjectFromList(payload.old.id);
-            break;
-          default:
-            break;
-        }
-      })
-      .subscribe();
-  }
-
-  // Добавление проекта в список
-  function addProjectToList(project) {
-    const projectElement = createProjectElement(project);
-    projectsList.appendChild(projectElement);
-  }
-
-  // Обновление проекта в списке
-  function updateProjectInList(project) {
-    const projectContainer = projectsList.querySelector(`.modal1-container[data-id='${project.id}']`);
-    if (projectContainer) {
-      // Обновляем значения полей
-      projectContainer.querySelector('.project_id').value = project.project_id || '';
-      projectContainer.querySelector('.project_name').value = project.project_name || '';
-      projectContainer.querySelector('.status').value = project.status || '';
-      projectContainer.querySelector('.contract_amount').value = project.contract_amount || '';
-      projectContainer.querySelector('.contract_costs').value = project.contract_costs || '';
-      projectContainer.querySelector('.contract_profit').value = project.contract_profit || '';
-      projectContainer.querySelector('.profit_percentage').value = project.profit_percentage || '';
-      projectContainer.querySelector('.company_seller').value = project.company_seller || '';
-      projectContainer.querySelector('.tin_seller').value = project.tin_seller || '';
-      projectContainer.querySelector('.buyer_company').value = project.buyer_company || '';
-      projectContainer.querySelector('.tin_buyer').value = project.tin_buyer || '';
-    }
-  }
-
-  // Удаление проекта из списка
-  function removeProjectFromList(projectId) {
-    const projectContainer = projectsList.querySelector(`.modal1-container[data-id='${projectId}']`);
-    if (projectContainer) {
-      projectContainer.remove();
-    }
-  }
-
-  // Инициализация при загрузке
-  document.addEventListener('DOMContentLoaded', () => {
-    loadProjects();
-    subscribeToProjects();
-  });
-
-  // Функция закрытия модального окна (должна быть определена в основном приложении)
-  function closeModal() {
-    // Предполагается, что функция closeModal() уже определена в основном приложении
-    if (typeof window.closeModal === 'function') {
-      window.closeModal();
-    }
-  }
-</script>
