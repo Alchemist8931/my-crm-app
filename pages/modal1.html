@@ -293,8 +293,8 @@
 </style>
 
 <script type="module">
-  // Весь необходимый JavaScript код для modal1.html
-  import { supabase } from '../path/to/your/supabaseClient.js'; // Обеспечьте правильный путь
+  // Доступ к Supabase клиенту через window.supabase
+  const supabase = window.supabase;
 
   const projectsContainer = document.getElementById('projects-container');
   const addProjectButton = document.getElementById('add-project-button');
@@ -492,4 +492,7 @@
   // Инициализация при загрузке модала
   loadProjects();
   setupRealtime();
+
+  // Экспортируем функции, чтобы они были доступны из HTML
+  window.deleteProject = deleteProject;
 </script>
