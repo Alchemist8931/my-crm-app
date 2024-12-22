@@ -5,80 +5,78 @@
   <p class="modal1-subtitle">проекты в работе</p>
   <!-- Дополнительный контент -->
   
-    <!-- модальное окно проектов -->
+  <!-- модальное окно проектов -->
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 100%;">
-      <div id="projectsList" class="modalVNUT-content">
-      
-
-      </div>
+    <div id="projectsList" class="modalVNUT-content">
+    </div>
   </div>
   
+  <!-- Разметка КОНТЕЙНЕРА -->
+  <template id="project-template">
+    <div class="modal1-container" data-id="">
+      <span class="modal1-icon project_id"><i class="material-symbols-outlined">developer_guide</i></span>
+      <span class="modal1-icon project_name"><i class="material-symbols-outlined">data_table</i></span>
 
-   <!-- Разметка КОНТЕЙНЕРА -->
-      <template id="project-template" class="modal1-container">
-        <span class="modal1-icon"><i class="material-symbols-outlined">developer_guide</i></span>
-        <span class="modal1-icon"><i class="material-symbols-outlined">data_table</i></span>
+      <!-- Группы ввода данных -->
+      <div class="modal1-input-group left">
+        <input type="text" class="modal1-input project_id" id="modal1-project-id" placeholder=" " />
+        <label for="modal1-project-id">project ID</label>
+      </div>
 
-        <!-- Группы ввода данных -->
-        <div class="modal1-input-group left">
-          <input type="text" class="modal1-input" id="modal1-project-id" placeholder=" " />
-          <label for="modal1-project-id">project ID</label>
-        </div>
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input project_name" id="modal1-project-name" placeholder=" " />
+        <label for="modal1-project-name">project name</label>
+      </div>
 
-        <div class="modal1-input-group right">
-          <input type="text" class="modal1-input" id="modal1-project-name" placeholder=" " />
-          <label for="modal1-project-name">project name</label>
-        </div>
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input status" id="modal1-status" placeholder=" " />
+        <label for="modal1-status">status</label>
+      </div>
 
-        <div class="modal1-input-group right">
-          <input type="text" class="modal1-input" id="modal1-status" placeholder=" " />
-          <label for="modal1-status">status</label>
-        </div>
+      <div class="modal1-input-group left">
+        <input type="text" class="modal1-input contract_amount" id="modal1-contract-amount" placeholder=" " />
+        <label for="modal1-contract-amount">contract amount</label>
+      </div>
 
-        <div class="modal1-input-group left">
-          <input type="text" class="modal1-input" id="modal1-contract-amount" placeholder=" " />
-          <label for="modal1-contract-amount">contract amount</label>
-        </div>
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input contract_costs" id="modal1-contract-costs" placeholder=" " />
+        <label for="modal1-contract-costs">contract costs</label>
+      </div>
 
-        <div class="modal1-input-group right">
-          <input type="text" class="modal1-input" id="modal1-contract-costs" placeholder=" " />
-          <label for="modal1-contract-costs">contract costs</label>
-        </div>
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input contract_profit" id="modal1-contract-profit" placeholder=" " />
+        <label for="modal1-contract-profit">contract profit</label>
+      </div>
 
-        <div class="modal1-input-group right">
-          <input type="text" class="modal1-input" id="modal1-contract-profit" placeholder=" " />
-          <label for="modal1-contract-profit">contract profit</label>
-        </div>
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input profit_percentage" id="modal1-profit-percentage" placeholder=" " />
+        <label for="modal1-profit-percentage">profit %</label>
+      </div>
 
-        <div class="modal1-input-group right">
-          <input type="text" class="modal1-input" id="modal1-profit-percentage" placeholder=" " />
-          <label for="modal1-profit-percentage">profit %</label>
-        </div>
+      <div class="modal1-input-group left">
+        <input type="text" class="modal1-input company_seller" id="modal1-company-seller" placeholder=" " />
+        <label for="modal1-company-seller">company seller</label>
+      </div>
 
-        <div class="modal1-input-group left">
-          <input type="text" class="modal1-input" id="modal1-company-seller" placeholder=" " />
-          <label for="modal1-company-seller">company seller</label>
-        </div>
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input tin_seller" id="modal1-tin-seller" placeholder=" " />
+        <label for="modal1-tin-seller">TIN seller</label>
+      </div>
 
-        <div class="modal1-input-group right">
-          <input type="text" class="modal1-input" id="modal1-tin-seller" placeholder=" " />
-          <label for="modal1-tin-seller">TIN seller</label>
-        </div>
+      <div class="modal1-input-group left">
+        <input type="text" class="modal1-input buyer_company" id="modal1-buyer-company" placeholder=" " />
+        <label for="modal1-buyer-company">buyer company</label>
+      </div>
 
-        <div class="modal1-input-group left">
-          <input type="text" class="modal1-input" id="modal1-buyer-company" placeholder=" " />
-          <label for="modal1-buyer-company">buyer company</label>
-        </div>
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input tin_buyer" id="modal1-tin-buyer" placeholder=" " />
+        <label for="modal1-tin-buyer">TIN buyer</label>
+      </div>
 
-        <div class="modal1-input-group right">
-          <input type="text" class="modal1-input" id="modal1-tin-buyer" placeholder=" " />
-          <label for="modal1-tin-buyer">TIN buyer</label>
-        </div>
-
-        <!-- Кнопка удаления проекта -->
-        <span class="material-symbols-outlined delete-project" title="Удалить проект">delete</span>
-      </template>
-  
+      <!-- Кнопка удаления проекта -->
+      <span class="material-symbols-outlined delete-project" title="Удалить проект">delete</span>
+    </div>
+  </template>
 </div>
 
 <style>
@@ -372,11 +370,11 @@
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   const projectsList = document.getElementById('projectsList');
-  const projectTemplate = document.getElementById('project-template').content;
+  const projectTemplate = document.getElementById('project-template');
 
   // Функция для создания элемента проекта из шаблона
   function createProjectElement(project) {
-    const projectClone = document.importNode(projectTemplate, true);
+    const projectClone = projectTemplate.content.cloneNode(true);
     const projectContainer = projectClone.querySelector('.modal1-container');
     projectContainer.setAttribute('data-id', project.id);
 
