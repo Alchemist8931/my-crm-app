@@ -5,10 +5,10 @@
   <p class="modal1-subtitle">проекты в работе</p>
   <!-- Дополнительный контент -->
 
-  <!--    Кнопка для добавления нового проекта    -->
+  <!-- Кнопка для добавления нового проекта -->
   <button id="add-project-button" style="margin-top: -4.2vw; padding: 0.5vw 1vw; font-size: 0.4vw; cursor: pointer;">Добавить проект</button>
 
-  <!-- модальное окно проектов -->
+  <!-- Модальное окно проектов -->
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 99%;">
     <div class="modalVNUT-content" id="projects-container">
       <!-- Контейнеры проектов будут динамически добавляться здесь -->
@@ -371,6 +371,9 @@
       </div>
     `;
 
+    // Удаляем добавление индивидуальных обработчиков событий
+    // Теперь используем делегирование событий
+
     return container;
   }
 
@@ -431,6 +434,17 @@
     // Изменения будут автоматически обновлены через подписку на UPDATE
   }
 
+  // Дебаунсинг для функции обновления поля проекта
+  function debounce(func, delay) {
+    let timeout;
+    return function(...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), delay);
+    };
+  }
+
+  const debouncedUpdateProjectField = debounce(updateProjectField, 300);
+
   // Функция для удаления проекта
   async function deleteProject(projectId) {
     const { data, error } = await supabase.from('projects').delete().eq('id', projectId);
@@ -477,20 +491,7 @@
       const field = input.dataset.field;
       const value = input.value;
       const projectId = input.id.split('-').pop(); // Предполагается, что ID имеет формат 'field-projectId'
-      updateProjectField(projectId, field, value);
-    }
-  });
-
-  // Делегирование событий для иконок (delete и edit)
-  projectsContainer.addEventListener('click', (event) => {
-    const icon = event.target.closest('.modal1-icon');
-    if (icon) {
-      const action = icon.dataset.action;
-      const projectId = icon.dataset.id;
-      if (action === 'delete') {
-        deleteProject(projectId);
-      }
-      // Добавьте обработку 'edit', если необходимо
+      debouncedUpdateProjectField(projectId, field, value);
     }
   });
 
