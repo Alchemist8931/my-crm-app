@@ -1,8 +1,8 @@
 <!-- /pages/modal1.html -->
 <button class="close-modal" onclick="closeModal()">×</button>
 <div class="modal111-content" style="justify-content: flex-start;">
-  <h2 style="margin-top: 1vw; left: 1vw;">ELABORATION SALES</h2>
-  <p style="margin-top: 0.2vw; left: 1vw;">проекты в работе</p>
+  <h2 class="modal1-title">ELABORATION SALES</h2>
+  <p class="modal1-subtitle">проекты в работе</p>
   <!-- Дополнительный контент -->
   
     <!-- модальное окно проектов -->
@@ -52,18 +52,23 @@
     pading: 1vw
   }
 
-  .modal111-content h2 {
-    color: var(--white-color2);
-    font-size: 0.8vw;
-    left: 1vw;
-  }
+  /* Заголовок */
+.modal1-title {
+  color: var(--white-color2);
+  font-size: 0.8vw;
+  margin-top: 1vw;
+  margin-left: 1vw;
+  align-self: flex-start; /* Убедитесь, что заголовок выровнен по левому краю */
+}
 
-  .modal111-content p {
-    color: var(--white-color2);
-    font-size: 0.5vw;
-    top: 1vw;
-    left: 1vw;
-  }
+/* Подзаголовок */
+.modal1-subtitle {
+  color: var(--white-color2);
+  font-size: 0.5vw;
+  margin-top: 0.2vw;
+  margin-left: 1vw;
+  align-self: flex-start; /* Убедитесь, что подзаголовок выровнен по левому краю */
+}
   
   
   
