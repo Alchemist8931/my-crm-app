@@ -299,8 +299,8 @@
   const projectsContainer = document.getElementById('projects-container');
   const addProjectButton = document.getElementById('add-project-button');
 
-  // Кэшируем часто используемые селекторы
-  const cachedSelectors = {};
+  // Создаем Map для кэширования элементов проектов по их ID
+  const projectElementsMap = new Map();
 
   // Функция для генерации уникального project_id
   function generateProjectID() {
@@ -372,7 +372,10 @@
         <input type="text" class="modal1-input" id="tin-buyer-${project.id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" />
         <label for="tin-buyer-${project.id}">TIN buyer</label>
       </div>
-`;
+    `;
+
+    // Добавляем контейнер в Map для быстрого доступа
+    projectElementsMap.set(project.id, container);
 
     return container;
   }
@@ -459,15 +462,22 @@
 
   // Функция для обновления только измененных полей без замены всего контейнера
   function updateProjectInDOM(project) {
-    const existingElement = projectsContainer.querySelector(`[data-id='${project.id}']`);
+    const existingElement = projectElementsMap.get(project.id);
     if (existingElement) {
+      // Используем DocumentFragment для группового обновления
+      const fragment = document.createDocumentFragment();
+
       Object.keys(project).forEach(field => {
         if (field === 'id') return; // Пропускаем поле id
         const input = existingElement.querySelector(`[data-field='${field}']`);
         if (input) {
-          input.value = project[field] !== null ? project[field] : '';
+          if (input.value !== (project[field] !== null ? project[field] : '')) {
+            input.value = project[field] !== null ? project[field] : '';
+          }
         }
       });
+
+      // Если нужны дополнительные действия после обновления, добавьте их здесь
     }
   }
 
@@ -490,11 +500,15 @@
         const projectElement = createProjectContainer(payload.new);
         projectsContainer.appendChild(projectElement);
       } else if (payload.eventType === 'UPDATE') {
-        updateProjectInDOM(payload.new);
+        // Используем requestAnimationFrame для группового обновления
+        requestAnimationFrame(() => {
+          updateProjectInDOM(payload.new);
+        });
       } else if (payload.eventType === 'DELETE') {
-        const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
+        const existingElement = projectElementsMap.get(projectId);
         if (existingElement) {
           projectsContainer.removeChild(existingElement);
+          projectElementsMap.delete(projectId);
         }
       }
     }).subscribe();
