@@ -1,15 +1,15 @@
 <!-- /pages/modal1.html -->
-<button class="close-modal" onclick="closeModal()">×</button>
-<div class="modalVNUT-content">
+<button class="modal1-close-modal" onclick="closeModal()">×</button>
+<div class="modal1-modalVNUT-content">
   <h2>ELABORATION</h2>
   <p>проекты компании</p>
   <!-- Дополнительный контент -->
     
-    <nav>
-      <menu>
-        <menuitem id="demo1" style="left: 17.6vw">
+    <nav class="modal1-nav">
+      <menu class="modal1-menu">
+        <menuitem id="modal1-demo1" style="left: 17.6vw">
           <a href="#">status</a>
-          <menu>
+          <menu class="modal1-submenu">
             <menuitem><a href="#">idea</a></menuitem>
             <menuitem><a href="#">planned</a></menuitem>
             <menuitem><a href="#">elaboration</a></menuitem>
@@ -23,11 +23,11 @@
       </menu>
     </nav>
 
-    <nav>
-      <menu>
-        <menuitem id="demo2" style="left: 43.2vw">
+    <nav class="modal1-nav">
+      <menu class="modal1-menu">
+        <menuitem id="modal1-demo2" style="left: 43.2vw">
           <a href="#">seller</a>
-          <menu>
+          <menu class="modal1-submenu">
             <menuitem><a href="#">LLC TABIA Group</a></menuitem>
             <menuitem><a href="#">LLC MPSteel</a></menuitem>
             <menuitem><a href="#">LLC ST</a></menuitem>
@@ -37,11 +37,11 @@
       </menu>
     </nav>
     
-    <nav>
-      <menu>
-        <menuitem id="demo3" style="left: 52.1vw">
+    <nav class="modal1-nav">
+      <menu class="modal1-menu">
+        <menuitem id="modal1-demo3" style="left: 52.1vw">
           <a href="#">buyer</a>
-          <menu>
+          <menu class="modal1-submenu">
             <menuitem><a href="#">Knauf Insulation г. Тюмень</a></menuitem>
             <menuitem><a href="#">ФГУП ПО Маяк</a></menuitem>
           </menu>
@@ -50,81 +50,80 @@
     </nav>
     
     <!-- Модальное окно проектов -->
-    <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 7vw); width: 92vw;">
-      <div class="modalVNUT-content">
+    <div id="modal1-modalBottom" class="modal1-modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 7vw); width: 92vw;">
+      <div class="modal1-modalVNUT-content">
         <!-- Контент внутри нижнего окна -->
-        <div id="modalCONTEINER" class="modalCONTEINER">
-          <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw;">developer_guide</i></span>
-          <span class="iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw; margin-left: 0.25vw;">data_table</i></span>
+        <div id="modal1-modalCONTEINER" class="modal1-modalCONTEINER">
+          <span class="modal1-iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw;">developer_guide</i></span>
+          <span class="modal1-iconTYPE1"><i class="material-symbols-outlined" style="font-size: 2vw; margin-left: 0.25vw;">data_table</i></span>
           
           <!-- Группы ввода данных -->
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
-            <input type="text" class="input" id="project-id" placeholder=" " style="width: 4.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="project-id">project ID</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="modal1-input" id="modal1-project-id" placeholder=" " style="width: 4.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="modal1-project-id">project ID</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="project-name" placeholder=" " style="width: 11vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="project-name">project name</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="modal1-input" id="modal1-project-name" placeholder=" " style="width: 11vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="modal1-project-name">project name</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="status" placeholder=" " style="width: 7.4vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="status">status</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="modal1-input" id="modal1-status" placeholder=" " style="width: 7.4vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="modal1-status">status</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
-            <input type="text" class="input" id="contract-amount" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="contract-amount">contract amount</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="modal1-input" id="modal1-contract-amount" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="modal1-contract-amount">contract amount</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="contract-costs" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="contract-costs">contract costs</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="modal1-input" id="modal1-contract-costs" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="modal1-contract-costs">contract costs</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="contract-profit" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="contract-profit">contract profit</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="modal1-input" id="modal1-contract-profit" placeholder=" " style="width: 5.8vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="modal1-contract-profit">contract profit</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="profit-percentage" placeholder=" " style="width: 3vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="profit-percentage">profit %</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="modal1-input" id="modal1-profit-percentage" placeholder=" " style="width: 3vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="modal1-profit-percentage">profit %</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
-            <input type="text" class="input" id="company-seller" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="company-seller">company seller</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="modal1-input" id="modal1-company-seller" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="modal1-company-seller">company seller</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="tin-seller" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="tin-seller">TIN seller</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="modal1-input" id="modal1-tin-seller" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="modal1-tin-seller">TIN seller</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
-            <input type="text" class="input" id="buyer-company" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
-            <label for="buyer-company">buyer company</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 2.2vw;">
+            <input type="text" class="modal1-input" id="modal1-buyer-company" placeholder=" " style="width: 9.5vw; letter-spacing: 0.025vw; font-weight: 700;"/>
+            <label for="modal1-buyer-company">buyer company</label>
           </div>
           
-          <div class="input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
-            <input type="text" class="input" id="tin-buyer" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
-            <label for="tin-buyer">TIN buyer</label>
+          <div class="modal1-input-group" style="margin-top: 0.15vw; margin-left: 0.4vw;">
+            <input type="text" class="modal1-input" id="modal1-tin-buyer" placeholder=" " style="width: 4.6vw; letter-spacing: 0.025vw; font-weight: 700; text-transform: uppercase;"/>
+            <label for="modal1-tin-buyer">TIN buyer</label>
           </div>
         </div>
         <!-- Дополнительный контент можно добавить здесь -->
       </div>
     </div>
-</div>
+  </div>
 
 <style>
 /* Стилевые правила для modal1.html */
 
 /* Стили уже определены в index.html, поэтому используем их */
-
 /* Стили для модальных окон */
-.modal {
+.modal1-modal {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -141,32 +140,32 @@
 }
 
 /* Заголовки и параграфы */
-h2 {
+.modal1-modal h2 {
   color: var(--white-color1);
   font-size: 1vw;
 }
 
-p {
+.modal1-modal p {
   color: var(--white-color2);
   font-size: 0.7vw;
 }
 
 /* Анимации */
-.show {
+.modal1-show {
   display: block;
-  animation: fadeIn 2s;
+  animation: modal1-fadeIn 2s;
 }
 
-.hide {
-  animation: fadeOut 1s;
+.modal1-hide {
+  animation: modal1-fadeOut 1s;
 }
 
-@keyframes fadeIn {
+@keyframes modal1-fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes fadeOut {
+@keyframes modal1-fadeOut {
   from { opacity: 1; }
   to { opacity: 0; }
 }
@@ -174,7 +173,7 @@ p {
 /* Функциональное модальное окно */
 
 /* Модальное окно с прокруткой */
-.modalVNUT {
+.modal1-modalVNUT {
   display: flex;
   flex-direction: column;
   background: none;
@@ -188,7 +187,7 @@ p {
 }
 
 /* Внутренний контейнер с прокруткой */
-.modalVNUT-content {
+.modal1-modalVNUT-content {
   padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
   height: 100%;
   width: 100%;
@@ -197,22 +196,22 @@ p {
 }
 
 /* Стилизация скроллбара */
-.modalVNUT-content::-webkit-scrollbar {
+.modal1-modalVNUT-content::-webkit-scrollbar {
   width: 4px; /* Ширина скроллбара */
   background-color: var(--white-color1);
 }
 
-.modalVNUT-content::-webkit-scrollbar-thumb {
+.modal1-modalVNUT-content::-webkit-scrollbar-thumb {
   background-color: var(--white-color2); /* Цвет ползунка */
   border-radius: 10px; /* Скругление */
 }
 
-.modalVNUT-content::-webkit-scrollbar-track {
+.modal1-modalVNUT-content::-webkit-scrollbar-track {
   background-color: var(--white-color1);
 }
 
 /* Контейнеры внутри модального окна */
-.modalCONTEINER {
+.modal1-modalCONTEINER {
   display: flex;
   align-items: center;
   padding: 0.4vw;
@@ -226,23 +225,23 @@ p {
   border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-.modalCONTEINER:hover,
-.modalCONTEINER:focus {
+.modal1-modalCONTEINER:hover,
+.modal1-modalCONTEINER:focus {
   border: 1px solid var(--white-color2);
 }
 
 /* Отступы только между контейнерами */
-.modalCONTEINER:not(:last-child) {
+.modal1-modalCONTEINER:not(:last-child) {
   margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
 }
 
 /* input с LABEL */
-.input-group {
+.modal1-input-group {
   position: relative;
   font-family: "Comfortaa", sans-serif;
 }
 
-.input-group label {
+.modal1-input-group label {
   background: none;
   color: rgba(255, 255, 255, 0.6);
   position: absolute;
@@ -256,7 +255,7 @@ p {
   transition: all 0.3s;
 }
 
-.input-group input {
+.modal1-input-group .modal1-input {
   padding: 0.4vw 0.4vw;
   width: 100%;
   border: 1px solid rgba(255, 255, 255, 0.18);
@@ -268,13 +267,13 @@ p {
   border-radius: var(--borderRadius);
 }
 
-.input-group input:hover,
-.input-group input:focus {
+.modal1-input-group .modal1-input:hover,
+.modal1-input-group .modal1-input:focus {
   border: 1px solid var(--white-color2);
 }
 
-.input-group input:focus + label,
-.input-group input:not(:placeholder-shown) + label {
+.modal1-input-group .modal1-input:focus + label,
+.modal1-input-group .modal1-input:not(:placeholder-shown) + label {
   top: -0.5vw;
   font-size: 0.4vw;
   padding: 0 0.4vw;
@@ -284,7 +283,7 @@ p {
 }
 
 /* input ЗАГОЛОВОК без границ */
-.input-TYPE1 {
+.modal1-input-TYPE1 {
   position: relative;
   font-family: "Comfortaa", sans-serif;
   width: 2vw;
@@ -296,24 +295,24 @@ p {
 }
 
 /* Иконка для контейнера */
-.iconTYPE1 {
+.modal1-iconTYPE1 {
   color: rgba(255, 255, 255, 0.6);
   font-size: 1vw;
   z-index: 1200;
   cursor: pointer;
 }
 
-.iconTYPE1:hover {
+.modal1-iconTYPE1:hover {
   color: var(--white-color2);
   transform: scale(1.1); /* Увеличение иконки при наведении */
 }
 
-.iconTYPE1:active {
+.modal1-iconTYPE1:active {
   transform: scale(0.92); /* Сжатие иконки при клике */
 }
 
 /* Выпадающий список (меню) */
-nav menuitem {
+.modal1-nav menuitem {
   position: relative;
   display: block;
   opacity: 0;
@@ -321,47 +320,47 @@ nav menuitem {
   z-index: 10000;   
 }
 
-nav menuitem > menu {
+.modal1-nav menuitem > menu {
   position: absolute;
   pointer-events: none;
 }
 
-nav > menu {
+.modal1-nav > menu {
   display: flex;
 }
 
-nav > menu > menuitem {
+.modal1-nav > menu > menuitem {
   pointer-events: all;
   opacity: 1;
 }
 
-menu menuitem a {
+.modal1-menu menuitem a {
   white-space: nowrap;
   display: block;
   user-select: none; /* Запрет выделения текста */
 }
 
-menuitem:hover > menu {
+.modal1-menu menuitem:hover > menu {
   pointer-events: initial;
 }
 
-menuitem:hover > menu > menuitem,
-menu:hover > menuitem {
+.modal1-menu menuitem:hover > menu > menuitem,
+.modal1-menu menuitem.hover > menu > menuitem {
   opacity: 1;
 }
 
-nav > menu > menuitem menuitem menu {
+.modal1-nav > menu > menuitem .modal1-submenu {
   transform: translateX(100%);
   top: 0;
   right: 0;
 }
 
-nav {
+.modal1-nav {
   margin-top: 10px;
   margin-left: 10px;
 }
 
-nav a {
+.modal1-nav a {
   background: var(--white-color2);
   color: var(--black-color);
   min-width: 190px;
@@ -376,20 +375,20 @@ nav a {
   height: 40px;
 }
 
-nav a:hover {
+.modal1-nav a:hover {
   color: var(--black-color);
   background: var(--white-color2);
   box-shadow: 0 0 6px var(--white-color2);
 }
 
-nav a:active {
+.modal1-nav a:active {
   box-shadow: 0 0 3px var(--white-color2);
   color: var(--white-color2);
   transform: scale(0.95); /* Сжатие кнопки при нажатии */
   background: var(--white-color2);
 }
 
-nav > menu > menuitem > a + menu:after {
+.modal1-nav > menu > menuitem > a + .modal1-submenu:after {
   content: '';
   position: absolute;
   border: 6px solid transparent;
@@ -398,7 +397,7 @@ nav > menu > menuitem > a + menu:after {
   top: -32px;
 }
 
-nav menuitem > menu > menuitem > a + menu:after {
+.modal1-nav menuitem > menu > menuitem > a + .modal1-submenu:after {
   content: '';
   position: absolute;
   border: 6px solid transparent;
@@ -408,26 +407,26 @@ nav menuitem > menu > menuitem > a + menu:after {
   transition: opacity 0.3s, transform 0s;
 }
 
-nav > menu > menuitem > menu > menuitem {
+.modal1-nav > menu > menuitem > menu > menuitem {
   transition: transform 0.3s, opacity 0.3s;
   transform: translateY(150%);
   opacity: 0;
 }
 
-nav > menu > menuitem:hover > menu > menuitem,
-nav > menu > menuitem.hover > menu > menuitem {
+.modal1-nav > menu > menuitem:hover > menu > menuitem,
+.modal1-nav > menu > menuitem.hover > menu > menuitem {
   transform: translateY(0%);
   opacity: 1;
 }
 
-menuitem > menu > menuitem > menu > menuitem {
+.modal1-nav menuitem > menu > menuitem > menu > menuitem {
   transition: transform 0.3s, opacity 0.3s;
   transform: translateX(195px) translateY(0%);
   opacity: 0;
 }
 
-menuitem > menu > menuitem:hover > menu > menuitem,
-menuitem > menu > menuitem.hover > menu > menuitem {
+.modal1-nav menuitem > menu > menuitem:hover > menu > menuitem,
+.modal1-nav menuitem > menu > menuitem.hover > menu > menuitem {
   transform: translateX(0) translateY(0%);
   opacity: 1;
 }
