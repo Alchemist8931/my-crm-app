@@ -4,20 +4,18 @@
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
   <!-- Дополнительный контент -->
-
-  <!--  <button class="add-project-button" onclick="addNewProject()">Добавить проект</button>  -->
   
     <!-- модальное окно проектов -->
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 100%;">
       <div id="projectsList" class="modalVNUT-content">
-           <!-- Проекты будут динамически добавляться здесь -->
+      
+
       </div>
   </div>
+  
 
-  <!-- Шаблон контейнера проекта (скрытый) -->
-    <template id="project-template">
-      <!-- Разметка КОНТЕЙНЕРА -->
-      <div id="modal1-container" class="modal1-container">
+   <!-- Разметка КОНТЕЙНЕРА -->
+      <template id="project-template" class="modal1-container">
         <span class="modal1-icon"><i class="material-symbols-outlined">developer_guide</i></span>
         <span class="modal1-icon"><i class="material-symbols-outlined">data_table</i></span>
 
@@ -76,8 +74,10 @@
           <input type="text" class="modal1-input" id="modal1-tin-buyer" placeholder=" " />
           <label for="modal1-tin-buyer">TIN buyer</label>
         </div>
-      </div>
-    </template>
+
+        <!-- Кнопка удаления проекта -->
+        <span class="material-symbols-outlined delete-project" title="Удалить проект">delete</span>
+      </template>
   
 </div>
 
