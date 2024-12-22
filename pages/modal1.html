@@ -371,24 +371,12 @@
       </div>
     `;
 
-    // Добавляем обработчики событий для автосохранения
-    const inputs = container.querySelectorAll('.modal1-input');
-    inputs.forEach(input => {
-      input.addEventListener('input', () => {
-        const field = input.dataset.field;
-        const value = input.value;
-        updateProjectField(project.id, field, value);
-      });
-    });
-
     return container;
   }
 
   // Функция для загрузки всех проектов
   async function loadProjects() {
-    const { data, error } = await supabase
-      .from('projects')
-      .select('*');
+    const { data, error } = await supabase.from('projects').select('*');
 
     if (error) {
       console.error('Ошибка при загрузке проектов:', error);
@@ -396,10 +384,13 @@
     }
 
     projectsContainer.innerHTML = ''; // Очищаем контейнер перед загрузкой
+
+    const fragment = document.createDocumentFragment();
     data.forEach(project => {
       const projectElement = createProjectContainer(project);
-      projectsContainer.appendChild(projectElement);
+      fragment.appendChild(projectElement);
     });
+    projectsContainer.appendChild(fragment);
   }
 
   // Функция для добавления нового проекта
@@ -418,10 +409,7 @@
       tin_buyer: ''
     };
 
-    const { data, error } = await supabase
-      .from('projects')
-      .insert([newProject])
-      .single();
+    const { data, error } = await supabase.from('projects').insert([newProject]).single();
 
     if (error) {
       console.error('Ошибка при добавлении проекта:', error);
@@ -433,10 +421,7 @@
 
   // Функция для обновления поля проекта
   async function updateProjectField(projectId, field, value) {
-    const { data, error } = await supabase
-      .from('projects')
-      .update({ [field]: value })
-      .eq('id', projectId);
+    const { data, error } = await supabase.from('projects').update({ [field]: value }).eq('id', projectId);
 
     if (error) {
       console.error(`Ошибка при обновлении поля ${field}:`, error);
@@ -448,10 +433,7 @@
 
   // Функция для удаления проекта
   async function deleteProject(projectId) {
-    const { data, error } = await supabase
-      .from('projects')
-      .delete()
-      .eq('id', projectId);
+    const { data, error } = await supabase.from('projects').delete().eq('id', projectId);
 
     if (error) {
       console.error('Ошибка при удалении проекта:', error);
@@ -463,31 +445,54 @@
 
   // Подписка на изменения в таблице projects
   function setupRealtime() {
-    supabase
-      .from('projects')
-      .on('*', payload => {
-        console.log('Изменение в projects:', payload);
-        if (payload.eventType === 'INSERT') {
-          const projectElement = createProjectContainer(payload.new);
-          projectsContainer.appendChild(projectElement);
-        } else if (payload.eventType === 'UPDATE') {
-          const existingElement = projectsContainer.querySelector(`[data-id='${payload.new.id}']`);
-          if (existingElement) {
-            const updatedElement = createProjectContainer(payload.new);
-            projectsContainer.replaceChild(updatedElement, existingElement);
-          }
-        } else if (payload.eventType === 'DELETE') {
-          const existingElement = projectsContainer.querySelector(`[data-id='${payload.old.id}']`);
-          if (existingElement) {
-            projectsContainer.removeChild(existingElement);
-          }
+    supabase.from('projects').on('*', payload => {
+      console.log('Изменение в projects:', payload);
+      if (payload.eventType === 'INSERT') {
+        const projectElement = createProjectContainer(payload.new);
+        projectsContainer.appendChild(projectElement);
+      } else if (payload.eventType === 'UPDATE') {
+        const existingElement = projectsContainer.querySelector(`[data-id='${payload.new.id}']`);
+        if (existingElement) {
+          const updatedElement = createProjectContainer(payload.new);
+          projectsContainer.replaceChild(updatedElement, existingElement);
         }
-      })
-      .subscribe();
+      } else if (payload.eventType === 'DELETE') {
+        const existingElement = projectsContainer.querySelector(`[data-id='${payload.old.id}']`);
+        if (existingElement) {
+          projectsContainer.removeChild(existingElement);
+        }
+      }
+    }).subscribe();
   }
 
   // Добавляем обработчик для кнопки добавления проекта
-  addProjectButton.addEventListener('click', addNewProject);
+  if (addProjectButton) {
+    addProjectButton.addEventListener('click', addNewProject);
+  }
+
+  // Делегирование событий для контейнера проектов
+  projectsContainer.addEventListener('input', (event) => {
+    const input = event.target;
+    if (input.classList.contains('modal1-input')) {
+      const field = input.dataset.field;
+      const value = input.value;
+      const projectId = input.id.split('-').pop(); // Предполагается, что ID имеет формат 'field-projectId'
+      updateProjectField(projectId, field, value);
+    }
+  });
+
+  // Делегирование событий для иконок (delete и edit)
+  projectsContainer.addEventListener('click', (event) => {
+    const icon = event.target.closest('.modal1-icon');
+    if (icon) {
+      const action = icon.dataset.action;
+      const projectId = icon.dataset.id;
+      if (action === 'delete') {
+        deleteProject(projectId);
+      }
+      // Добавьте обработку 'edit', если необходимо
+    }
+  });
 
   // Инициализация при загрузке модала
   loadProjects();
