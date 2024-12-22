@@ -301,6 +301,13 @@
 
   // Создаем Map для кэширования элементов проектов по их ID
   const projectElementsMap = new Map();
+  // Создаем Map для кэширования input элементов по проекту и полю
+  const projectInputsMap = new Map();
+
+  // Настройки пагинации
+  const ITEMS_PER_PAGE = 50;
+  let currentPage = 1;
+  let totalPages = 1;
 
   // Функция для генерации уникального project_id
   function generateProjectID() {
@@ -374,22 +381,43 @@
       </div>
     `;
 
-    // Добавляем контейнер в Map для быстрого доступа
+    // Кэшируем контейнер
     projectElementsMap.set(project.id, container);
+
+    // Кэшируем элементы ввода
+    const inputsMap = new Map();
+    const inputs = container.querySelectorAll('.modal1-input');
+    inputs.forEach(input => {
+      const field = input.dataset.field;
+      inputsMap.set(field, input);
+    });
+    projectInputsMap.set(project.id, inputsMap);
 
     return container;
   }
 
-  // Функция для загрузки всех проектов
-  async function loadProjects() {
-    const { data, error } = await supabase.from('projects').select('*');
+  // Функция для загрузки всех проектов с пагинацией
+  async function loadProjects(page = 1) {
+    const from = (page - 1) * ITEMS_PER_PAGE;
+    const to = from + ITEMS_PER_PAGE - 1;
+
+    const { data, error, count } = await supabase
+      .from('projects')
+      .select('*', { count: 'exact' })
+      .range(from, to)
+      .order('id', { ascending: true });
 
     if (error) {
       console.error('Ошибка при загрузке проектов:', error);
       return;
     }
 
-    projectsContainer.innerHTML = ''; // Очищаем контейнер перед загрузкой
+    // Обновляем общее количество страниц
+    totalPages = Math.ceil(count / ITEMS_PER_PAGE);
+    currentPage = page;
+
+    // Очищаем контейнер перед загрузкой
+    projectsContainer.innerHTML = '';
 
     const fragment = document.createDocumentFragment();
     data.forEach(project => {
@@ -397,6 +425,51 @@
       fragment.appendChild(projectElement);
     });
     projectsContainer.appendChild(fragment);
+
+    // Добавляем пагинацию (если нужно)
+    // Поскольку вы не хотите изменять HTML, можно создать её динамически здесь
+    createPaginationControls();
+  }
+
+  // Функция для создания элементов пагинации
+  function createPaginationControls() {
+    // Удаляем существующие контролы
+    const existingControls = document.getElementById('pagination-controls');
+    if (existingControls) {
+      existingControls.remove();
+    }
+
+    // Создаем контейнер для контролов
+    const controlsContainer = document.createElement('div');
+    controlsContainer.id = 'pagination-controls';
+    controlsContainer.style.marginTop = '1vw'; // Добавьте стили по необходимости
+
+    // Создаем кнопки "Предыдущая" и "Следующая"
+    const prevButton = document.createElement('button');
+    prevButton.textContent = 'Предыдущая';
+    prevButton.disabled = currentPage === 1;
+    prevButton.addEventListener('click', () => {
+      if (currentPage > 1) {
+        loadProjects(currentPage - 1);
+      }
+    });
+
+    const nextButton = document.createElement('button');
+    nextButton.textContent = 'Следующая';
+    nextButton.disabled = currentPage === totalPages;
+    nextButton.addEventListener('click', () => {
+      if (currentPage < totalPages) {
+        loadProjects(currentPage + 1);
+      }
+    });
+
+    // Добавляем кнопки в контейнер
+    controlsContainer.appendChild(prevButton);
+    controlsContainer.appendChild(document.createTextNode(` Страница ${currentPage} из ${totalPages} `));
+    controlsContainer.appendChild(nextButton);
+
+    // Добавляем контейнер с контролами после списка проектов
+    projectsContainer.parentElement.insertBefore(controlsContainer, projectsContainer.nextSibling);
   }
 
   // Функция для добавления нового проекта
@@ -463,21 +536,38 @@
   // Функция для обновления только измененных полей без замены всего контейнера
   function updateProjectInDOM(project) {
     const existingElement = projectElementsMap.get(project.id);
-    if (existingElement) {
-      // Используем DocumentFragment для группового обновления
-      const fragment = document.createDocumentFragment();
-
-      Object.keys(project).forEach(field => {
-        if (field === 'id') return; // Пропускаем поле id
-        const input = existingElement.querySelector(`[data-field='${field}']`);
-        if (input) {
-          if (input.value !== (project[field] !== null ? project[field] : '')) {
-            input.value = project[field] !== null ? project[field] : '';
+    const inputsMap = projectInputsMap.get(project.id);
+    if (existingElement && inputsMap) {
+      // Используем requestAnimationFrame для группового обновления
+      requestAnimationFrame(() => {
+        Object.keys(project).forEach(field => {
+          if (field === 'id') return; // Пропускаем поле id
+          const input = inputsMap.get(field);
+          if (input) {
+            const newValue = project[field] !== null ? project[field] : '';
+            if (input.value !== newValue) {
+              input.value = newValue;
+            }
           }
-        }
+        });
       });
+    }
+  }
 
-      // Если нужны дополнительные действия после обновления, добавьте их здесь
+  // Создаем очередь для обновлений
+  const updateQueue = new Map();
+  let updateScheduled = false;
+
+  function scheduleBatchUpdate() {
+    if (!updateScheduled) {
+      updateScheduled = true;
+      requestAnimationFrame(() => {
+        updateQueue.forEach(project => {
+          updateProjectInDOM(project);
+        });
+        updateQueue.clear();
+        updateScheduled = false;
+      });
     }
   }
 
@@ -500,15 +590,15 @@
         const projectElement = createProjectContainer(payload.new);
         projectsContainer.appendChild(projectElement);
       } else if (payload.eventType === 'UPDATE') {
-        // Используем requestAnimationFrame для группового обновления
-        requestAnimationFrame(() => {
-          updateProjectInDOM(payload.new);
-        });
+        // Добавляем проект в очередь обновлений
+        updateQueue.set(payload.new.id, payload.new);
+        scheduleBatchUpdate();
       } else if (payload.eventType === 'DELETE') {
         const existingElement = projectElementsMap.get(projectId);
         if (existingElement) {
           projectsContainer.removeChild(existingElement);
           projectElementsMap.delete(projectId);
+          projectInputsMap.delete(projectId);
         }
       }
     }).subscribe();
@@ -547,6 +637,7 @@
   loadProjects();
   setupRealtime();
 
-  // Экспортируем функции, чтобы они были доступны из HTML
+  // Экспортируем функции, чтобы они были доступны из HTML (если необходимо)
   window.deleteProject = deleteProject;
 </script>
+
