@@ -397,14 +397,14 @@
 
   // Создание HTML-контейнера проекта
   function createProjectContainer(project) {
-    if (!project.id) {
-      console.error('Project does not have an id:', project);
+    if (!project.project_id) {
+      console.error('Project does not have a project_id:', project);
       return null;
     }
 
     const container = document.createElement('div');
     container.classList.add('modal1-container');
-    container.dataset.id = project.id;
+    container.dataset.id = project.project_id;
 
     // Сохраняем все необходимые данные в data-атрибуты для легкого доступа
     container.dataset.projectName = project.project_name || '';
@@ -477,7 +477,7 @@
         <input type="text" class="modal1-input" id="tin-buyer-${project.id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" />
         <label for="tin-buyer-${project.id}">TIN buyer</label>
       </div>
- `;
+`;
 
     return container;
   }
@@ -532,7 +532,7 @@
 
   // Удаление проекта
   async function deleteProject(projectId) {
-    const { error } = await supabase.from('projects').delete().eq('id', projectId);
+    const { error } = await supabase.from('projects').delete().eq('project_id', projectId);
     if (error) {
       console.error('Ошибка удаления проекта:', error);
       return;
@@ -548,13 +548,13 @@
   function openEditModal(projectId) {
     const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
     if (!projectElement) {
-      console.error(`Project with id ${projectId} not found.`);
+      console.error(`Project with project_id ${projectId} not found.`);
       return;
     }
 
     // Получаем данные из data-атрибутов
     const project = {
-      id: projectId,
+      project_id: projectId,
       project_name: projectElement.dataset.projectName,
       status: projectElement.dataset.status,
       contract_amount: projectElement.dataset.contractAmount,
@@ -614,7 +614,7 @@
     const { data, error } = await supabase
       .from('projects')
       .update(updatedProject)
-      .eq('id', currentEditingProject.id)
+      .eq('project_id', currentEditingProject.project_id)
       .single();
 
     if (error) {
@@ -623,7 +623,7 @@
     }
 
     // Обновляем проект в DOM
-    const projectElement = projectsContainer.querySelector(`[data-id="${currentEditingProject.id}"]`);
+    const projectElement = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
     if (projectElement) {
       projectElement.dataset.projectName = data.project_name || '';
       projectElement.dataset.status = data.status || '';
@@ -655,7 +655,7 @@
         'postgres_changes',
         { event: '*', schema: 'public', table: 'projects' },
         (payload) => {
-          const projectId = payload.new?.id || payload.old?.id;
+          const projectId = payload.new?.project_id || payload.old?.project_id;
           if (!projectId) return;
 
           if (payload.eventType === 'INSERT') {
