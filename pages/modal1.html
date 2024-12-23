@@ -16,7 +16,6 @@
   </div>
 </div>
 
-
 <template id="project-template">
   <div class="modal1-container">
     <span class="modal1-icon" data-action="delete"><i class="material-symbols-outlined">delete</i></span>
@@ -365,13 +364,6 @@
   const addProjectButton = document.getElementById('add-project-button');
   const projectTemplate = document.getElementById('project-template');
 
-  // Настройки виртуализации
-  const ITEM_HEIGHT = 60; // Высота одного элемента (в пикселях)
-  const BUFFER = 5; // Количество элементов, добавляемых сверху и снизу видимой области
-
-  // Создаем Map для кэширования элементов проектов по их ID
-  const projectElementsMap = new Map();
-
   // Хранилище всех проектов
   let allProjects = [];
 
@@ -380,28 +372,82 @@
     return 'proj_' + Math.random().toString(36).substr(2, 9);
   }
 
-  // Функция для создания и заполнения контейнера проекта из шаблона
-  function createProjectElement(project) {
-    const templateClone = projectTemplate.content.cloneNode(true);
-    const container = templateClone.querySelector('.modal1-container');
-    container.dataset.id = project.id;
+  // Функция для создания HTML-строки проекта
+  function generateProjectHTML(project) {
+    return `
+      <div class="modal1-container" data-id="${project.id}">
+        <span class="modal1-icon" data-action="delete"><i class="material-symbols-outlined">delete</i></span>
+        <span class="modal1-icon" data-action="edit"><i class="material-symbols-outlined">edit</i></span>
 
-    // Заполняем поля
-    const inputs = container.querySelectorAll('.modal1-input');
-    inputs.forEach(input => {
-      const field = input.dataset.field;
-      if (field && project.hasOwnProperty(field)) {
-        input.value = project[field] !== null ? project[field] : '';
-        // Присваиваем уникальный ID только если необходимо
-        // Например:
-        // input.id = `${field}-${project.id}`;
-      }
-    });
+        <!-- Группы ввода данных -->
+        <div class="modal1-input-group left">
+          <input type="text" class="modal1-input" id="project-id-${project.id}" value="${project.project_id}" placeholder=" " data-field="project_id" />
+          <label for="project-id-${project.id}">project ID</label>
+        </div>
 
-    // Добавляем контейнер в Map для быстрого доступа
-    projectElementsMap.set(project.id, container);
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="project-name-${project.id}" value="${project.project_name}" placeholder=" " data-field="project_name" />
+          <label for="project-name-${project.id}">project name</label>
+        </div>
 
-    return container;
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="status-${project.id}" value="${project.status || ''}" placeholder=" " data-field="status" />
+          <label for="status-${project.id}">status</label>
+        </div>
+
+        <div class="modal1-input-group left">
+          <input type="number" step="0.01" class="modal1-input" id="contract-amount-${project.id}" value="${project.contract_amount || ''}" placeholder=" " data-field="contract_amount" />
+          <label for="contract-amount-${project.id}">contract amount</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="number" step="0.01" class="modal1-input" id="contract-costs-${project.id}" value="${project.contract_costs || ''}" placeholder=" " data-field="contract_costs" />
+          <label for="contract-costs-${project.id}">contract costs</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="number" step="0.01" class="modal1-input" id="contract-profit-${project.id}" value="${project.contract_profit || ''}" placeholder=" " data-field="contract_profit" />
+          <label for="contract-profit-${project.id}">contract profit</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="number" step="0.01" class="modal1-input" id="profit-percentage-${project.id}" value="${project.profit_percentage || ''}" placeholder=" " data-field="profit_percentage" />
+          <label for="profit-percentage-${project.id}">profit %</label>
+        </div>
+
+        <div class="modal1-input-group left">
+          <input type="text" class="modal1-input" id="company-seller-${project.id}" value="${project.company_seller || ''}" placeholder=" " data-field="company_seller" />
+          <label for="company-seller-${project.id}">company seller</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="tin-seller-${project.id}" value="${project.tin_seller || ''}" placeholder=" " data-field="tin_seller" />
+          <label for="tin-seller-${project.id}">TIN seller</label>
+        </div>
+
+        <div class="modal1-input-group left">
+          <input type="text" class="modal1-input" id="buyer-company-${project.id}" value="${project.buyer_company || ''}" placeholder=" " data-field="buyer_company" />
+          <label for="buyer-company-${project.id}">buyer company</label>
+        </div>
+
+        <div class="modal1-input-group right">
+          <input type="text" class="modal1-input" id="tin-buyer-${project.id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" />
+          <label for="tin-buyer-${project.id}">TIN buyer</label>
+        </div>
+      </div>
+    `;
+  }
+
+  // Функция для рендеринга всех проектов
+  function renderProjects() {
+    // Создаем массив HTML-строк для всех проектов
+    const projectsHTML = allProjects.map(project => generateProjectHTML(project));
+
+    // Объединяем их в одну строку
+    const combinedHTML = projectsHTML.join('');
+
+    // Устанавливаем innerHTML контейнера единовременно
+    projectsContainer.innerHTML = combinedHTML;
   }
 
   // Функция для загрузки всех проектов
@@ -414,7 +460,7 @@
       }
 
       allProjects = data;
-      renderVisibleProjects();
+      renderProjects();
     } catch (err) {
       console.error('Ошибка при загрузке проектов:', err);
     }
@@ -487,96 +533,46 @@
     }
   }
 
-  // Функция для обновления только измененных полей без замены всего контейнера
+  // Функция для обновления проекта в DOM
   function updateProjectInDOM(project) {
-    const existingElement = projectElementsMap.get(project.id);
-    if (existingElement) {
-      requestAnimationFrame(() => {
-        const inputs = existingElement.querySelectorAll('.modal1-input');
-        inputs.forEach(input => {
-          const field = input.dataset.field;
-          if (field && project.hasOwnProperty(field)) {
-            const newValue = project[field] !== null ? project[field] : '';
-            if (input.value !== newValue) {
-              input.value = newValue;
-            }
-          }
-        });
-      });
-    }
-  }
+    // Найти элемент проекта по data-id
+    const projectElement = projectsContainer.querySelector(`.modal1-container[data-id="${project.id}"]`);
+    if (!projectElement) return;
 
-  // Функция для рендеринга видимых проектов (виртуализация)
-  function renderVisibleProjects() {
-    // Получаем высоту контейнера
-    const containerHeight = projectsContainer.clientHeight;
-    // Получаем текущую позицию прокрутки
-    const scrollTop = projectsContainer.scrollTop;
-    // Вычисляем индекс первого видимого элемента
-    const startIndex = Math.floor(scrollTop / ITEM_HEIGHT) - BUFFER;
-    // Вычисляем индекс последнего видимого элемента
-    const endIndex = Math.ceil((scrollTop + containerHeight) / ITEM_HEIGHT) + BUFFER;
-
-    // Ограничиваем индексы
-    const visibleStartIndex = Math.max(0, startIndex);
-    const visibleEndIndex = Math.min(allProjects.length, endIndex);
-
-    // Очищаем текущие элементы
-    projectsContainer.innerHTML = '';
-
-    // Создаем DocumentFragment для быстрого добавления элементов
-    const fragment = document.createDocumentFragment();
-
-    for (let i = visibleStartIndex; i < visibleEndIndex; i++) {
-      const project = allProjects[i];
-      let projectElement = projectElementsMap.get(project.id);
-
-      if (!projectElement) {
-        projectElement = createProjectElement(project);
+    // Обновить только измененные поля
+    Object.keys(project).forEach(field => {
+      if (field === 'id') return; // Пропускаем поле id
+      const input = projectElement.querySelector(`[data-field="${field}"]`);
+      if (input && input.value !== (project[field] !== null ? project[field] : '')) {
+        input.value = project[field] !== null ? project[field] : '';
       }
-
-      // Устанавливаем позицию элемента
-      projectElement.style.position = 'absolute';
-      projectElement.style.top = `${i * ITEM_HEIGHT}px`;
-      projectElement.style.height = `${ITEM_HEIGHT}px`;
-      projectElement.style.width = '100%';
-
-      fragment.appendChild(projectElement);
-    }
-
-    // Устанавливаем общую высоту контейнера для правильной прокрутки
-    projectsContainer.style.position = 'relative';
-    projectsContainer.style.height = `${allProjects.length * ITEM_HEIGHT}px`;
-
-    projectsContainer.appendChild(fragment);
-  }
-
-  // Обработчик события прокрутки для рендеринга видимых проектов
-  function onScroll() {
-    renderVisibleProjects();
+    });
   }
 
   // Подписка на изменения в таблице projects
   function setupRealtime() {
     supabase.from('projects').on('INSERT', payload => {
       allProjects.push(payload.new);
-      renderVisibleProjects();
+      // Добавить новый проект в DOM
+      const newProjectHTML = generateProjectHTML(payload.new);
+      projectsContainer.insertAdjacentHTML('beforeend', newProjectHTML);
     }).on('UPDATE', payload => {
-      const index = allProjects.findIndex(p => p.id === payload.new.id);
+      const updatedProject = payload.new;
+      const index = allProjects.findIndex(p => p.id === updatedProject.id);
       if (index !== -1) {
-        allProjects[index] = payload.new;
-        updateProjectInDOM(payload.new);
+        allProjects[index] = updatedProject;
+        updateProjectInDOM(updatedProject);
       }
     }).on('DELETE', payload => {
-      const index = allProjects.findIndex(p => p.id === payload.old.id);
+      const deletedProjectId = payload.old.id;
+      const index = allProjects.findIndex(p => p.id === deletedProjectId);
       if (index !== -1) {
         allProjects.splice(index, 1);
-        const existingElement = projectElementsMap.get(payload.old.id);
-        if (existingElement) {
-          projectsContainer.removeChild(existingElement);
-          projectElementsMap.delete(payload.old.id);
+        // Удалить проект из DOM
+        const projectElement = projectsContainer.querySelector(`.modal1-container[data-id="${deletedProjectId}"]`);
+        if (projectElement) {
+          projectsContainer.removeChild(projectElement);
         }
-        renderVisibleProjects();
       }
     }).subscribe();
   }
@@ -613,9 +609,6 @@
   // Инициализация при загрузке модала
   loadProjects();
   setupRealtime();
-
-  // Добавляем обработчик события прокрутки
-  projectsContainer.addEventListener('scroll', onScroll);
 
   // Экспортируем функции, чтобы они были доступны из HTML (если необходимо)
   window.deleteProject = deleteProject;
