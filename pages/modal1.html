@@ -398,9 +398,9 @@
 
   // Создание HTML-контейнера проекта
   function createProjectContainer(project) {
-    if (!project.project_id) {
-      console.error('Project does not have a project_id:', project);
-      return null;
+    if (!project || !project.project_id) {
+        console.error('Invalid project data passed to createProjectContainer:', project);
+        return null;
     }
 
     const container = document.createElement('div');
@@ -510,30 +510,31 @@
   // Добавление нового проекта
   async function addNewProject() {
     const newProject = {
-      project_id: generateProjectID(),
-      project_name: 'Новый проект',
-      status: 'Новый',
-      contract_amount: 0.00,
-      contract_costs: 0.00,
-      contract_profit: 0.00,
-      profit_percentage: 0.00,
-      company_seller: '',
-      tin_seller: '',
-      buyer_company: '',
-      tin_buyer: '',
+        project_id: generateProjectID(),
+        project_name: 'Новый проект',
+        status: 'Новый',
+        contract_amount: 0.00,
+        contract_costs: 0.00,
+        contract_profit: 0.00,
+        profit_percentage: 0.00,
+        company_seller: '',
+        tin_seller: '',
+        buyer_company: '',
+        tin_buyer: '',
     };
 
     const { data, error } = await supabase.from('projects').insert([newProject]).single();
+
     if (error) {
-      console.error('Ошибка добавления проекта:', error);
-      return;
+        console.error('Ошибка добавления проекта:', error);
+        return;
     }
 
     const newProjectElement = createProjectContainer(data);
     if (newProjectElement) {
-      projectsContainer.appendChild(newProjectElement);
+        projectsContainer.appendChild(newProjectElement);
     }
-  }
+}
 
   // Удаление проекта
   async function deleteProject(projectId) {
