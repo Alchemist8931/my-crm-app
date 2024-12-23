@@ -398,6 +398,7 @@
 
   // Создание HTML-контейнера проекта
   function createProjectContainer(project) {
+    console.log('Входящие данные в createProjectContainer:', project); // Логирование данных
     if (!project || !project.project_id) {
         console.error('Invalid project data passed to createProjectContainer:', project);
         return null;
@@ -526,15 +527,18 @@
     const { data, error } = await supabase.from('projects').insert([newProject]).single();
 
     if (error) {
-        console.error('Ошибка добавления проекта:', error);
+        console.error('Ошибка добавления проекта в базу данных:', error);
         return;
     }
+
+    console.log('Данные проекта, возвращенные из Supabase:', data); // Добавлено для отладки
 
     const newProjectElement = createProjectContainer(data);
     if (newProjectElement) {
         projectsContainer.appendChild(newProjectElement);
     }
 }
+
 
   // Удаление проекта
   async function deleteProject(projectId) {
