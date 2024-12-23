@@ -63,7 +63,7 @@
   <input type="text" id="edit-tin-buyer" placeholder="Введите ИНН покупателя" />
 
   <!-- Кнопка для сохранения изменений -->
-  <button type="button" onclick="saveProject()">Сохранить</button>
+  <button type="button" id="save-button">Сохранить</button>
 </form>
 
   </div>
@@ -385,6 +385,7 @@
 <script type="module">
   const supabase = window.supabase;
 
+  document.getElementById('save-button').addEventListener('click', saveProject);
   const projectsContainer = document.getElementById('projects-container');
   const addProjectButton = document.getElementById('add-project-button');
   const editModal = document.getElementById('editModal');
@@ -600,39 +601,39 @@
   // Сохранение изменений в проекте
   async function saveProject() {
     if (!currentEditingProject) {
-      console.error('Нет текущего редактируемого проекта.');
-      return;
+        console.error('Нет текущего редактируемого проекта.');
+        return;
     }
 
     const updatedProject = {
-      project_name: editForm.elements['edit-project-name'].value,
-      status: editForm.elements['edit-status'].value,
-      contract_amount: parseFloat(editForm.elements['edit-contract-amount'].value) || 0.00,
-      contract_costs: parseFloat(editForm.elements['edit-contract-cost'].value) || 0.00,
-      contract_profit: parseFloat(editForm.elements['edit-contract-profit'].value) || 0.00,
-      profit_percentage: parseFloat(editForm.elements['edit-profit-percentage'].value) || 0.00,
-      company_seller: editForm.elements['edit-company-seller'].value,
-      tin_seller: editForm.elements['edit-tin-seller'].value,
-      buyer_company: editForm.elements['edit-buyer-company'].value,
-      tin_buyer: editForm.elements['edit-tin-buyer'].value,
+        project_name: editForm.elements['edit-project-name'].value || '',
+        status: editForm.elements['edit-status'].value || '',
+        contract_amount: parseFloat(editForm.elements['edit-contract-amount'].value) || 0.00,
+        contract_costs: parseFloat(editForm.elements['edit-contract-cost'].value) || 0.00,
+        contract_profit: parseFloat(editForm.elements['edit-contract-profit'].value) || 0.00,
+        profit_percentage: parseFloat(editForm.elements['edit-profit-percentage'].value) || 0.00,
+        company_seller: editForm.elements['edit-company-seller'].value || '',
+        tin_seller: editForm.elements['edit-tin-seller'].value || '',
+        buyer_company: editForm.elements['edit-buyer-company'].value || '',
+        tin_buyer: editForm.elements['edit-tin-buyer'].value || '',
     };
 
     const { data, error } = await supabase
-      .from('projects')
-      .update(updatedProject)
-      .eq('project_id', currentEditingProject.project_id)
-      .single();
+        .from('projects')
+        .update(updatedProject)
+        .eq('project_id', currentEditingProject.project_id)
+        .single();
 
     if (error) {
-      console.error('Ошибка сохранения проекта:', error);
-      return;
+        console.error('Ошибка сохранения проекта:', error);
+        return;
     }
 
     // Обновляем проект в DOM
     const projectElement = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
     if (projectElement) {
-      projectElement.dataset.projectName = data.project_name || '';
-      projectElement.dataset.status = data.status || '';
+        projectElement.dataset.projectName = data.project_name || '';
+        projectElement.dataset.status = data.status || '';
       projectElement.dataset.contractAmount = data.contract_amount || 0;
       projectElement.dataset.contractCosts = data.contract_costs || 0;
       projectElement.dataset.contractProfit = data.contract_profit || 0;
