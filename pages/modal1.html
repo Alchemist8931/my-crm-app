@@ -10,9 +10,9 @@
 
   <!-- модальное окно проектов -->
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 99%;">
-    <div class="modalVNUT-content" id="projects-container">
-      <!-- Контейнеры проектов будут динамически добавляться здесь -->
-    </div>
+  <div class="modalVNUT-content" id="projects-container">
+    <div id="spacer"></div>
+    <div id="virtualized-list"></div>
   </div>
 </div>
 
@@ -353,6 +353,25 @@
   #add-project-button:hover {
     background-color: var(--white-color1);
   }
+
+
+
+
+
+
+
+  #spacer {
+  width: 1px;
+  opacity: 0;
+}
+
+#virtualized-list {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
   
   
 </style>
@@ -361,11 +380,42 @@
   // Доступ к Supabase клиенту через window.supabase
   const supabase = window.supabase;
 
+  // Элементы DOM
   const projectsContainer = document.getElementById('projects-container');
   const addProjectButton = document.getElementById('add-project-button');
   const projectTemplate = document.getElementById('project-template');
 
-  // Создаем Map для кэширования элементов проектов по их ID
+  // Параметры виртуализации
+  const PROJECT_HEIGHT = 80; // Высота одного контейнера проекта в пикселях (настройте по необходимости)
+  const BUFFER = 5; // Количество элементов до и после видимой области для плавности прокрутки
+
+  // Контейнеры для виртуализированного списка
+  const spacer = document.createElement('div');
+  spacer.id = 'spacer';
+  spacer.style.width = '1px';
+  spacer.style.opacity = '0';
+
+  const virtualizedList = document.createElement('div');
+  virtualizedList.id = 'virtualized-list';
+  virtualizedList.style.position = 'absolute';
+  virtualizedList.style.top = '0';
+  virtualizedList.style.left = '0';
+  virtualizedList.style.width = '100%';
+
+  // Добавляем контейнеры в projectsContainer
+  projectsContainer.innerHTML = ''; // Очистка существующего содержимого
+  projectsContainer.appendChild(spacer);
+  projectsContainer.appendChild(virtualizedList);
+  projectsContainer.style.position = 'relative'; // Для абсолютного позиционирования виртуализированного списка
+
+  // Массив всех проектов
+  let projects = [];
+
+  // Индексы видимых элементов
+  let visibleStartIndex = 0;
+  let visibleEndIndex = 0;
+
+  // Map для быстрого доступа к элементам проектов
   const projectElementsMap = new Map();
 
   // Функция для генерации уникального project_id
@@ -373,7 +423,7 @@
     return 'proj_' + Math.random().toString(36).substr(2, 9);
   }
 
-  // Функция для создания и заполнения контейнера проекта из шаблона
+  // Функция для создания контейнера проекта из шаблона
   function createProjectElement(project) {
     const templateClone = projectTemplate.content.cloneNode(true);
     const container = templateClone.querySelector('.modal1-container');
@@ -385,36 +435,80 @@
       const field = input.dataset.field;
       if (field && project.hasOwnProperty(field)) {
         input.value = project[field] !== null ? project[field] : '';
-        // Присваиваем уник ID только если необходимо
-        // Например:
-        // input.id = ${field}-${project.id};
       }
     });
-
-    // Добавляем контейнер в Map для быстрого доступа
-    projectElementsMap.set(project.id, container);
 
     return container;
   }
 
+  // Функция для рендеринга видимых элементов
+  function renderVisibleProjects() {
+    const scrollTop = projectsContainer.scrollTop;
+    const containerHeight = projectsContainer.clientHeight;
+    const totalProjects = projects.length;
+
+    const startIndex = Math.floor(scrollTop / PROJECT_HEIGHT) - BUFFER;
+    const endIndex = Math.ceil((scrollTop + containerHeight) / PROJECT_HEIGHT) + BUFFER;
+
+    const newStartIndex = Math.max(0, startIndex);
+    const newEndIndex = Math.min(totalProjects, endIndex);
+
+    if (newStartIndex !== visibleStartIndex || newEndIndex !== visibleEndIndex) {
+      visibleStartIndex = newStartIndex;
+      visibleEndIndex = newEndIndex;
+
+      // Очищаем виртуализированный список
+      virtualizedList.innerHTML = '';
+
+      const fragment = document.createDocumentFragment();
+
+      for (let i = visibleStartIndex; i < visibleEndIndex; i++) {
+        const project = projects[i];
+        let projectElement = projectElementsMap.get(project.id);
+
+        if (!projectElement) {
+          projectElement = createProjectElement(project);
+          projectElementsMap.set(project.id, projectElement);
+        }
+
+        // Позиционируем элемент
+        projectElement.style.position = 'absolute';
+        projectElement.style.top = `${i * PROJECT_HEIGHT}px`;
+        projectElement.style.width = '100%';
+
+        fragment.appendChild(projectElement);
+      }
+
+      virtualizedList.appendChild(fragment);
+    }
+  }
+
+  // Обработчик прокрутки с использованием requestAnimationFrame для оптимизации
+  let ticking = false;
+  projectsContainer.addEventListener('scroll', () => {
+    if (!ticking) {
+      window.requestAnimationFrame(() => {
+        renderVisibleProjects();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+
   // Функция для загрузки всех проектов
   async function loadProjects() {
     try {
-      const { data, error } = await supabase.from('projects').select('*');
+      const { data, error } = await supabase.from('projects').select('*').order('id', { ascending: true });
       if (error) {
         console.error('Ошибка при загрузке проектов:', error);
         return;
       }
 
-      // Очистка контейнера перед загрузкой
-      projectsContainer.innerHTML = '';
+      projects = data;
+      const totalHeight = projects.length * PROJECT_HEIGHT;
+      spacer.style.height = `${totalHeight}px`;
 
-      const fragment = document.createDocumentFragment();
-      data.forEach(project => {
-        const projectElement = createProjectElement(project);
-        fragment.appendChild(projectElement);
-      });
-      projectsContainer.appendChild(fragment);
+      renderVisibleProjects();
     } catch (err) {
       console.error('Ошибка при загрузке проектов:', err);
     }
@@ -453,12 +547,12 @@
     try {
       const { data, error } = await supabase.from('projects').update({ [field]: value }).eq('id', projectId);
       if (error) {
-        console.error(Ошибка при обновлении поля ${field}:, error);
+        console.error(`Ошибка при обновлении поля ${field}:`, error);
         return;
       }
       // Изменения будут автоматически обновлены через подписку на UPDATE
     } catch (err) {
-      console.error(Ошибка при обновлении поля ${field}:, err);
+      console.error(`Ошибка при обновлении поля ${field}:`, err);
     }
   }
 
@@ -487,32 +581,20 @@
     }
   }
 
-  // Функция для обновления только измененных полей без замены всего контейнера
+  // Функция для обновления проекта в DOM
   function updateProjectInDOM(project) {
-    const existingElement = projectElementsMap.get(project.id);
-    if (existingElement) {
-      // Используем requestAnimationFrame для группового обновления
-      requestAnimationFrame(() => {
-        const inputs = existingElement.querySelectorAll('.modal1-input');
-        inputs.forEach(input => {
-          const field = input.dataset.field;
-          if (field && project.hasOwnProperty(field)) {
-            const newValue = project[field] !== null ? project[field] : '';
-            if (input.value !== newValue) {
-              input.value = newValue;
-            }
-          }
-        });
-      });
+    const index = projects.findIndex(p => p.id === project.id);
+    if (index !== -1) {
+      projects[index] = project;
+      // Удаляем старый элемент из Map, чтобы он был пересоздан при рендере
+      projectElementsMap.delete(project.id);
+      renderVisibleProjects();
     }
   }
 
   // Подписка на изменения в таблице projects
   function setupRealtime() {
     supabase.from('projects').on('*', payload => {
-      // Удаляем console.log для улучшения производительности
-      // console.log('Изменение в projects:', payload);
-
       let projectId;
       if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
         projectId = payload.new.id;
@@ -520,18 +602,21 @@
         projectId = payload.old.id;
       }
 
-      if (!projectId) return; // Если projectId не определен, выходим
+      if (!projectId) return;
 
       if (payload.eventType === 'INSERT') {
-        const projectElement = createProjectElement(payload.new);
-        projectsContainer.appendChild(projectElement);
+        projects.push(payload.new);
+        spacer.style.height = `${projects.length * PROJECT_HEIGHT}px`;
+        renderVisibleProjects();
       } else if (payload.eventType === 'UPDATE') {
         updateProjectInDOM(payload.new);
       } else if (payload.eventType === 'DELETE') {
-        const existingElement = projectElementsMap.get(projectId);
-        if (existingElement) {
-          projectsContainer.removeChild(existingElement);
+        const index = projects.findIndex(p => p.id === projectId);
+        if (index !== -1) {
+          projects.splice(index, 1);
+          spacer.style.height = `${projects.length * PROJECT_HEIGHT}px`;
           projectElementsMap.delete(projectId);
+          renderVisibleProjects();
         }
       }
     }).subscribe();
