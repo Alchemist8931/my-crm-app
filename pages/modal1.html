@@ -385,9 +385,6 @@
       const field = input.dataset.field;
       if (field && project.hasOwnProperty(field)) {
         input.value = project[field] !== null ? project[field] : '';
-        // Присваиваем уник ID только если необходимо
-        // Например:
-        // input.id = ${field}-${project.id};
       }
     });
 
