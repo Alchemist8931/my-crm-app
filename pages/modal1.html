@@ -405,6 +405,8 @@
         return null;
     }
 
+    const uniqueSuffix = Math.random().toString(36).substr(2, 5); // Дополнительный уникальный суффикс
+
     const container = document.createElement('div');
     container.classList.add('modal1-container');
     container.dataset.id = project.project_id;
@@ -417,65 +419,64 @@
       <i class="material-symbols-outlined">edit</i>
     </span>
 
-    <!-- Группы ввода данных -->
     <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" id="project-id-${project.project_id}" value="${project.project_id}" placeholder=" " data-field="project_id" readonly />
-      <label for="project-id-${project.project_id}">Project ID</label>
+      <input type="text" class="modal1-input" id="project-id-${project.project_id}-${uniqueSuffix}" value="${project.project_id}" placeholder=" " data-field="project_id" readonly />
+      <label for="project-id-${project.project_id}-${uniqueSuffix}">Project ID</label>
     </div>
 
     <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" id="project-name-${project.project_id}" value="${project.project_name}" placeholder=" " data-field="project_name" readonly />
-      <label for="project-name-${project.project_id}">Project Name</label>
+      <input type="text" class="modal1-input" id="project-name-${project.project_id}-${uniqueSuffix}" value="${project.project_name}" placeholder=" " data-field="project_name" readonly />
+      <label for="project-name-${project.project_id}-${uniqueSuffix}">Project Name</label>
     </div>
 
     <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" id="status-${project.project_id}" value="${project.status || ''}" placeholder=" " data-field="status" readonly />
-      <label for="status-${project.project_id}">Status</label>
-    </div>
-
-    <div class="modal1-input-group left">
-      <input type="number" step="0.01" class="modal1-input" id="contract-amount-${project.project_id}" value="${project.contract_amount || ''}" placeholder=" " data-field="contract_amount" readonly />
-      <label for="contract-amount-${project.project_id}">Contract Amount</label>
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" id="contract-costs-${project.project_id}" value="${project.contract_costs || ''}" placeholder=" " data-field="contract_costs" readonly />
-      <label for="contract-costs-${project.project_id}">Contract Costs</label>
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" id="contract-profit-${project.project_id}" value="${project.contract_profit || ''}" placeholder=" " data-field="contract_profit" readonly />
-      <label for="contract-profit-${project.project_id}">Contract Profit</label>
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" id="profit-percentage-${project.project_id}" value="${project.profit_percentage || ''}" placeholder=" " data-field="profit_percentage" readonly />
-      <label for="profit-percentage-${project.project_id}">Profit %</label>
+      <input type="text" class="modal1-input" id="status-${project.project_id}-${uniqueSuffix}" value="${project.status || ''}" placeholder=" " data-field="status" readonly />
+      <label for="status-${project.project_id}-${uniqueSuffix}">Status</label>
     </div>
 
     <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" id="company-seller-${project.project_id}" value="${project.company_seller || ''}" placeholder=" " data-field="company_seller" readonly />
-      <label for="company-seller-${project.project_id}">Company Seller</label>
+      <input type="number" step="0.01" class="modal1-input" id="contract-amount-${project.project_id}-${uniqueSuffix}" value="${project.contract_amount || ''}" placeholder=" " data-field="contract_amount" readonly />
+      <label for="contract-amount-${project.project_id}-${uniqueSuffix}">Contract Amount</label>
     </div>
 
     <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" id="tin-seller-${project.project_id}" value="${project.tin_seller || ''}" placeholder=" " data-field="tin_seller" readonly />
-      <label for="tin-seller-${project.project_id}">TIN Seller</label>
+      <input type="number" step="0.01" class="modal1-input" id="contract-costs-${project.project_id}-${uniqueSuffix}" value="${project.contract_costs || ''}" placeholder=" " data-field="contract_costs" readonly />
+      <label for="contract-costs-${project.project_id}-${uniqueSuffix}">Contract Costs</label>
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="number" step="0.01" class="modal1-input" id="contract-profit-${project.project_id}-${uniqueSuffix}" value="${project.contract_profit || ''}" placeholder=" " data-field="contract_profit" readonly />
+      <label for="contract-profit-${project.project_id}-${uniqueSuffix}">Contract Profit</label>
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="number" step="0.01" class="modal1-input" id="profit-percentage-${project.project_id}-${uniqueSuffix}" value="${project.profit_percentage || ''}" placeholder=" " data-field="profit_percentage" readonly />
+      <label for="profit-percentage-${project.project_id}-${uniqueSuffix}">Profit %</label>
     </div>
 
     <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" id="buyer-company-${project.project_id}" value="${project.buyer_company || ''}" placeholder=" " data-field="buyer_company" readonly />
-      <label for="buyer-company-${project.project_id}">Buyer Company</label>
+      <input type="text" class="modal1-input" id="company-seller-${project.project_id}-${uniqueSuffix}" value="${project.company_seller || ''}" placeholder=" " data-field="company_seller" readonly />
+      <label for="company-seller-${project.project_id}-${uniqueSuffix}">Company Seller</label>
     </div>
 
     <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" id="tin-buyer-${project.project_id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" readonly />
-      <label for="tin-buyer-${project.project_id}">TIN Buyer</label>
+      <input type="text" class="modal1-input" id="tin-seller-${project.project_id}-${uniqueSuffix}" value="${project.tin_seller || ''}" placeholder=" " data-field="tin_seller" readonly />
+      <label for="tin-seller-${project.project_id}-${uniqueSuffix}">TIN Seller</label>
+    </div>
+
+    <div class="modal1-input-group left">
+      <input type="text" class="modal1-input" id="buyer-company-${project.project_id}-${uniqueSuffix}" value="${project.buyer_company || ''}" placeholder=" " data-field="buyer_company" readonly />
+      <label for="buyer-company-${project.project_id}-${uniqueSuffix}">Buyer Company</label>
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="text" class="modal1-input" id="tin-buyer-${project.project_id}-${uniqueSuffix}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" readonly />
+      <label for="tin-buyer-${project.project_id}-${uniqueSuffix}">TIN Buyer</label>
     </div>
   `;
 
     return container;
-  }
+}
 
   // Загрузка всех проектов
   async function loadProjects() {
