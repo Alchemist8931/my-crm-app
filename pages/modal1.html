@@ -510,43 +510,46 @@
   }
 
   // Добавление нового проекта
-  async function addNewProject() {
-    const newProject = {
-      project_id: generateProjectID(),
-      project_name: 'Новый проект',
-      status: 'Новый',
-      contract_amount: 0.00,
-      contract_costs: 0.00,
-      contract_profit: 0.00,
-      profit_percentage: 0.00,
-      company_seller: '',
-      tin_seller: '',
-      buyer_company: '',
-      tin_buyer: '',
-    };
+  // Добавление нового проекта
+async function addNewProject() {
+  const newProject = {
+    project_id: generateProjectID(),
+    project_name: 'Новый проект',
+    status: 'Новый',
+    contract_amount: 0.00,
+    contract_costs: 0.00,
+    contract_profit: 0.00,
+    profit_percentage: 0.00,
+    company_seller: '',
+    tin_seller: '',
+    buyer_company: '',
+    tin_buyer: '',
+  };
 
-    // Добавляем .select('*') для возврата всех полей вставленной записи
-    const { data, error } = await supabase
-      .from('projects')
-      .insert([newProject])
-      .select('*') // Добавлено
-      .single();    // Остаётся
+  // Добавляем .select('*') для возврата всех полей вставленной записи
+  const { data, error } = await supabase
+    .from('projects')
+    .insert([newProject])
+    .select('*') // Добавлено для возврата данных
+    .single();
 
-    if (error) {
-      console.error('Ошибка добавления проекта:', error);
-      return;
-    }
-
-    if (!data) {
-      console.error('Нет данных после вставки нового проекта');
-      return;
-    }
-
-    const newProjectElement = createProjectContainer(data);
-    if (newProjectElement) {
-      projectsContainer.appendChild(newProjectElement);
-    }
+  if (error) {
+    console.error('Ошибка добавления проекта:', error);
+    return;
   }
+
+  if (!data) {
+    console.error('Нет данных после вставки нового проекта');
+    return;
+  }
+
+  // Удаляем ручное добавление проекта в DOM
+  // const newProjectElement = createProjectContainer(data);
+  // if (newProjectElement) {
+  //   projectsContainer.appendChild(newProjectElement);
+  // }
+}
+
 
   // Удаление проекта
   async function deleteProject(projectId) {
