@@ -1,4 +1,10 @@
 <!-- /pages/modal1.html -->
+<!-- Clusterize.js CSS (если требуется) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clusterize.js/0.18.1/clusterize.min.css" integrity="sha512-j8U4LMZ9Izgy4GF4qlH7Z4K4D0YnPGGvGDr0RjtpypRUVYOVxSVPQEnjg9X+2Pex/NipYpAzWR1/XKjhP9s5bw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!-- Clusterize.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clusterize.js/0.18.1/clusterize.min.js" integrity="sha512-+A6Ytx81Ike2wFXLrN8WkFZjznH5QmC3V05oEBU8tM3Uw3M5qCjuaK1lR0b2/BNV9q8LidO3eCPhfgRAraN7Hw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
 <button class="close-modal" onclick="closeModal()">×</button>
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
@@ -9,11 +15,13 @@
   <button id="add-project-button" style="margin-top: -4.2vw; padding: 0.5vw 1vw; font-size: 0.4vw; cursor: pointer;">Добавить проект</button>
 
   <!-- Модальное окно проектов -->
-  <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 99%;">
-    <div class="modalVNUT-content" id="projects-container">
+<div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 99%;">
+  <div class="modalVNUT-content" id="scrollArea">
+    <div id="contentArea">
       <!-- Контейнеры проектов будут динамически добавляться здесь -->
     </div>
   </div>
+</div>
 </div>
 
 <template id="project-template">
@@ -360,7 +368,6 @@
   // Доступ к Supabase клиенту через window.supabase
   const supabase = window.supabase;
 
-  const projectsContainer = document.getElementById('projects-container');
   const addProjectButton = document.getElementById('add-project-button');
   const projectTemplate = document.getElementById('project-template');
 
@@ -446,9 +453,24 @@
     // Объединяем их в одну строку
     const combinedHTML = projectsHTML.join('');
 
-    // Устанавливаем innerHTML контейнера единовременно
-    projectsContainer.innerHTML = combinedHTML;
+    // Возвращаем объединенную HTML-строку
+    return combinedHTML;
   }
+
+  // Инициализация Clusterize.js
+  let clusterize = new Clusterize({
+    rows: [],
+    scrollId: 'scrollArea',
+    contentId: 'contentArea',
+    callbacks: {
+      clusterWillChange: function () {
+        // Вызывается перед изменением кластера
+      },
+      clusterChanged: function () {
+        // Вызывается после изменения кластера
+      }
+    }
+  });
 
   // Функция для загрузки всех проектов
   async function loadProjects() {
@@ -460,7 +482,8 @@
       }
 
       allProjects = data;
-      renderProjects();
+      const projectsHTML = renderProjects();
+      clusterize.update(projectsHTML.split('\n'));
     } catch (err) {
       console.error('Ошибка при загрузке проектов:', err);
     }
@@ -535,44 +558,36 @@
 
   // Функция для обновления проекта в DOM
   function updateProjectInDOM(project) {
-    // Найти элемент проекта по data-id
-    const projectElement = projectsContainer.querySelector(`.modal1-container[data-id="${project.id}"]`);
-    if (!projectElement) return;
+    // Найти индекс проекта в allProjects
+    const index = allProjects.findIndex(p => p.id === project.id);
+    if (index === -1) return;
 
-    // Обновить только измененные поля
-    Object.keys(project).forEach(field => {
-      if (field === 'id') return; // Пропускаем поле id
-      const input = projectElement.querySelector(`[data-field="${field}"]`);
-      if (input && input.value !== (project[field] !== null ? project[field] : '')) {
-        input.value = project[field] !== null ? project[field] : '';
-      }
-    });
+    // Обновить данные в allProjects
+    allProjects[index] = project;
+
+    // Генерируем HTML для обновленного проекта
+    const updatedProjectHTML = generateProjectHTML(project);
+
+    // Обновляем соответствующую строку в Clusterize.js
+    clusterize.rows[index] = updatedProjectHTML;
+    clusterize.refresh(true);
   }
 
   // Подписка на изменения в таблице projects
   function setupRealtime() {
     supabase.from('projects').on('INSERT', payload => {
       allProjects.push(payload.new);
-      // Добавить новый проект в DOM
       const newProjectHTML = generateProjectHTML(payload.new);
-      projectsContainer.insertAdjacentHTML('beforeend', newProjectHTML);
+      clusterize.append([newProjectHTML]);
     }).on('UPDATE', payload => {
       const updatedProject = payload.new;
-      const index = allProjects.findIndex(p => p.id === updatedProject.id);
-      if (index !== -1) {
-        allProjects[index] = updatedProject;
-        updateProjectInDOM(updatedProject);
-      }
+      updateProjectInDOM(updatedProject);
     }).on('DELETE', payload => {
       const deletedProjectId = payload.old.id;
       const index = allProjects.findIndex(p => p.id === deletedProjectId);
       if (index !== -1) {
         allProjects.splice(index, 1);
-        // Удалить проект из DOM
-        const projectElement = projectsContainer.querySelector(`.modal1-container[data-id="${deletedProjectId}"]`);
-        if (projectElement) {
-          projectsContainer.removeChild(projectElement);
-        }
+        clusterize.delete(index);
       }
     }).subscribe();
   }
@@ -583,7 +598,10 @@
   }
 
   // Делегирование событий для контейнера проектов
-  projectsContainer.addEventListener('input', (event) => {
+  // Поскольку Clusterize.js управляет рендерингом, используем делегирование на scrollArea
+  const scrollArea = document.getElementById('scrollArea');
+
+  scrollArea.addEventListener('input', (event) => {
     const input = event.target;
     if (input.classList.contains('modal1-input')) {
       const field = input.dataset.field;
@@ -593,8 +611,7 @@
     }
   });
 
-  // Делегирование событий для иконок (delete и edit)
-  projectsContainer.addEventListener('click', (event) => {
+  scrollArea.addEventListener('click', (event) => {
     const icon = event.target.closest('.modal1-icon');
     if (icon) {
       const action = icon.dataset.action;
@@ -609,7 +626,4 @@
   // Инициализация при загрузке модала
   loadProjects();
   setupRealtime();
-
-  // Экспортируем функции, чтобы они были доступны из HTML (если необходимо)
-  window.deleteProject = deleteProject;
 </script>
