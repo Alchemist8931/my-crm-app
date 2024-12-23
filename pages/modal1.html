@@ -398,7 +398,8 @@
 
   // Создание HTML-контейнера проекта
   function createProjectContainer(project) {
-    console.log('Входящие данные в createProjectContainer:', project); // Логирование данных
+    console.log('Входящие данные в createProjectContainer:', project);
+
     if (!project || !project.project_id) {
         console.error('Invalid project data passed to createProjectContainer:', project);
         return null;
@@ -408,19 +409,7 @@
     container.classList.add('modal1-container');
     container.dataset.id = project.project_id;
 
-    // Сохраняем все необходимые данные в data-атрибуты для легкого доступа
-    container.dataset.projectName = project.project_name || '';
-    container.dataset.status = project.status || '';
-    container.dataset.contractAmount = project.contract_amount || 0;
-    container.dataset.contractCosts = project.contract_costs || 0;
-    container.dataset.contractProfit = project.contract_profit || 0;
-    container.dataset.profitPercentage = project.profit_percentage || 0;
-    container.dataset.companySeller = project.company_seller || '';
-    container.dataset.tinSeller = project.tin_seller || '';
-    container.dataset.buyerCompany = project.buyer_company || '';
-    container.dataset.tinBuyer = project.tin_buyer || '';
-
-      container.innerHTML = `
+    container.innerHTML = `
     <span class="modal1-icon" data-action="delete" data-id="${project.project_id}">
       <i class="material-symbols-outlined">delete</i>
     </span>
@@ -524,20 +513,32 @@
         tin_buyer: '',
     };
 
-    const { data, error } = await supabase.from('projects').insert([newProject]).single();
+    console.log('Создание нового проекта:', newProject);
+
+    const { data, error } = await supabase
+        .from('projects')
+        .insert([newProject])
+        .select()
+        .single();
 
     if (error) {
-        console.error('Ошибка добавления проекта в базу данных:', error);
+        console.error('Ошибка добавления проекта:', error);
         return;
     }
 
-    console.log('Данные проекта, возвращенные из Supabase:', data); // Добавлено для отладки
+    console.log('Данные проекта, возвращенные из Supabase:', data);
+
+    if (!data) {
+        console.warn('Supabase вернул пустые данные.');
+        return;
+    }
 
     const newProjectElement = createProjectContainer(data);
     if (newProjectElement) {
         projectsContainer.appendChild(newProjectElement);
     }
 }
+
 
 
   // Удаление проекта
