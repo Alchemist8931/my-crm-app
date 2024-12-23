@@ -1,5 +1,5 @@
 <!-- /pages/modal1.html -->
-<button class="close-modal" onclick="closeModal()">×</button>
+<button class="close-modal">×</button>
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
@@ -17,7 +17,7 @@
 <!-- Модальное окно редактирования -->
 <div id="editModal" class="edit-modal hidden">
   <div class="edit-modal-content">
-    <button class="close-edit-modal" onclick="closeEditModal()">×</button>
+    <button class="close-edit-modal">×</button>
     <h3>Редактирование проекта</h3>
     <form id="edit-form">
       <!-- Поля редактирования -->
@@ -63,7 +63,7 @@
       <input type="text" id="edit-tin-buyer" placeholder="Введите ИНН покупателя" />
 
       <!-- Кнопка для сохранения изменений -->
-      <button type="button" onclick="saveProject()">Сохранить</button>
+      <button type="button" class="save-button">Сохранить</button>
     </form>
   </div>
 </div>
@@ -510,46 +510,41 @@
   }
 
   // Добавление нового проекта
-  // Добавление нового проекта
-async function addNewProject() {
-  const newProject = {
-    project_id: generateProjectID(),
-    project_name: 'Новый проект',
-    status: 'Новый',
-    contract_amount: 0.00,
-    contract_costs: 0.00,
-    contract_profit: 0.00,
-    profit_percentage: 0.00,
-    company_seller: '',
-    tin_seller: '',
-    buyer_company: '',
-    tin_buyer: '',
-  };
+  async function addNewProject() {
+    const newProject = {
+      project_id: generateProjectID(),
+      project_name: 'Новый проект',
+      status: 'Новый',
+      contract_amount: 0.00,
+      contract_costs: 0.00,
+      contract_profit: 0.00,
+      profit_percentage: 0.00,
+      company_seller: '',
+      tin_seller: '',
+      buyer_company: '',
+      tin_buyer: '',
+    };
 
-  // Добавляем .select('*') для возврата всех полей вставленной записи
-  const { data, error } = await supabase
-    .from('projects')
-    .insert([newProject])
-    .select('*') // Добавлено для возврата данных
-    .single();
+    // Добавляем .select('*') для возврата всех полей вставленной записи
+    const { data, error } = await supabase
+      .from('projects')
+      .insert([newProject])
+      .select('*') // Добавлено для возврата данных
+      .single();    // Остаётся
 
-  if (error) {
-    console.error('Ошибка добавления проекта:', error);
-    return;
+    if (error) {
+      console.error('Ошибка добавления проекта:', error);
+      return;
+    }
+
+    if (!data) {
+      console.error('Нет данных после вставки нового проекта');
+      return;
+    }
+
+    // Удаляем ручное добавление проекта в DOM
+    // Ручное добавление не требуется, Realtime обработает это событие
   }
-
-  if (!data) {
-    console.error('Нет данных после вставки нового проекта');
-    return;
-  }
-
-  // Удаляем ручное добавление проекта в DOM
-  // const newProjectElement = createProjectContainer(data);
-  // if (newProjectElement) {
-  //   projectsContainer.appendChild(newProjectElement);
-  // }
-}
-
 
   // Удаление проекта
   async function deleteProject(projectId) {
@@ -646,9 +641,10 @@ async function addNewProject() {
       return;
     }
 
-    // Обновляем проект в DOM
+    // Обновляем все поля проекта в DOM
     const projectElement = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
     if (projectElement) {
+      // Обновляем data-атрибуты
       projectElement.dataset.projectName = data.project_name || '';
       projectElement.dataset.status = data.status || '';
       projectElement.dataset.contractAmount = data.contract_amount || 0;
@@ -660,11 +656,14 @@ async function addNewProject() {
       projectElement.dataset.buyerCompany = data.buyer_company || '';
       projectElement.dataset.tinBuyer = data.tin_buyer || '';
 
-      // Обновляем отображаемое название
-      const projectNameInput = projectElement.querySelector(`[data-field="project_name"]`);
-      if (projectNameInput) {
-        projectNameInput.value = data.project_name || 'Без названия';
-      }
+      // Обновляем значения всех полей ввода
+      const fields = ['project_id', 'project_name', 'status', 'contract_amount', 'contract_costs', 'contract_profit', 'profit_percentage', 'company_seller', 'tin_seller', 'buyer_company', 'tin_buyer'];
+      fields.forEach(field => {
+        const input = projectElement.querySelector(`[data-field="${field}"]`);
+        if (input) {
+          input.value = data[field] !== undefined ? data[field] : '';
+        }
+      });
     }
 
     // Закрываем модальное окно
@@ -683,14 +682,19 @@ async function addNewProject() {
           if (!projectId) return;
 
           if (payload.eventType === 'INSERT' && payload.new) {
-            const projectElement = createProjectContainer(payload.new);
-            if (projectElement) {
-              projectsContainer.appendChild(projectElement);
+            // Проверяем, существует ли уже проект в DOM
+            if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
+              const projectElement = createProjectContainer(payload.new);
+              if (projectElement) {
+                projectsContainer.appendChild(projectElement);
+              }
             }
           } else if (payload.eventType === 'UPDATE' && payload.new) {
             const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
             if (projectElement) {
               const updatedProject = payload.new;
+
+              // Обновляем data-атрибуты
               projectElement.dataset.projectName = updatedProject.project_name || '';
               projectElement.dataset.status = updatedProject.status || '';
               projectElement.dataset.contractAmount = updatedProject.contract_amount || 0;
@@ -702,11 +706,14 @@ async function addNewProject() {
               projectElement.dataset.buyerCompany = updatedProject.buyer_company || '';
               projectElement.dataset.tinBuyer = updatedProject.tin_buyer || '';
 
-              // Обновляем отображаемое название
-              const projectNameInput = projectElement.querySelector(`[data-field="project_name"]`);
-              if (projectNameInput) {
-                projectNameInput.value = updatedProject.project_name || 'Без названия';
-              }
+              // Обновляем значения всех полей ввода
+              const fields = ['project_id', 'project_name', 'status', 'contract_amount', 'contract_costs', 'contract_profit', 'profit_percentage', 'company_seller', 'tin_seller', 'buyer_company', 'tin_buyer'];
+              fields.forEach(field => {
+                const input = projectElement.querySelector(`[data-field="${field}"]`);
+                if (input) {
+                  input.value = updatedProject[field] !== undefined ? updatedProject[field] : '';
+                }
+              });
             }
           } else if (payload.eventType === 'DELETE') {
             const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
@@ -743,11 +750,16 @@ async function addNewProject() {
     }
   });
 
+  // Добавляем обработчики событий для кнопок закрытия и сохранения
+  document.querySelector('.close-modal').addEventListener('click', closeModal);
+  document.querySelector('.close-edit-modal').addEventListener('click', closeEditModal);
+  editForm.querySelector('.save-button').addEventListener('click', saveProject);
+
   // Запуск
   loadProjects();
   setupRealtime();
 
-  // Экспорт функций в глобальную область видимости
+  // Экспорт функций в глобальную область видимости (если необходимо)
   window.saveProject = saveProject;
   window.closeModal = closeModal;
   window.closeEditModal = closeEditModal;
