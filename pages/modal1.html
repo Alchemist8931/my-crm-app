@@ -499,8 +499,9 @@
 
   // Добавление нового проекта
   async function addNewProject() {
+    // Создаем объект нового проекта
     const newProject = {
-        project_id: generateProjectID(),
+        project_id: generateProjectID(), // Генерируем уникальный project_id
         project_name: 'Новый проект',
         status: 'Новый',
         contract_amount: 0.00,
@@ -515,29 +516,34 @@
 
     console.log('Создание нового проекта:', newProject);
 
+    // Вставляем новый проект в базу данных
     const { data, error } = await supabase
         .from('projects')
-        .insert([newProject])
-        .select()
-        .single();
+        .insert([newProject]) // Вставляем новый проект
+        .select() // Указываем, что хотим получить обратно вставленные данные
+        .single(); // Гарантируем, что возвращается только один объект
 
+    // Обрабатываем возможные ошибки
     if (error) {
-        console.error('Ошибка добавления проекта:', error);
+        console.error('Ошибка добавления проекта в базу данных:', error);
         return;
     }
 
     console.log('Данные проекта, возвращенные из Supabase:', data);
 
+    // Проверяем, что данные успешно возвращены
     if (!data) {
         console.warn('Supabase вернул пустые данные.');
         return;
     }
 
+    // Создаем DOM-элемент контейнера для нового проекта
     const newProjectElement = createProjectContainer(data);
     if (newProjectElement) {
-        projectsContainer.appendChild(newProjectElement);
+        projectsContainer.appendChild(newProjectElement); // Добавляем контейнер в DOM
     }
 }
+
 
 
 
