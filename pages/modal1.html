@@ -670,54 +670,25 @@
   // Подписка на изменения в таблице projects (реальное время)
   function setupRealtime() {
     const channel = supabase
-      .channel('realtime_projects')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'projects' },
-        (payload) => {
-          const projectId = payload.new?.project_id || payload.old?.project_id;
-          if (!projectId) return;
+        .channel('realtime_projects')
+        .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'projects' },
+            (payload) => {
+                const projectId = payload.new?.project_id || payload.old?.project_id;
+                if (!projectId) return;
 
-          if (payload.eventType === 'INSERT') {
-            const projectElement = createProjectContainer(payload.new);
-            if (projectElement) {
-              projectsContainer.appendChild(projectElement);
+                if (payload.eventType === 'INSERT') {
+                    const projectElement = createProjectContainer(payload.new);
+                    if (projectElement) {
+                        projectsContainer.appendChild(projectElement);
+                    }
+                }
             }
-          } else if (payload.eventType === 'UPDATE') {
-            const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-            if (projectElement) {
-              const updatedProject = payload.new;
-              projectElement.dataset.projectName = updatedProject.project_name || '';
-              projectElement.dataset.status = updatedProject.status || '';
-              projectElement.dataset.contractAmount = updatedProject.contract_amount || 0;
-              projectElement.dataset.contractCosts = updatedProject.contract_costs || 0;
-              projectElement.dataset.contractProfit = updatedProject.contract_profit || 0;
-              projectElement.dataset.profitPercentage = updatedProject.profit_percentage || 0;
-              projectElement.dataset.companySeller = updatedProject.company_seller || '';
-              projectElement.dataset.tinSeller = updatedProject.tin_seller || '';
-              projectElement.dataset.buyerCompany = updatedProject.buyer_company || '';
-              projectElement.dataset.tinBuyer = updatedProject.tin_buyer || '';
+        )
+        .subscribe();
+}
 
-              // Обновляем отображаемое название
-              const p = projectElement.querySelector('p');
-              if (p) {
-                p.textContent = updatedProject.project_name || 'Без названия';
-              }
-            }
-          } else if (payload.eventType === 'DELETE') {
-            const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-            if (projectElement) {
-              projectsContainer.removeChild(projectElement);
-            }
-          }
-        }
-      )
-      .subscribe();
-
-    channel.on('subscription_error', (status) => {
-      console.error('Ошибка подписки на канал:', status);
-    });
-  }
 
   // Обработка кликов на кнопке "Сохранить" в форме редактирования
   editForm.addEventListener('submit', (event) => {
