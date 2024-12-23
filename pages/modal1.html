@@ -460,7 +460,7 @@ function createProjectContainer(project) {
         <input type="text" class="modal1-input" id="tin-buyer-${project.id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" />
         <label for="tin-buyer-${project.id}">TIN buyer</label>
       </div>
-    `;
+  `;
 
   return container;
 }
@@ -469,7 +469,7 @@ function createProjectContainer(project) {
 async function loadProjects() {
   const { data, error } = await supabase.from('projects').select('*');
   if (error) {
-    console.error('Ошибка загрузки проектов:', error);
+    console.error('Ошибка загрузки проектов:', error.message);
     return;
   }
 
@@ -491,13 +491,13 @@ async function addNewProject() {
     contract_amount: 0.00,
   };
 
-  const { data, error } = await supabase.from('projects').insert([newProject]).single();
+  const { data, error } = await supabase.from('projects').insert([newProject]);
   if (error) {
-    console.error('Ошибка добавления проекта:', error);
+    console.error('Ошибка добавления проекта:', error.message);
     return;
   }
 
-  const newProjectElement = createProjectContainer(data);
+  const newProjectElement = createProjectContainer(data[0]);
   projectsContainer.appendChild(newProjectElement);
 }
 
@@ -505,7 +505,7 @@ async function addNewProject() {
 async function deleteProject(projectId) {
   const { error } = await supabase.from('projects').delete().eq('id', projectId);
   if (error) {
-    console.error('Ошибка удаления проекта:', error);
+    console.error('Ошибка удаления проекта:', error.message);
   } else {
     const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
     if (projectElement) projectsContainer.removeChild(projectElement);
@@ -546,7 +546,7 @@ async function saveProject() {
     .eq('id', currentEditingProject.id);
 
   if (error) {
-    console.error('Ошибка сохранения проекта:', error);
+    console.error('Ошибка сохранения проекта:', error.message);
     return;
   }
 
