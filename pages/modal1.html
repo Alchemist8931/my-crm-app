@@ -456,43 +456,53 @@
   }
 
   // Подписка на изменения в таблице projects
-  function setupRealtime() {
-    supabase.from('projects').on('*', payload => {
-      // Удаляем console.log для улучшения производительности
-      // console.log('Изменение в projects:', payload);
-
-      let projectId;
-      if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
-        projectId = payload.new.id;
-      } else if (payload.eventType === 'DELETE') {
-        projectId = payload.old.id;
-      }
-
-      if (!projectId) return; // Если projectId не определен, выходим
-
-      if (payload.eventType === 'INSERT') {
-        const projectElement = createProjectContainer(payload.new);
-        projectsContainer.appendChild(projectElement);
-      } else if (payload.eventType === 'UPDATE') {
-        const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
-        if (existingElement) {
-          // Обновляем только измененные поля, вместо замены всего контейнера
-          Object.keys(payload.new).forEach(field => {
-            if (field === 'id') return; // Пропускаем поле id
-            const input = existingElement.querySelector(`[data-field='${field}']`);
-            if (input) {
-              input.value = payload.new[field] !== null ? payload.new[field] : '';
-            }
-          });
+function setupRealtime() {
+  const channel = supabase
+    .channel('realtime_projects')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'projects' },
+      payload => {
+        // Обработка полученного payload
+        let projectId;
+        if (payload.eventType === 'INSERT' || payload.eventType === 'UPDATE') {
+          projectId = payload.new.id;
+        } else if (payload.eventType === 'DELETE') {
+          projectId = payload.old.id;
         }
-      } else if (payload.eventType === 'DELETE') {
-        const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
-        if (existingElement) {
-          projectsContainer.removeChild(existingElement);
+
+        if (!projectId) return; // Если projectId не определен, выходим
+
+        if (payload.eventType === 'INSERT') {
+          const projectElement = createProjectContainer(payload.new);
+          projectsContainer.appendChild(projectElement);
+        } else if (payload.eventType === 'UPDATE') {
+          const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
+          if (existingElement) {
+            // Обновляем только измененные поля
+            Object.keys(payload.new).forEach(field => {
+              if (field === 'id') return; // Пропускаем поле id
+              const input = existingElement.querySelector(`[data-field='${field}']`);
+              if (input) {
+                input.value = payload.new[field] !== null ? payload.new[field] : '';
+              }
+            });
+          }
+        } else if (payload.eventType === 'DELETE') {
+          const existingElement = projectsContainer.querySelector(`[data-id='${projectId}']`);
+          if (existingElement) {
+            projectsContainer.removeChild(existingElement);
+          }
         }
       }
-    }).subscribe();
-  }
+    )
+    .subscribe();
+
+  // Обработка ошибок подписки
+  channel.on('subscription_error', (status) => {
+    console.error('Ошибка подписки на канал:', status);
+  });
+}
 
   // Добавляем обработчик для кнопки добавления проекта
   if (addProjectButton) {
