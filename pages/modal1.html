@@ -477,7 +477,7 @@
         <input type="text" class="modal1-input" id="tin-buyer-${project.id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" />
         <label for="tin-buyer-${project.id}">TIN buyer</label>
       </div>
-`;
+ `;
 
     return container;
   }
@@ -539,8 +539,10 @@
     }
 
     const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-    if (projectElement) {
+    if (projectElement && projectsContainer.contains(projectElement)) {
       projectsContainer.removeChild(projectElement);
+    } else {
+      console.error(`Project element with project_id ${projectId} not found in projectsContainer.`);
     }
   }
 
