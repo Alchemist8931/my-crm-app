@@ -15,77 +15,59 @@
 </div>
 
 <!-- Модальное окно редактирования -->
+<!-- Модальное окно редактирования -->
 <div id="editModal" class="edit-modal hidden">
   <div class="edit-modal-content">
-    
-    <div id="modalProfile" class="modal" style="
-  height: 35.5vh;
-  width: 13vw;
-  position: center;
-  ">
-  <h2>NEW PROJECT</h2>
-  <p style="margin-bottom: 1vw;">новый проект команды TABIA</p>
-  
-  <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-project-name" placeholder=" " style="width: 11vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">название проекта</label>
-   </div>
-  
-  <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-status" placeholder=" " style="width: 11vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">статус проекта</label>
-   </div>
-      
-   <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-contract-amount" placeholder=" " style="width: 6.7vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">сумма проекта</label>
-   </div>
-      
-      <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-contract-cost" placeholder=" " style="width: 6.7vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">расходы проекта</label>
-   </div>
-      
-       <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-contract-profit" placeholder=" " style="width: 6.7vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">прибыль проекта</label>
-   </div>
-      
-      <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-profit-percentage" placeholder=" " style="width: 6.7vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">прибыль проекта %</label>
-   </div>
-        
-   <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-company-seller" placeholder=" " style="width: 11vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">диллер</label>
-   </div>
-      
-      <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-tin-seller" placeholder=" " style="width: 11vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">инн диллера</label>
-   </div>
-      
-      <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-buyer-company" placeholder=" " style="width: 11vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">наименование клиента</label>
-   </div>
-      
-      <div class="input-group" style="margin-top: 0.8vw">
-            <input type="text" class="input" id="edit-tin-buyer" placeholder=" " style="width: 11vw; background-color: var(--black-color); color: var(--white-color2);"/>
-            <label for="fffff" style="background-color: var(--black-color); color: var(--white-color2);">наименование клиента</label>
-   </div>
+    <button class="close-edit-modal">×</button>
+    <h3>Редактирование проекта</h3>
+    <form id="edit-form">
+      <!-- Поля редактирования -->
 
+      <!-- Название проекта -->
+      <label for="edit-project-name">Название проекта</label>
+      <input type="text" id="edit-project-name" placeholder="Введите название проекта" required />
 
-  <button class="save-button"> создать запись </button>
+      <!-- Статус проекта -->
+      <label for="edit-status">Статус</label>
+      <input type="text" id="edit-status" placeholder="Введите статус проекта" required />
 
+      <!-- Сумма контракта -->
+      <label for="edit-contract-amount">Сумма контракта</label>
+      <input type="number" id="edit-contract-amount" step="0.01" placeholder="Введите сумму контракта" required />
+
+      <!-- Стоимость контракта -->
+      <label for="edit-contract-cost">Стоимость контракта</label>
+      <input type="number" id="edit-contract-cost" step="0.01" placeholder="Введите стоимость контракта" />
+
+      <!-- Прибыль -->
+      <label for="edit-contract-profit">Прибыль</label>
+      <input type="number" id="edit-contract-profit" step="0.01" placeholder="Введите прибыль" />
+
+      <!-- Процент прибыли -->
+      <label for="edit-profit-percentage">Процент прибыли</label>
+      <input type="number" id="edit-profit-percentage" step="0.01" placeholder="Введите процент прибыли" />
+
+      <!-- Компания-продавец -->
+      <label for="edit-company-seller">Компания-продавец</label>
+      <input type="text" id="edit-company-seller" placeholder="Введите название компании-продавца" />
+
+      <!-- ИНН продавца -->
+      <label for="edit-tin-seller">ИНН продавца</label>
+      <input type="text" id="edit-tin-seller" placeholder="Введите ИНН продавца" />
+
+      <!-- Компания-покупатель -->
+      <label for="edit-buyer-company">Компания-покупатель</label>
+      <input type="text" id="edit-buyer-company" placeholder="Введите название компании-покупателя" />
+
+      <!-- ИНН покупателя -->
+      <label for="edit-tin-buyer">ИНН покупателя</label>
+      <input type="text" id="edit-tin-buyer" placeholder="Введите ИНН покупателя" />
 
       <!-- Кнопка для сохранения изменений -->
       <button type="button" class="save-button">Сохранить</button>
     </form>
   </div>
 </div>
-  </div>
 
 <style>
 .close-modal {
