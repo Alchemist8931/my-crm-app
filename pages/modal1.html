@@ -482,21 +482,25 @@
   async function loadProjects() {
     const { data, error } = await supabase.from('projects').select('*');
     if (error) {
-      console.error('Ошибка загрузки проектов:', error);
-      return;
+        console.error('Ошибка загрузки проектов:', error);
+        return; // Возвращаемся, если есть ошибка
     }
 
     projectsContainer.innerHTML = ''; // Очищаем контейнер
 
-    const fragment = document.createDocumentFragment();
+    const fragment = document.createDocumentFragment(); // Создаем фрагмент для минимизации операций с DOM
     data.forEach((project) => {
-      const projectElement = createProjectContainer(project);
-      if (projectElement) {
-        fragment.appendChild(projectElement);
-      }
+        const projectElement = createProjectContainer(project);
+        if (projectElement) {
+            fragment.appendChild(projectElement); // Добавляем только корректные элементы
+        } else {
+            console.warn(`Контейнер для проекта ${project.project_id} не был создан.`);
+        }
     });
-    projectsContainer.appendChild(fragment);
-  }
+
+    projectsContainer.appendChild(fragment); // Добавляем фрагмент в DOM один раз
+}
+
 
   // Добавление нового проекта
   async function addNewProject() {
