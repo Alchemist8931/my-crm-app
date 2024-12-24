@@ -3,7 +3,7 @@
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
-    <button id="add-project-button" class="button type1" style="top: 3vw; left: 12vw;"> <span class="btn-txt">new project</span> </button>
+    <button id="add-project-button" class="buttonD" style="top: 3vw; left: 17vw;"> <span class="btn-txt">new project</span> </button>
 
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 99%;">
     <div class="modalVNUT-content" id="projects-container">
@@ -62,7 +62,7 @@
       <input type="text" id="edit-tin-buyer" placeholder="Введите ИНН покупателя" />
 
       <!-- Кнопка для сохранения изменений -->
-      <button type="button" class="save-button">Сохранить</button>
+      <button type="button" class="buttonD">Сохранить</button>
     </form>
   </div>
 </div>
@@ -379,7 +379,7 @@
 
   /* Стили для КНОПКИ */
 
-  .button {
+  .buttonD {
   height: 1vw;
   width: 8vw;
   position: fixed;
@@ -400,34 +400,10 @@
   font-size: 0.5vw;
 }
 
-.type1::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  transition: all 0.5s ease-in-out;
-  background-color: var(--black-color);
-  border-radius: 10px;
-  visibility: hidden;
-  height: 1vw;
-  width: 1vw;
-  z-index: -1;
-}
-
-.button:hover {
-  box-shadow: 1px 1px 6vw var(--black-color);
-  color: var(--black-color);
-  border: none;
-}
-
-.type1:hover::after {
-  visibility: visible;
-  transform: scale(100) translateX(2px);
-}
-
-.button:active {
+.buttonD:active {
   height: 0.9vw;
   width: 7.6vw;
+  background-color: var(--white-color1);
   }
   
   
