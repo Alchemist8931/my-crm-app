@@ -3,7 +3,7 @@
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
-  <button id="add-project-button" style="margin-top: -4.2vw; padding: 0.5vw 1vw; font-size: 0.4vw; cursor: pointer;">
+  <button id="add-project-button" class="button-D" style="top: 3vw; left: 17vw;"> <span class="btn-txt">new project</span> </button> 
     Добавить проект
   </button>
 
@@ -376,7 +376,35 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
-  
+
+
+
+  .button-D {
+  height: 1vw;
+  width: 8vw;
+  position: fixed;
+  background-color: transparent;
+  cursor: pointer;
+  border: 2px solid var(--white-color2);
+  overflow: hidden;
+  border-radius: 10px;
+  color: var(--black-color);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-txt {
+  z-index: 1;
+  font-weight: 800;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  font-size: 0.5vw;
+}
+
+.button-D:active {
+  height: 0.9vw;
+  width: 7.6vw;
+  background-color: var(--white-color1);
+  }
   
 </style>
 
