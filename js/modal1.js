@@ -264,6 +264,7 @@ export function initModal1() {
 
   //функция обработки Realtime-событий
   function handleRealtime(payload) {
+    console.count('Realtime event');
     const projectId = payload.new?.project_id || payload.old?.project_id;
     if (!projectId) return;
 
