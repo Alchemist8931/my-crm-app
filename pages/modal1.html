@@ -3,7 +3,7 @@
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
-  <button id="add-project-button" style="top: -1.5vw; left: 10vw; display: flex; padding: 0.5vw 1vw; font-size: 0.4vw; cursor: pointer;">
+    <button id="add-project-button" class="button type1"> <span class="btn-txt">new project</span> </button>
     Добавить проект
   </button>
 
@@ -377,6 +377,59 @@
   font-size: 1.5rem;
   cursor: pointer;
 }
+
+
+  /* Стили для КНОПКИ */
+
+  .button {
+  height: 2.6vw;
+  width: 10vw;
+  position: relative;
+  background-color: transparent;
+  cursor: pointer;
+  border: 2px solid var(--white-color2);
+  overflow: hidden;
+  border-radius: 10px;
+  color: var(--black-color);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-txt {
+  z-index: 1;
+  font-weight: 800;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.type1::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: all 0.5s ease-in-out;
+  background-color: var(--black-color);
+  border-radius: 10px;
+  visibility: hidden;
+  height: 1vw;
+  width: 1vw;
+  z-index: -1;
+}
+
+.button:hover {
+  box-shadow: 1px 1px 6vw var(--black-color);
+  color: var(--black-color);
+  border: none;
+}
+
+.type1:hover::after {
+  visibility: visible;
+  transform: scale(100) translateX(2px);
+}
+
+.button:active {
+  height: 2vw;
+  width: 9vw;
+  }
   
   
 </style>
