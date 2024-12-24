@@ -401,6 +401,9 @@ canvas#canvas {
   </div>
 
  <script type="module">
+  // Функция initModal1 доступна глобально, если нужно,
+  import { initModal1 } from './js/modal1.js';
+  window.initModal1 = initModal1;
 
   import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
 
@@ -506,73 +509,69 @@ canvas#canvas {
 
 /* Функция загрузки HTML контента */
 async function loadModalContent(modalId) {
+  //fileName формируем на основе modalId, например "modal1.html"
   const fileName = modalId + '.html';
-  const url = `./pages/${fileName}?t=${Date.now()}`; // предотвращение кэширования
-  console.log("Загружаемый путь:", url);
+  //добавляем параметр ?t=... чтобы избежать кеширования
+  const url = `./pages/${fileName}?t=${Date.now()}`;
+
+  console.log("Загружаем:", url);
 
   try {
-    // Показываем прелоадер
+    // Показываем прелоадер (если нужно)
     const loader = modalContent.querySelector('.lines-loader');
     if (loader) {
-      loader.classList.add('visible'); // Показываем прелоадер
-    } else {
-      console.warn('Прелоадер не найден внутри modalContent.');
+      loader.classList.add('visible');
     }
 
-    // Показываем totalmodal
+    // Показываем основное модальное окно
     totalmodal.classList.add('show');
 
-    // Начинаем загрузку контента
+    // Загружаем HTML
     const response = await fetch(url);
-    if (!response.ok) throw new Error('Ошибка загрузки контента');
+    if (!response.ok) {
+      throw new Error(`Ошибка загрузки контента: ${response.status}`);
+    }
     const html = await response.text();
 
-    // Вставляем загруженный контент
+    // Парсим HTML во временный документ
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    // Удаляем все скрипты из загруженного HTML, чтобы не дублировать их
+    doc.querySelectorAll('script').forEach(s => s.remove());
+
+    // Вставляем «чистый» HTML в content-area
     const contentArea = modalContent.querySelector('.content-area');
     if (contentArea) {
-      contentArea.innerHTML = html;
-      // Показываем контент плавно
+      contentArea.innerHTML = doc.body.innerHTML;
+      // Плавно показываем контент
       contentArea.classList.add('visible');
-
-      // Извлекаем и выполняем встроенные скрипты
-      const scripts = contentArea.querySelectorAll('script');
-      scripts.forEach(oldScript => {
-        const newScript = document.createElement('script');
-
-        // Копируем атрибуты, включая type
-        Array.from(oldScript.attributes).forEach(attr => {
-          newScript.setAttribute(attr.name, attr.value);
-        });
-
-        if (oldScript.src) {
-          newScript.src = oldScript.src;
-        } else {
-          newScript.textContent = oldScript.textContent;
-        }
-
-        document.body.appendChild(newScript);
-      });
-    } else {
-      console.warn('Контейнер .content-area не найден внутри modalContent.');
     }
 
-    // Скрываем прелоадер плавно
+    // Скрываем прелоадер
     if (loader) {
       loader.classList.remove('visible');
     }
 
-  } catch (e) {
-    console.error(e);
+    // Если модалка "modal1" – инициализируем её логику из modal1.js
+    if (modalId === 'modal1' && window.initModal1) {
+      // initModal1() – функция, экспортируемая из modal1.js
+      // Она подвязывает все обработчики, настраивает Realtime и т.д.
+      window.initModal1();
+    }
+
+  } catch (err) {
+    console.error('Ошибка в loadModalContent:', err);
     // Скрываем прелоадер
     const loader = modalContent.querySelector('.lines-loader');
     if (loader) {
       loader.classList.remove('visible');
     }
 
-    // Показываем сообщение об ошибке
+    // Выводим сообщение об ошибке внутри контента (по желанию)
     const contentArea = modalContent.querySelector('.content-area');
     if (contentArea) {
-      contentArea.innerHTML = '<p style="color: red;">Ошибка загрузки контента.</p>';
+      contentArea.innerHTML = `<p style="color:red;">Не удалось загрузить страницу: ${modalId}</p>`;
       contentArea.classList.add('visible');
     }
   }
@@ -601,28 +600,28 @@ async function loadModalContent(modalId) {
 
   /* Функция закрытия модального окна с анимацией */
   async function closeModal() {
-    if (!currentModal) return;
-
-    // Скрываем контент плавно
-    const contentArea = modalContent.querySelector('.content-area');
-    if (contentArea) {
-      contentArea.classList.remove('visible');
-    }
-
-    // Ждём окончания анимации (0.5s)
-    await new Promise(resolve => setTimeout(resolve, 500));
-
-    // Скрываем модальное окно
-    totalmodal.classList.remove('show');
-
-    // Очищаем содержимое модального окна
-    if (contentArea) {
-      contentArea.innerHTML = '';
-      contentArea.classList.remove('visible');
-    }
-
-    currentModal = null;
+  // Скрываем контент плавно
+  const contentArea = modalContent.querySelector('.content-area');
+  if (contentArea) {
+    contentArea.classList.remove('visible');
   }
+  await new Promise(resolve => setTimeout(resolve, 500));
+
+  // Скрываем само окно
+  totalmodal.classList.remove('show');
+
+  // Очищаем
+  if (contentArea) {
+    contentArea.innerHTML = '';
+  }
+
+  // Если мы хотим ещё и отписаться от Realtime (которое внутри modal1.js),
+  // то можно сделать, к примеру, так:
+  if (window.modal1Instance && window.modal1Instance.unsubscribeRealtime) {
+    window.modal1Instance.unsubscribeRealtime();
+  }
+}
+
 
   /* Закрытие totalmodal при клике вне контента */
   totalmodal.addEventListener('click', (e) => {
