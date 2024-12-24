@@ -222,7 +222,7 @@
   .modal1-icon {
     color: rgba(255, 255, 255, 0.6);
     font-size: 1.4vw; /* Уменьшено на 30% */
-    margin-right: 0.175vw; /* Уменьшено на 30% */
+    margin-right: 0.2vw; /* Уменьшено на 30% */
     cursor: pointer;
     display: flex;
     align-items: center; /* Центрирование иконок по вертикали */
@@ -244,11 +244,11 @@
   }
 
   .modal1-input-group.left {
-    margin-left: 1.54vw; /* Уменьшено на 30% от 2.2vw */
+    margin-left: 2vw; /* Уменьшено на 30% от 2.2vw */
   }
 
   .modal1-input-group.right {
-    margin-left: 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    margin-left: 0.3vw; /* Уменьшено на 30% от 0.4vw */
   }
 
   .modal1-input-group label {
@@ -448,10 +448,7 @@
     container.dataset.tinBuyer = project.tin_buyer || '';
 
     container.innerHTML = `
-      <span class="modal1-icon" data-action="delete" data-id="${project.project_id}">
-        <i class="material-symbols-outlined">delete</i>
-      </span>
-      <span class="modal1-icon" data-action="edit" data-id="${project.project_id}">
+      <span class="modal1-icon" style="left: 1vw;" data-action="edit" data-id="${project.project_id}">
         <i class="material-symbols-outlined">edit</i>
       </span>
 
@@ -510,6 +507,10 @@
         <input type="text" class="modal1-input" id="tin-buyer-${project.project_id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" readonly />
         <label for="tin-buyer-${project.project_id}">TIN Buyer</label>
       </div>
+
+      <span class="modal1-icon" style="right: 1vw;" data-action="delete" data-id="${project.project_id}">
+        <i class="material-symbols-outlined">delete</i>
+      </span>
     `;
 
     return container;
