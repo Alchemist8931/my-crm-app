@@ -240,45 +240,59 @@
   }
 
   /* Input группы */
- /* //обертка */
-.modal1-input-group {
-  display: inline-block;  /* или flex, как вам удобнее */
-  font-family: "Comfortaa", sans-serif;
-  position: relative;     /* оставим на случай, если нужно что-то внутри */
-}
+ .modal1-input-group {
+    position: relative;
+    font-family: "Comfortaa", sans-serif;
+  }
 
-/* //убираем "плавающие" стили у label */
-.modal1-input-group label {
-  display: block;         /* или inline-block */
-  margin-bottom: 0.3vw;   /* чтобы отодвинуть label от input */
-  position: static;       /* вместо absolute */
-  transform: none;        /* убираем смещение */
-  transition: none;       /* убираем анимацию */
-  color: rgba(255, 255, 255, 0.6);
-  font-size: 0.7vw;
-  font-weight: 700;
-  text-transform: uppercase;
-  pointer-events: none;   /* при необходимости отключает клики */
-}
+  .modal1-input-group.left {
+    margin-left: 2vw; /* Уменьшено на 30% от 2.2vw */
+  }
 
-/* //чтобы input не заезжал на label */
-.modal1-input-group .modal1-input {
-  display: block;
-  padding: 0.4vw;
-  font-size: 0.7vw;
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 7px;
-  background-color: transparent;
-  color: var(--white-color2);
-  outline: none;
-}
+  .modal1-input-group.right {
+    margin-left: 0.3vw; /* Уменьшено на 30% от 0.4vw */
+  }
 
-/* //эффект при ховере/фокусе */
-.modal1-input-group .modal1-input:hover,
-.modal1-input-group .modal1-input:focus {
-  border: 1px solid var(--white-color2);
-}
+  .modal1-input-group label {
+    background: none;
+    color: rgba(255, 255, 255, 0.6);
+    position: absolute;
+    top: 0.61vw; /* Уменьшено на 30% от 0.86vw */
+    left: 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    transform: translateY(-50%);
+    text-transform: uppercase;
+    font-weight: 700;
+    pointer-events: none;
+    font-size: 0.42vw; /* Уменьшено на 30% от 0.6vw */
+    transition: all 0.3s;
+  }
+
+  .modal1-input-group .modal1-input {
+    padding: 0.28vw 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    outline: none;
+    color: var(--white-color2);
+    font-size: 0.49vw; /* Уменьшено на 30% от 0.7vw */
+    font-family: inherit;
+    background-color: transparent;
+    border-radius: 7px; /* Уменьшено на 30% от 10px → 7px */
+  }
+
+  .modal1-input-group .modal1-input:hover,
+  .modal1-input-group .modal1-input:focus {
+    border: 1px solid var(--white-color2);
+  }
+
+  .modal1-input-group .modal1-input:focus + label,
+  .modal1-input-group .modal1-input:not(:placeholder-shown) + label {
+    top: -0.06vw; /* Уменьшено на 30% от -0.5vw */
+    font-size: 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    padding: 0 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 7px; /* Уменьшено на 30% от 10px → 7px */
+    color: var(--white-color2);
+  } 
 
   /* Input заголовок без границ */
   .modal1-input-TYPE1 {
