@@ -422,7 +422,7 @@ const closeEditModalBtn = document.querySelector('.close-edit-modal'); // Кно
 const saveEditBtn = editForm.querySelector('.save-button');        // Кнопка "Сохранить" в модальном окне редактирования
 
 // Параметры для "ленивой" подгрузки
-const BATCH_SIZE = 10;             // Сколько проектов рендерим за один раз
+const BATCH_SIZE = 3;             // Сколько проектов рендерим за один раз
 let allProjects = [];              // Хранилище всех проектов, загруженных из Supabase
 let currentStartIndex = 0;         // С какого индекса рендерим следующий блок
 let currentEditingProject = null;  // Текущий проект, открытый на редактирование
