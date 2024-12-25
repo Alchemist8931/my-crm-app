@@ -880,12 +880,15 @@ async function init() {
   // 1) Загрузить все проекты (но не рендерить их все сразу)
   await loadAllProjects();
 
-  // 2) Можно сразу отрендерить ОДНУ первую строку, если хотите
-  renderNextProject();
+  // 2) Отрендерить все проекты
+  for (let i = 0; i < allProjects.length; i++) {
+    renderNextProject();
+  }
 
   // 3) Запуск опроса каждые 5 секунд
   pollingInterval = setInterval(pollChanges, POLLING_MS);
 }
+
 
 // Запуск init
 init();
