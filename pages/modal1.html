@@ -504,60 +504,24 @@ let currentIndex = 0;
 let isLoading = false;
 let currentEditingProject = null;
 
-// Функция создания контейнера для проекта
+// Функция создания контейнера из шаблона
 function createProjectContainer(project) {
-    if (!project || !project.project_id) return null;
+    const template = document.getElementById('project-template');
+    const clone = template.content.cloneNode(true);
 
-    const container = document.createElement('div');
-    container.classList.add('modal1-container');
+    // Заполняем данные в клон
+    const container = clone.querySelector('.modal1-container');
     container.dataset.id = project.project_id;
 
-    // Добавляем поля проекта
-    const fields = [
-        { key: 'project_id', readonly: true },
-        { key: 'project_name', readonly: true },
-        { key: 'status', readonly: true },
-        { key: 'contract_amount', readonly: true },
-        { key: 'contract_costs', readonly: true },
-        { key: 'contract_profit', readonly: true },
-        { key: 'profit_percentage', readonly: true },
-        { key: 'company_seller', readonly: true },
-        { key: 'tin_seller', readonly: true }
-    ];
-
-    fields.forEach(({ key, readonly }) => {
-        const inputGroup = document.createElement('div');
-        inputGroup.className = 'modal1-input-group';
-
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.dataset.field = key;
-        input.value = project[key] || '';
-        if (readonly) input.readOnly = true;
-
-        inputGroup.appendChild(input);
-        container.appendChild(inputGroup);
+    Object.keys(project).forEach((key) => {
+        const input = container.querySelector(`[data-field="${key}"]`);
+        if (input) input.value = project[key] || '';
     });
 
-    // Добавляем кнопки "Редактировать" и "Удалить"
-    const editIcon = document.createElement('span');
-    editIcon.className = 'modal1-icon';
-    editIcon.dataset.action = 'edit';
-    editIcon.dataset.id = project.project_id;
-    editIcon.innerHTML = '<i class="material-symbols-outlined">edit</i>';
-    container.appendChild(editIcon);
-
-    const deleteIcon = document.createElement('span');
-    deleteIcon.className = 'modal1-icon';
-    deleteIcon.dataset.action = 'delete';
-    deleteIcon.dataset.id = project.project_id;
-    deleteIcon.innerHTML = '<i class="material-symbols-outlined">delete</i>';
-    container.appendChild(deleteIcon);
-
-    return container;
+    return clone;
 }
 
-// Отрисовка проектов порциями
+// Отрисовка порций проектов
 function renderProjectsChunked() {
     const fragment = document.createDocumentFragment();
     const chunkEnd = Math.min(currentIndex + CHUNK_SIZE, allProjects.length);
@@ -571,7 +535,7 @@ function renderProjectsChunked() {
     projectsContainer.appendChild(fragment);
 }
 
-// Загрузка проектов из базы данных
+// Загрузка всех проектов
 async function loadAllProjects() {
     if (isLoading) return;
     isLoading = true;
