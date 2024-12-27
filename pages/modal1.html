@@ -507,12 +507,20 @@ let currentEditingProject = null;
 // Функция создания контейнера из шаблона
 function createProjectContainer(project) {
     const template = document.getElementById('project-template');
+    if (!template) {
+        console.error('Шаблон project-template не найден');
+        return null;
+    }
+
     const clone = template.content.cloneNode(true);
+    const container = clone.querySelector('.modal1-container');
+    if (!container) {
+        console.error('Шаблон не содержит элемент с классом modal1-container');
+        return null;
+    }
 
     // Заполняем данные в клон
-    const container = clone.querySelector('.modal1-container');
     container.dataset.id = project.project_id;
-
     Object.keys(project).forEach((key) => {
         const input = container.querySelector(`[data-field="${key}"]`);
         if (input) input.value = project[key] || '';
@@ -533,6 +541,7 @@ function renderProjectsChunked() {
     }
 
     projectsContainer.appendChild(fragment);
+    console.log('Рендер завершён:', currentIndex, 'из', allProjects.length);
 }
 
 // Загрузка всех проектов
@@ -547,9 +556,16 @@ async function loadAllProjects() {
         return;
     }
 
-    allProjects = data || [];
+    if (!data || !Array.isArray(data) || data.length === 0) {
+        console.warn('Проекты отсутствуют или данные некорректны:', data);
+        isLoading = false;
+        return;
+    }
+
+    console.log('Проекты загружены:', data);
+    allProjects = data;
     currentIndex = 0;
-    projectsContainer.innerHTML = '';
+    projectsContainer.innerHTML = ''; // Очищаем контейнер
     renderProjectsChunked();
     isLoading = false;
 }
