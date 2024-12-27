@@ -504,35 +504,42 @@ let currentIndex = 0;
 let isLoading = false;
 let currentEditingProject = null;
 
-// Оптимизированная функция создания контейнера проекта
+// Функция создания контейнера для проекта
 function createProjectContainer(project) {
+    if (!project || !project.project_id) return null;
+
     const container = document.createElement('div');
     container.classList.add('modal1-container');
     container.dataset.id = project.project_id;
 
-    // Добавляем поля проекта в DOM
+    // Добавляем поля проекта
     const fields = [
-        { key: 'project_name', label: 'Название', readonly: true },
-        { key: 'status', label: 'Статус', readonly: true },
-        { key: 'contract_amount', label: 'Сумма', readonly: true },
-        { key: 'contract_costs', label: 'Затраты', readonly: true },
-        { key: 'contract_profit', label: 'Прибыль', readonly: true },
-        { key: 'profit_percentage', label: 'Процент прибыли', readonly: true },
-        { key: 'company_seller', label: 'Компания', readonly: true },
-        { key: 'tin_seller', label: 'ИНН', readonly: true }
+        { key: 'project_id', readonly: true },
+        { key: 'project_name', readonly: true },
+        { key: 'status', readonly: true },
+        { key: 'contract_amount', readonly: true },
+        { key: 'contract_costs', readonly: true },
+        { key: 'contract_profit', readonly: true },
+        { key: 'profit_percentage', readonly: true },
+        { key: 'company_seller', readonly: true },
+        { key: 'tin_seller', readonly: true }
     ];
 
-    fields.forEach((field) => {
+    fields.forEach(({ key, readonly }) => {
         const inputGroup = document.createElement('div');
         inputGroup.className = 'modal1-input-group';
-        inputGroup.innerHTML = `
-            <label>${field.label}</label>
-            <input type="text" data-field="${field.key}" value="${project[field.key] || ''}" ${field.readonly ? 'readonly' : ''}>
-        `;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.dataset.field = key;
+        input.value = project[key] || '';
+        if (readonly) input.readOnly = true;
+
+        inputGroup.appendChild(input);
         container.appendChild(inputGroup);
     });
 
-    // Добавляем кнопки
+    // Добавляем кнопки "Редактировать" и "Удалить"
     const editIcon = document.createElement('span');
     editIcon.className = 'modal1-icon';
     editIcon.dataset.action = 'edit';
@@ -550,20 +557,21 @@ function createProjectContainer(project) {
     return container;
 }
 
-// Отрисовка порций проектов
+// Отрисовка проектов порциями
 function renderProjectsChunked() {
     const fragment = document.createDocumentFragment();
     const chunkEnd = Math.min(currentIndex + CHUNK_SIZE, allProjects.length);
 
     for (; currentIndex < chunkEnd; currentIndex++) {
         const project = allProjects[currentIndex];
-        const el = createProjectContainer(project);
-        fragment.appendChild(el);
+        const container = createProjectContainer(project);
+        if (container) fragment.appendChild(container);
     }
+
     projectsContainer.appendChild(fragment);
 }
 
-// Загрузка всех проектов
+// Загрузка проектов из базы данных
 async function loadAllProjects() {
     if (isLoading) return;
     isLoading = true;
@@ -603,8 +611,8 @@ async function addNewProject() {
     }
 
     allProjects.push(data);
-    const el = createProjectContainer(data);
-    projectsContainer.appendChild(el);
+    const container = createProjectContainer(data);
+    if (container) projectsContainer.appendChild(container);
 }
 
 // Удаление проекта
@@ -615,8 +623,8 @@ async function deleteProject(projectId) {
         return;
     }
 
-    const elem = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-    if (elem) projectsContainer.removeChild(elem);
+    const container = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+    if (container) projectsContainer.removeChild(container);
 
     allProjects = allProjects.filter((p) => p.project_id !== projectId);
 }
@@ -662,10 +670,10 @@ async function saveProject() {
         return;
     }
 
-    const elem = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
-    if (elem) {
+    const container = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
+    if (container) {
         Object.keys(updatedFields).forEach((key) => {
-            const input = elem.querySelector(`[data-field="${key}"]`);
+            const input = container.querySelector(`[data-field="${key}"]`);
             if (input) input.value = updatedFields[key];
         });
     }
@@ -673,7 +681,7 @@ async function saveProject() {
     closeEditModal();
 }
 
-// Делегирование событий
+// Делегирование событий для редактирования и удаления
 projectsContainer.addEventListener('click', (e) => {
     const icon = e.target.closest('.modal1-icon');
     if (!icon) return;
