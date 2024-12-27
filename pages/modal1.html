@@ -15,6 +15,70 @@
   </div>
 </div>
 
+
+
+<!-- ШАБЛОН: одна карточка проекта -->
+<template id="project-template">
+  <div class="modal1-container">
+<!-- Иконка "редактировать" -->
+    <span class="modal1-icon" style="left: 1vw;" data-action="edit" data-id="${project.project_id}">
+      <i class="material-symbols-outlined">edit</i>
+    </span>
+
+    <!-- //группы ввода данных -->
+    <div class="modal1-input-group left">
+      <input type="text" class="modal1-input" value="${project.project_id}" placeholder=" " data-field="project_id" readonly />
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="text" class="modal1-input" value="${project.project_name || ''}" placeholder=" " data-field="project_name" readonly />
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="text" class="modal1-input" value="${project.status || ''}" placeholder=" " data-field="status" readonly />
+    </div>
+
+    <div class="modal1-input-group left">
+      <input type="number" step="0.01" class="modal1-input" value="${project.contract_amount || ''}" placeholder=" " data-field="contract_amount" readonly />
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="number" step="0.01" class="modal1-input" value="${project.contract_costs || ''}" placeholder=" " data-field="contract_costs" readonly />
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="number" step="0.01" class="modal1-input" value="${project.contract_profit || ''}" placeholder=" " data-field="contract_profit" readonly />
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="number" step="0.01" class="modal1-input" value="${project.profit_percentage || ''}" placeholder=" " data-field="profit_percentage" readonly />
+    </div>
+
+    <div class="modal1-input-group left">
+      <input type="text" class="modal1-input" value="${project.company_seller || ''}" placeholder=" " data-field="company_seller" readonly />
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="text" class="modal1-input" value="${project.tin_seller || ''}" placeholder=" " data-field="tin_seller" readonly />
+    </div>
+
+    <div class="modal1-input-group left">
+      <input type="text" class="modal1-input" value="${project.buyer_company || ''}" placeholder=" " data-field="buyer_company" readonly />
+    </div>
+
+    <div class="modal1-input-group right">
+      <input type="text" class="modal1-input" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" readonly />
+    </div>
+
+    <!-- Иконка "удалить" -->
+    <span class="modal1-icon" style="margin-left: 6vw; right: 1vw;" data-action="delete" data-id="${project.project_id}">
+      <i class="material-symbols-outlined">delete</i>
+    </span>
+  </div>
+</template>
+
+
+
 <!-- Модальное окно редактирования -->
 <div id="editModal" class="edit-modal hidden">
   <div class="edit-modal-content">
@@ -433,19 +497,34 @@ let changedRows = new Set();
 
 // // ПОЛЛИНГ: каждые 5 секунд проверяем, есть ли изменения
 let pollingInterval = null;   
-const POLLING_MS = 5000;    
+const POLLING_MS = 5000;      
 
-// ---------------------------------------------------------------------
-// // ФУНКЦИЯ СОЗДАНИЯ КАРТОЧКИ (DOM-элемента) ПРОЕКТА
-// ---------------------------------------------------------------------
+// // Шаблон вёрстки (в HTML есть <template id="project-template">...</template>)
+
+// //функция клонирования и заполнения карточки из шаблона
 function createProjectContainer(project) {
+  // //"ключи для рендеринга карточек с данными"
   if (!project || !project.project_id) return null;
 
-  // //функция рендеринга карточки проекта
-  const container = document.createElement('div');
-  container.classList.add('modal1-container');
-  container.dataset.id = project.project_id;
+  // Находим template в DOM
+  const template = document.getElementById('project-template');
+  if (!template) {
+    console.error('Template с id="project-template" не найден в DOM.');
+    return null;
+  }
 
+  // Клонируем содержимое шаблона
+  const clone = template.content.cloneNode(true);
+  // Предполагается, что в template все обёрнуто в один главный контейнер .modal1-container
+  // Ищем этот контейнер (первый элемент в клоне)
+  const container = clone.querySelector('.modal1-container');
+  if (!container) {
+    console.error('В шаблоне отсутствует элемент .modal1-container');
+    return null;
+  }
+
+  // Прописываем data-атрибуты
+  container.dataset.id = project.project_id;
   container.dataset.projectName = project.project_name || '';
   container.dataset.status = project.status || '';
   container.dataset.contractAmount = project.contract_amount || 0;
@@ -457,104 +536,48 @@ function createProjectContainer(project) {
   container.dataset.buyerCompany = project.buyer_company || '';
   container.dataset.tinBuyer = project.tin_buyer || '';
 
-  container.innerHTML = `
-    <!-- Иконка "редактировать" -->
-    <span class="modal1-icon" style="left: 1vw;" data-action="edit" data-id="${project.project_id}">
-      <i class="material-symbols-outlined">edit</i>
-    </span>
-
-    <!-- //группы ввода данных -->
-    <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" value="${project.project_id}" placeholder=" " data-field="project_id" readonly />
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" value="${project.project_name || ''}" placeholder=" " data-field="project_name" readonly />
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" value="${project.status || ''}" placeholder=" " data-field="status" readonly />
-    </div>
-
-    <div class="modal1-input-group left">
-      <input type="number" step="0.01" class="modal1-input" value="${project.contract_amount || ''}" placeholder=" " data-field="contract_amount" readonly />
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" value="${project.contract_costs || ''}" placeholder=" " data-field="contract_costs" readonly />
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" value="${project.contract_profit || ''}" placeholder=" " data-field="contract_profit" readonly />
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" value="${project.profit_percentage || ''}" placeholder=" " data-field="profit_percentage" readonly />
-    </div>
-
-    <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" value="${project.company_seller || ''}" placeholder=" " data-field="company_seller" readonly />
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" value="${project.tin_seller || ''}" placeholder=" " data-field="tin_seller" readonly />
-    </div>
-
-    <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" value="${project.buyer_company || ''}" placeholder=" " data-field="buyer_company" readonly />
-    </div>
-
-    <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" readonly />
-    </div>
-
-    <!-- Иконка "удалить" -->
-    <span class="modal1-icon" style="margin-left: 6vw; right: 1vw;" data-action="delete" data-id="${project.project_id}">
-      <i class="material-symbols-outlined">delete</i>
-    </span>
-  `;
+  // Заполняем поля (inputs) в клон-элементе
+  const fillField = (fieldName, value) => {
+    const inputEl = container.querySelector(`[data-field="${fieldName}"]`);
+    if (inputEl) inputEl.value = value || '';
+  };
+  fillField('project_id', project.project_id);
+  fillField('project_name', project.project_name);
+  fillField('status', project.status);
+  fillField('contract_amount', project.contract_amount);
+  fillField('contract_costs', project.contract_costs);
+  fillField('contract_profit', project.contract_profit);
+  fillField('profit_percentage', project.profit_percentage);
+  fillField('company_seller', project.company_seller);
+  fillField('tin_seller', project.tin_seller);
+  fillField('buyer_company', project.buyer_company);
+  fillField('tin_buyer', project.tin_buyer);
 
   return container;
 }
 
-// ---------------------------------------------------------------------
 // // ПАКЕТНАЯ / ПОСТЕПЕННАЯ ОТРИСОВКА
-// ---------------------------------------------------------------------
 function renderProjectsChunked(chunkSize = CHUNK_SIZE) {
-  // Начинаем от currentIndex и рисуем следующую партию
-  // Операции оформляем через requestAnimationFrame и DocumentFragment
   function renderChunk() {
     if (currentIndex >= allProjects.length) {
       console.log('Все проекты уже отрендерены в DOM');
       return;
     }
-
-    // Создаём фрагмент для пакетного добавления
     const fragment = document.createDocumentFragment();
-
-    // Добавим до chunkSize элементов
     for (let i = 0; i < chunkSize && currentIndex < allProjects.length; i++, currentIndex++) {
       const project = allProjects[currentIndex];
       const el = createProjectContainer(project);
       if (el) fragment.appendChild(el);
     }
-
-    // Добавляем всё разом в DOM
     projectsContainer.appendChild(fragment);
-
-    // Если ещё не все отрисованы — продолжаем в следующем кадре
     if (currentIndex < allProjects.length) {
       requestAnimationFrame(renderChunk);
     }
   }
-
-  // Запускаем рендер «пакета»
   requestAnimationFrame(renderChunk);
 }
 
-// ---------------------------------------------------------------------
 // // ЗАГРУЗКА ДАННЫХ
-// ---------------------------------------------------------------------
 async function loadAllProjects() {
   if (isLoading) return; 
   isLoading = true;
@@ -567,17 +590,14 @@ async function loadAllProjects() {
   }
 
   allProjects = data || [];
-  currentIndex = 0;           // Сбрасываем индекс
+  currentIndex = 0;           
   projectsContainer.innerHTML = '';
   isLoading = false;
 }
 
-// ---------------------------------------------------------------------
-// // ПОЛЛИНГ РАЗ В 5 СЕКУНД ТОЛЬКО ПРИ НАЛИЧИИ ИЗМЕНЕНИЙ
-// ---------------------------------------------------------------------
+// // ПОЛЛИНГ РАЗ В 5 СЕКУНД (pollChanges)
 async function pollChanges() {
   if (changedRows.size === 0) return; // Нет изменений — нет смысла дергать БД
-
   const idsToUpdate = Array.from(changedRows);
   if (!idsToUpdate.length) return;
 
@@ -590,7 +610,6 @@ async function pollChanges() {
     console.error('Ошибка при обновлении по changedRows:', error);
     return;
   }
-
   if (!data || !Array.isArray(data)) {
     console.warn('pollChanges: нет данных или неверный формат ответа');
     return;
@@ -612,14 +631,13 @@ async function pollChanges() {
       elem.dataset.tinBuyer = updatedProj.tin_buyer || '';
 
       const fields = [
-        'project_name','status','contract_amount','contract_costs','contract_profit',
-        'profit_percentage','company_seller','tin_seller','buyer_company','tin_buyer'
+        'project_name','status','contract_amount','contract_costs',
+        'contract_profit','profit_percentage','company_seller','tin_seller',
+        'buyer_company','tin_buyer'
       ];
       fields.forEach(field => {
         const input = elem.querySelector(`[data-field="${field}"]`);
-        if (input) {
-          input.value = updatedProj[field] || '';
-        }
+        if (input) input.value = updatedProj[field] || '';
       });
     }
 
@@ -629,13 +647,10 @@ async function pollChanges() {
       allProjects[idx] = updatedProj;
     }
   });
-
   changedRows.clear();
 }
 
-// ---------------------------------------------------------------------
 // // CRUD: ADD / DELETE / EDIT
-// ---------------------------------------------------------------------
 async function addNewProject() {
   const newProject = {
     project_id: 'proj_' + Math.random().toString(36).substr(2, 9),
@@ -663,15 +678,15 @@ async function addNewProject() {
   }
 
   if (data) {
-    // Добавляем его в массив
+    // Добавляем новый проект в allProjects
     allProjects.push(data);
-    // Можно сразу перерисовать последнюю порцию (либо вызывать renderProjectsChunked заново).
-    // Но для простоты — просто делаем новую порцию:
-    // currentIndex = allProjects.length - 1; // Чтобы нарисовать именно этот проект
-    // renderProjectsChunked(1);
+    // Можно сразу дорисовать в контейнер
+    const el = createProjectContainer(data);
+    if (el) projectsContainer.appendChild(el);
   }
 }
 
+// //функция удаления
 async function deleteProject(projectId) {
   const { error } = await supabase
     .from('projects')
@@ -682,7 +697,6 @@ async function deleteProject(projectId) {
     console.error('Ошибка удаления проекта:', error);
     return;
   }
-
   const elem = projectsContainer.querySelector(`[data-id="${projectId}"]`);
   if (elem) {
     projectsContainer.removeChild(elem);
@@ -728,6 +742,7 @@ function closeEditModal() {
   currentEditingProject = null;
 }
 
+// //функция сохранения изменений
 async function saveProject() {
   if (!currentEditingProject) return;
 
@@ -757,6 +772,7 @@ async function saveProject() {
   }
 
   if (data) {
+    // Обновим DOM
     const elem = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
     if (elem) {
       elem.dataset.projectName = data.project_name;
@@ -782,28 +798,22 @@ async function saveProject() {
         }
       });
     }
-
+    // Обновим в allProjects
     const idx = allProjects.findIndex(p => p.project_id === data.project_id);
     if (idx !== -1) {
       allProjects[idx] = data;
     }
-
     changedRows.add(currentEditingProject.project_id);
   }
-
   closeEditModal();
 }
 
-// ---------------------------------------------------------------------
 // // ОБРАБОТЧИКИ
-// ---------------------------------------------------------------------
 projectsContainer.addEventListener('click', (e) => {
   const icon = e.target.closest('.modal1-icon');
   if (!icon) return;
-
   const action = icon.dataset.action;
   const projectId = icon.dataset.id;
-
   if (action === 'edit') {
     openEditModal(projectId);
   } else if (action === 'delete') {
@@ -822,16 +832,10 @@ closeMainModalBtn.addEventListener('click', () => {
 closeEditModalBtn.addEventListener('click', closeEditModal);
 saveEditBtn.addEventListener('click', saveProject);
 
-// ---------------------------------------------------------------------
 // // ИНИЦИАЛИЗАЦИЯ
-// ---------------------------------------------------------------------
 async function init() {
-  await loadAllProjects();            // Загружаем проекты, но не выводим
-
-  // Рендерим проекты «пакетами» (по 10 штук, например)
-  renderProjectsChunked(CHUNK_SIZE);
-
-  // Запуск опроса каждые 5 секунд (pollChanges)
+  await loadAllProjects();            
+  renderProjectsChunked(CHUNK_SIZE);  
   pollingInterval = setInterval(pollChanges, POLLING_MS);
 }
 
@@ -842,3 +846,4 @@ window.renderProjectsChunked = renderProjectsChunked;
 window.closeEditModal = closeEditModal;
 window.saveProject = saveProject;
 </script>
+
