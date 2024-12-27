@@ -435,184 +435,99 @@
 </style>
 
 <script type="module">
-// // Глобальный объект Supabase (должен быть доступен)
 const supabase = window.supabase;
 
-// // DOM-элементы
-const projectsContainer = document.getElementById('projects-container'); // Основной контейнер для проектов
-const addProjectButton = document.getElementById('add-project-button');  // Кнопка "new project"
-const editModal = document.getElementById('editModal');                  // Модалка редактирования
-const editForm = document.getElementById('edit-form');                   // Форма редактирования
-const closeMainModalBtn = document.querySelector('.close-modal');        // Кнопка "×" у modal1
-const closeEditModalBtn = document.querySelector('.close-edit-modal');   // Кнопка "×" у editModal
-const saveEditBtn = editForm.querySelector('.save-button');             // Кнопка "Сохранить" в editModal
+const projectsContainer = document.getElementById('projects-container');
+const addProjectButton = document.getElementById('add-project-button');
+const editModal = document.getElementById('editModal');
+const editForm = document.getElementById('edit-form');
+const closeMainModalBtn = document.querySelector('.close-modal');
+const closeEditModalBtn = document.querySelector('.close-edit-modal');
+const saveEditBtn = editForm.querySelector('.save-button');
 
-// //"функция ленивая подгрузка проектов" — настраиваемый размер порции
-const CHUNK_SIZE = 10;
+const CHUNK_SIZE = 10; // Количество проектов для ленивой подгрузки
+let allProjects = [];
+let currentIndex = 0;
+let isLoading = false;
+let currentEditingProject = null;
+let changedRows = new Set();
+let saveDebounceTimeout;
 
-// // Хранилище проектов, флаги и т. д.
-let allProjects = [];           
-let currentIndex = 0;           
-let isLoading = false;          
-let currentEditingProject = null; 
-let changedRows = new Set();    
-
-// // ПОЛЛИНГ: каждые 5 секунд проверяем, есть ли изменения
-let pollingInterval = null;   
-const POLLING_MS = 5000;      
-
-// // Шаблон вёрстки (в HTML есть <template id="project-template">...</template>)
-
-// //функция клонирования и заполнения карточки из шаблона
+// Функция для клонирования контейнера проекта из шаблона
 function createProjectContainer(project) {
-  // //"ключи для рендеринга карточек с данными"
-  if (!project || !project.project_id) return null;
-
-  // Находим template в DOM
   const template = document.getElementById('project-template');
-  if (!template) {
-    console.error('Template с id="project-template" не найден в DOM.');
-    return null;
-  }
-
-  // Клонируем содержимое шаблона
   const clone = template.content.cloneNode(true);
-  // Предполагается, что в template все обёрнуто в один главный контейнер .modal1-container
-  // Ищем этот контейнер (первый элемент в клоне)
   const container = clone.querySelector('.modal1-container');
-  if (!container) {
-    console.error('В шаблоне отсутствует элемент .modal1-container');
-    return null;
-  }
+  if (!container) return null;
 
-  // Прописываем data-атрибуты
-  container.dataset.id = project.project_id;
-  container.dataset.projectName = project.project_name || '';
-  container.dataset.status = project.status || '';
-  container.dataset.contractAmount = project.contract_amount || 0;
-  container.dataset.contractCosts = project.contract_costs || 0;
-  container.dataset.contractProfit = project.contract_profit || 0;
-  container.dataset.profitPercentage = project.profit_percentage || 0;
-  container.dataset.companySeller = project.company_seller || '';
-  container.dataset.tinSeller = project.tin_seller || '';
-  container.dataset.buyerCompany = project.buyer_company || '';
-  container.dataset.tinBuyer = project.tin_buyer || '';
-
-  // Заполняем поля (inputs) в клон-элементе
-  const fillField = (fieldName, value) => {
-    const inputEl = container.querySelector(`[data-field="${fieldName}"]`);
-    if (inputEl) inputEl.value = value || '';
-  };
-  fillField('project_id', project.project_id);
-  fillField('project_name', project.project_name);
-  fillField('status', project.status);
-  fillField('contract_amount', project.contract_amount);
-  fillField('contract_costs', project.contract_costs);
-  fillField('contract_profit', project.contract_profit);
-  fillField('profit_percentage', project.profit_percentage);
-  fillField('company_seller', project.company_seller);
-  fillField('tin_seller', project.tin_seller);
-  fillField('buyer_company', project.buyer_company);
-  fillField('tin_buyer', project.tin_buyer);
+  // Установка data-атрибутов
+  Object.keys(project).forEach((key) => {
+    container.dataset[key] = project[key] || '';
+    const input = container.querySelector(`[data-field="${key}"]`);
+    if (input) input.value = project[key] || '';
+  });
 
   return container;
 }
 
-// // ПАКЕТНАЯ / ПОСТЕПЕННАЯ ОТРИСОВКА
+// Отрисовка проектов порциями для повышения производительности
 function renderProjectsChunked(chunkSize = CHUNK_SIZE) {
-  function renderChunk() {
-    if (currentIndex >= allProjects.length) {
-      console.log('Все проекты уже отрендерены в DOM');
-      return;
-    }
-    const fragment = document.createDocumentFragment();
-    for (let i = 0; i < chunkSize && currentIndex < allProjects.length; i++, currentIndex++) {
-      const project = allProjects[currentIndex];
-      const el = createProjectContainer(project);
-      if (el) fragment.appendChild(el);
-    }
-    projectsContainer.appendChild(fragment);
-    if (currentIndex < allProjects.length) {
-      requestAnimationFrame(renderChunk);
-    }
+  if (currentIndex >= allProjects.length) return;
+
+  const fragment = document.createDocumentFragment();
+  for (let i = 0; i < chunkSize && currentIndex < allProjects.length; i++, currentIndex++) {
+    const project = allProjects[currentIndex];
+    const el = createProjectContainer(project);
+    if (el) fragment.appendChild(el);
   }
-  requestAnimationFrame(renderChunk);
+
+  projectsContainer.appendChild(fragment);
 }
 
-// // ЗАГРУЗКА ДАННЫХ
+// Загрузка всех проектов
 async function loadAllProjects() {
-  if (isLoading) return; 
+  if (isLoading) return;
   isLoading = true;
 
   const { data, error } = await supabase.from('projects').select('*');
   if (error) {
-    console.error('Ошибка при загрузке projects:', error);
+    console.error('Ошибка при загрузке проектов:', error);
     isLoading = false;
     return;
   }
 
   allProjects = data || [];
-  currentIndex = 0;           
+  currentIndex = 0;
   projectsContainer.innerHTML = '';
   isLoading = false;
+
+  renderProjectsChunked();
 }
 
-// // ПОЛЛИНГ РАЗ В 5 СЕКУНД (pollChanges)
-async function pollChanges() {
-  if (changedRows.size === 0) return; // Нет изменений — нет смысла дергать БД
-  const idsToUpdate = Array.from(changedRows);
-  if (!idsToUpdate.length) return;
-
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .in('project_id', idsToUpdate);
-
-  if (error) {
-    console.error('Ошибка при обновлении по changedRows:', error);
-    return;
-  }
-  if (!data || !Array.isArray(data)) {
-    console.warn('pollChanges: нет данных или неверный формат ответа');
-    return;
-  }
-
-  // Обновляем DOM для каждой записи
-  data.forEach((updatedProj) => {
-    const elem = projectsContainer.querySelector(`[data-id="${updatedProj.project_id}"]`);
-    if (elem) {
-      elem.dataset.projectName = updatedProj.project_name || '';
-      elem.dataset.status = updatedProj.status || '';
-      elem.dataset.contractAmount = updatedProj.contract_amount || 0;
-      elem.dataset.contractCosts = updatedProj.contract_costs || 0;
-      elem.dataset.contractProfit = updatedProj.contract_profit || 0;
-      elem.dataset.profitPercentage = updatedProj.profit_percentage || 0;
-      elem.dataset.companySeller = updatedProj.company_seller || '';
-      elem.dataset.tinSeller = updatedProj.tin_seller || '';
-      elem.dataset.buyerCompany = updatedProj.buyer_company || '';
-      elem.dataset.tinBuyer = updatedProj.tin_buyer || '';
-
-      const fields = [
-        'project_name','status','contract_amount','contract_costs',
-        'contract_profit','profit_percentage','company_seller','tin_seller',
-        'buyer_company','tin_buyer'
-      ];
-      fields.forEach(field => {
-        const input = elem.querySelector(`[data-field="${field}"]`);
-        if (input) input.value = updatedProj[field] || '';
-      });
-    }
-
-    // Обновим также в allProjects
-    const idx = allProjects.findIndex(p => p.project_id === updatedProj.project_id);
-    if (idx !== -1) {
-      allProjects[idx] = updatedProj;
+// Ленивый рендеринг проектов при прокрутке
+function setupLazyLoading() {
+  projectsContainer.addEventListener('scroll', () => {
+    if (projectsContainer.scrollTop + projectsContainer.clientHeight >= projectsContainer.scrollHeight) {
+      renderProjectsChunked(CHUNK_SIZE);
     }
   });
-  changedRows.clear();
 }
 
-// // CRUD: ADD / DELETE / EDIT
+// Функция для дебаунса при сохранении изменений
+function debounceSaveChanges(projectId, updatedFields) {
+  clearTimeout(saveDebounceTimeout);
+  saveDebounceTimeout = setTimeout(async () => {
+    const { error } = await supabase
+      .from('projects')
+      .update(updatedFields)
+      .eq('project_id', projectId);
+    if (error) {
+      console.error('Ошибка сохранения изменений:', error);
+    }
+  }, 300); // Задержка 300 мс
+}
+
+// Добавление нового проекта
 async function addNewProject() {
   const newProject = {
     project_id: 'proj_' + Math.random().toString(36).substr(2, 9),
@@ -639,143 +554,78 @@ async function addNewProject() {
     return;
   }
 
-  if (data) {
-    // Добавляем новый проект в allProjects
-    allProjects.push(data);
-    // Можно сразу дорисовать в контейнер
-    const el = createProjectContainer(data);
-    if (el) projectsContainer.appendChild(el);
-  }
+  allProjects.push(data);
+  const el = createProjectContainer(data);
+  if (el) projectsContainer.appendChild(el);
 }
 
-// //функция удаления
+// Удаление проекта
 async function deleteProject(projectId) {
-  const { error } = await supabase
-    .from('projects')
-    .delete()
-    .eq('project_id', projectId);
-
+  const { error } = await supabase.from('projects').delete().eq('project_id', projectId);
   if (error) {
     console.error('Ошибка удаления проекта:', error);
     return;
   }
+
   const elem = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-  if (elem) {
-    projectsContainer.removeChild(elem);
-  }
-  allProjects = allProjects.filter(p => p.project_id !== projectId);
+  if (elem) projectsContainer.removeChild(elem);
+
+  allProjects = allProjects.filter((p) => p.project_id !== projectId);
 }
 
-// // Открытие окна редактирования
+// Открытие модального окна редактирования
 function openEditModal(projectId) {
-  const elem = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-  if (!elem) return;
+  const project = allProjects.find((p) => p.project_id === projectId);
+  if (!project) return;
 
-  currentEditingProject = {
-    project_id: projectId,
-    project_name: elem.dataset.projectName,
-    status: elem.dataset.status,
-    contract_amount: elem.dataset.contractAmount,
-    contract_costs: elem.dataset.contractCosts,
-    contract_profit: elem.dataset.contractProfit,
-    profit_percentage: elem.dataset.profitPercentage,
-    company_seller: elem.dataset.companySeller,
-    tin_seller: elem.dataset.tinSeller,
-    buyer_company: elem.dataset.buyerCompany,
-    tin_buyer: elem.dataset.tinBuyer,
-  };
+  currentEditingProject = { ...project };
 
-  editForm['edit-project-name'].value = currentEditingProject.project_name;
-  editForm['edit-status'].value = currentEditingProject.status;
-  editForm['edit-contract-amount'].value = currentEditingProject.contract_amount;
-  editForm['edit-contract-cost'].value = currentEditingProject.contract_costs;
-  editForm['edit-contract-profit'].value = currentEditingProject.contract_profit;
-  editForm['edit-profit-percentage'].value = currentEditingProject.profit_percentage;
-  editForm['edit-company-seller'].value = currentEditingProject.company_seller;
-  editForm['edit-tin-seller'].value = currentEditingProject.tin_seller;
-  editForm['edit-buyer-company'].value = currentEditingProject.buyer_company;
-  editForm['edit-tin-buyer'].value = currentEditingProject.tin_buyer;
+  Object.keys(currentEditingProject).forEach((key) => {
+    const input = editForm.querySelector(`[name="edit-${key.replace('_', '-')}"]`);
+    if (input) input.value = currentEditingProject[key] || '';
+  });
 
   editModal.classList.remove('hidden');
 }
 
+// Закрытие модального окна редактирования
 function closeEditModal() {
   editModal.classList.add('hidden');
   currentEditingProject = null;
 }
 
-// //функция сохранения изменений
+// Сохранение изменений проекта
 async function saveProject() {
   if (!currentEditingProject) return;
 
-  const updatedFields = {
-    project_name: editForm['edit-project-name'].value,
-    status: editForm['edit-status'].value,
-    contract_amount: parseFloat(editForm['edit-contract-amount'].value) || 0,
-    contract_costs: parseFloat(editForm['edit-contract-cost'].value) || 0,
-    contract_profit: parseFloat(editForm['edit-contract-profit'].value) || 0,
-    profit_percentage: parseFloat(editForm['edit-profit-percentage'].value) || 0,
-    company_seller: editForm['edit-company-seller'].value,
-    tin_seller: editForm['edit-tin-seller'].value,
-    buyer_company: editForm['edit-buyer-company'].value,
-    tin_buyer: editForm['edit-tin-buyer'].value,
-  };
+  const updatedFields = Object.fromEntries(
+    Array.from(editForm.elements)
+      .filter((el) => el.name.startsWith('edit-'))
+      .map((el) => [el.name.replace('edit-', '').replace('-', '_'), el.value || ''])
+  );
 
-  const { data, error } = await supabase
-    .from('projects')
-    .update(updatedFields)
-    .eq('project_id', currentEditingProject.project_id)
-    .select('*')
-    .single();
+  debounceSaveChanges(currentEditingProject.project_id, updatedFields);
 
-  if (error) {
-    console.error('Ошибка сохранения проекта:', error);
-    return;
+  const elem = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
+  if (elem) {
+    Object.keys(updatedFields).forEach((key) => {
+      elem.dataset[key] = updatedFields[key];
+      const input = elem.querySelector(`[data-field="${key}"]`);
+      if (input) input.value = updatedFields[key];
+    });
   }
 
-  if (data) {
-    // Обновим DOM
-    const elem = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
-    if (elem) {
-      elem.dataset.projectName = data.project_name;
-      elem.dataset.status = data.status;
-      elem.dataset.contractAmount = data.contract_amount;
-      elem.dataset.contractCosts = data.contract_costs;
-      elem.dataset.contractProfit = data.contract_profit;
-      elem.dataset.profitPercentage = data.profit_percentage;
-      elem.dataset.companySeller = data.company_seller;
-      elem.dataset.tinSeller = data.tin_seller;
-      elem.dataset.buyerCompany = data.buyer_company;
-      elem.dataset.tinBuyer = data.tin_buyer;
-
-      const fields = [
-        'project_name','status','contract_amount','contract_costs',
-        'contract_profit','profit_percentage','company_seller','tin_seller',
-        'buyer_company','tin_buyer'
-      ];
-      fields.forEach((field) => {
-        const input = elem.querySelector(`[data-field="${field}"]`);
-        if (input) {
-          input.value = data[field] || '';
-        }
-      });
-    }
-    // Обновим в allProjects
-    const idx = allProjects.findIndex(p => p.project_id === data.project_id);
-    if (idx !== -1) {
-      allProjects[idx] = data;
-    }
-    changedRows.add(currentEditingProject.project_id);
-  }
   closeEditModal();
 }
 
-// // ОБРАБОТЧИКИ
+// Обработчик делегирования событий
 projectsContainer.addEventListener('click', (e) => {
   const icon = e.target.closest('.modal1-icon');
   if (!icon) return;
+
   const action = icon.dataset.action;
   const projectId = icon.dataset.id;
+
   if (action === 'edit') {
     openEditModal(projectId);
   } else if (action === 'delete') {
@@ -783,29 +633,17 @@ projectsContainer.addEventListener('click', (e) => {
   }
 });
 
+// Привязка событий
 addProjectButton?.addEventListener('click', addNewProject);
-
-closeMainModalBtn.addEventListener('click', () => {
-  if (window.closeModal) {
-    window.closeModal();
-  }
-});
-
+closeMainModalBtn.addEventListener('click', () => window.closeModal?.());
 closeEditModalBtn.addEventListener('click', closeEditModal);
 saveEditBtn.addEventListener('click', saveProject);
 
-// // ИНИЦИАЛИЗАЦИЯ
+// Инициализация
 async function init() {
-  await loadAllProjects();            
-  renderProjectsChunked(CHUNK_SIZE);  
-  pollingInterval = setInterval(pollChanges, POLLING_MS);
+  await loadAllProjects();
+  setupLazyLoading();
 }
 
 init();
-
-// // Экспорт, если нужно
-window.renderProjectsChunked = renderProjectsChunked;
-window.closeEditModal = closeEditModal;
-window.saveProject = saveProject;
 </script>
-
