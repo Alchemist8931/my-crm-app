@@ -422,14 +422,9 @@ const closeMainModalBtn = document.querySelector('.close-modal');        // Кн
 const closeEditModalBtn = document.querySelector('.close-edit-modal');   // Кнопка "×" у editModal
 const saveEditBtn = editForm.querySelector('.save-button');             // Кнопка "Сохранить" в editModal
 
-// //"функция ленивая подгрузка проектов" — настраиваемый размер порции
-const CHUNK_SIZE = 10;
-
-// // Хранилище проектов и индексов для пакетной отрисовки
-let allProjects = [];
-let currentIndex = 0;
-let isLoading = false;
-let currentEditingProject = null;
+let allProjects = [];          // //Хранилище проектов
+let isLoading = false;         // //Флаг загрузки
+let currentEditingProject = null; // //Текущий проект в режиме редактирования
 
 // //функция создания DOM-карточки проекта
 function createProjectContainer(project) {
@@ -507,38 +502,27 @@ function createProjectContainer(project) {
       <i class="material-symbols-outlined">delete</i>
     </span>
   `;
-
   return container;
 }
 
-// //функция пакетной отрисовки (ленивая подгрузка)
-function renderProjectsChunked(chunkSize = CHUNK_SIZE) {
-  function renderChunk() {
-    if (currentIndex >= allProjects.length) {
-      console.log('Все проекты отрисованы в DOM');
-      return;
-    }
-
-    const fragment = document.createDocumentFragment();
-    for (let i = 0; i < chunkSize && currentIndex < allProjects.length; i++, currentIndex++) {
-      const project = allProjects[currentIndex];
-      const el = createProjectContainer(project);
-      if (el) fragment.appendChild(el);
-    }
-    projectsContainer.appendChild(fragment);
-
-    if (currentIndex < allProjects.length) {
-      requestAnimationFrame(renderChunk);
-    }
-  }
-
-  requestAnimationFrame(renderChunk);
+// //"функция однократной отрисовки проектов"
+function renderAllProjects() {
+  console.time('renderAllProjects');
+  projectsContainer.innerHTML = '';
+  const fragment = document.createDocumentFragment();
+  allProjects.forEach((project) => {
+    const el = createProjectContainer(project);
+    if (el) fragment.appendChild(el);
+  });
+  projectsContainer.appendChild(fragment);
+  console.timeEnd('renderAllProjects');
 }
 
 // //функция начальной загрузки проектов из БД
 async function loadAllProjects() {
   if (isLoading) return;
   isLoading = true;
+  console.time('loadProjectsFromDB');
 
   const { data, error } = await supabase.from('projects').select('*');
   if (error) {
@@ -546,10 +530,10 @@ async function loadAllProjects() {
     isLoading = false;
     return;
   }
+
   allProjects = data || [];
-  currentIndex = 0;
-  projectsContainer.innerHTML = '';
   isLoading = false;
+  console.timeEnd('loadProjectsFromDB');
 }
 
 // //функция добавления нового проекта
@@ -578,10 +562,10 @@ async function addNewProject() {
     console.error('Ошибка добавления проекта:', error);
     return;
   }
-
   if (data) {
-    // //добавляем созданный проект в массив
+    // //добавляем созданный проект в массив и перерисовываем
     allProjects.push(data);
+    renderAllProjects();
   }
 }
 
@@ -674,7 +658,6 @@ async function saveProject() {
   if (data) {
     updateProjectInDOM(data);
   }
-
   closeEditModal();
 }
 
@@ -773,11 +756,12 @@ saveEditBtn.addEventListener('click', saveProject);
 
 // //"инициализация (замена поллинга на realtime-подписку)"
 async function init() {
-  await loadAllProjects();  
-  renderProjectsChunked(CHUNK_SIZE);
+  await loadAllProjects();
+  // //отрисовываем все проекты одним проходом
+  renderAllProjects();
 
   // //Подписка на события изменения таблицы projects
-  const channel = supabase
+  supabase
     .channel('projects-changes')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, (payload) => {
       handleRealtimeChange(payload);
@@ -788,7 +772,6 @@ async function init() {
 init();
 
 // // Экспорт, если нужно
-window.renderProjectsChunked = renderProjectsChunked;
 window.closeEditModal = closeEditModal;
 window.saveProject = saveProject;
 </script>
