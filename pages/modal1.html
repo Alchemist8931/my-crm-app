@@ -409,7 +409,8 @@
 </style>
 
 <script type="module">
-// // Глобальный объект Supabase (должен быть доступен)
+/* // ИСПОЛЬЗУЕМ Supabase Realtime ВМЕСТО ПОЛЛИНГА.
+// // Глобальный объект Supabase (должен быть доступен) */
 const supabase = window.supabase;
 
 // // DOM-элементы
@@ -424,24 +425,17 @@ const saveEditBtn = editForm.querySelector('.save-button');             // Кн�
 // //"функция ленивая подгрузка проектов" — настраиваемый размер порции
 const CHUNK_SIZE = 10;
 
-// // Хранилище проектов, флаги и т. д.
-let allProjects = [];           
-let currentIndex = 0;           
-let isLoading = false;          
-let currentEditingProject = null; 
-let changedRows = new Set();    
+// // Хранилище проектов и индексов для пакетной отрисовки
+let allProjects = [];
+let currentIndex = 0;
+let isLoading = false;
+let currentEditingProject = null;
 
-// // ПОЛЛИНГ: каждые 5 секунд проверяем, есть ли изменения
-let pollingInterval = null;   
-const POLLING_MS = 5000;    
-
-// ---------------------------------------------------------------------
-// // ФУНКЦИЯ СОЗДАНИЯ КАРТОЧКИ (DOM-элемента) ПРОЕКТА
-// ---------------------------------------------------------------------
+// //функция создания DOM-карточки проекта
 function createProjectContainer(project) {
   if (!project || !project.project_id) return null;
 
-  // //функция рендеринга карточки проекта
+  // //рендеринг карточки проекта
   const container = document.createElement('div');
   container.classList.add('modal1-container');
   container.dataset.id = project.project_id;
@@ -517,46 +511,33 @@ function createProjectContainer(project) {
   return container;
 }
 
-// ---------------------------------------------------------------------
-// // ПАКЕТНАЯ / ПОСТЕПЕННАЯ ОТРИСОВКА
-// ---------------------------------------------------------------------
+// //функция пакетной отрисовки (ленивая подгрузка)
 function renderProjectsChunked(chunkSize = CHUNK_SIZE) {
-  // Начинаем от currentIndex и рисуем следующую партию
-  // Операции оформляем через requestAnimationFrame и DocumentFragment
   function renderChunk() {
     if (currentIndex >= allProjects.length) {
-      console.log('Все проекты уже отрендерены в DOM');
+      console.log('Все проекты отрисованы в DOM');
       return;
     }
 
-    // Создаём фрагмент для пакетного добавления
     const fragment = document.createDocumentFragment();
-
-    // Добавим до chunkSize элементов
     for (let i = 0; i < chunkSize && currentIndex < allProjects.length; i++, currentIndex++) {
       const project = allProjects[currentIndex];
       const el = createProjectContainer(project);
       if (el) fragment.appendChild(el);
     }
-
-    // Добавляем всё разом в DOM
     projectsContainer.appendChild(fragment);
 
-    // Если ещё не все отрисованы — продолжаем в следующем кадре
     if (currentIndex < allProjects.length) {
       requestAnimationFrame(renderChunk);
     }
   }
 
-  // Запускаем рендер «пакета»
   requestAnimationFrame(renderChunk);
 }
 
-// ---------------------------------------------------------------------
-// // ЗАГРУЗКА ДАННЫХ
-// ---------------------------------------------------------------------
+// //функция начальной загрузки проектов из БД
 async function loadAllProjects() {
-  if (isLoading) return; 
+  if (isLoading) return;
   isLoading = true;
 
   const { data, error } = await supabase.from('projects').select('*');
@@ -565,77 +546,13 @@ async function loadAllProjects() {
     isLoading = false;
     return;
   }
-
   allProjects = data || [];
-  currentIndex = 0;           // Сбрасываем индекс
+  currentIndex = 0;
   projectsContainer.innerHTML = '';
   isLoading = false;
 }
 
-// ---------------------------------------------------------------------
-// // ПОЛЛИНГ РАЗ В 5 СЕКУНД ТОЛЬКО ПРИ НАЛИЧИИ ИЗМЕНЕНИЙ
-// ---------------------------------------------------------------------
-async function pollChanges() {
-  if (changedRows.size === 0) return; // Нет изменений — нет смысла дергать БД
-
-  const idsToUpdate = Array.from(changedRows);
-  if (!idsToUpdate.length) return;
-
-  const { data, error } = await supabase
-    .from('projects')
-    .select('*')
-    .in('project_id', idsToUpdate);
-
-  if (error) {
-    console.error('Ошибка при обновлении по changedRows:', error);
-    return;
-  }
-
-  if (!data || !Array.isArray(data)) {
-    console.warn('pollChanges: нет данных или неверный формат ответа');
-    return;
-  }
-
-  // Обновляем DOM для каждой записи
-  data.forEach((updatedProj) => {
-    const elem = projectsContainer.querySelector(`[data-id="${updatedProj.project_id}"]`);
-    if (elem) {
-      elem.dataset.projectName = updatedProj.project_name || '';
-      elem.dataset.status = updatedProj.status || '';
-      elem.dataset.contractAmount = updatedProj.contract_amount || 0;
-      elem.dataset.contractCosts = updatedProj.contract_costs || 0;
-      elem.dataset.contractProfit = updatedProj.contract_profit || 0;
-      elem.dataset.profitPercentage = updatedProj.profit_percentage || 0;
-      elem.dataset.companySeller = updatedProj.company_seller || '';
-      elem.dataset.tinSeller = updatedProj.tin_seller || '';
-      elem.dataset.buyerCompany = updatedProj.buyer_company || '';
-      elem.dataset.tinBuyer = updatedProj.tin_buyer || '';
-
-      const fields = [
-        'project_name','status','contract_amount','contract_costs','contract_profit',
-        'profit_percentage','company_seller','tin_seller','buyer_company','tin_buyer'
-      ];
-      fields.forEach(field => {
-        const input = elem.querySelector(`[data-field="${field}"]`);
-        if (input) {
-          input.value = updatedProj[field] || '';
-        }
-      });
-    }
-
-    // Обновим также в allProjects
-    const idx = allProjects.findIndex(p => p.project_id === updatedProj.project_id);
-    if (idx !== -1) {
-      allProjects[idx] = updatedProj;
-    }
-  });
-
-  changedRows.clear();
-}
-
-// ---------------------------------------------------------------------
-// // CRUD: ADD / DELETE / EDIT
-// ---------------------------------------------------------------------
+// //функция добавления нового проекта
 async function addNewProject() {
   const newProject = {
     project_id: 'proj_' + Math.random().toString(36).substr(2, 9),
@@ -663,26 +580,23 @@ async function addNewProject() {
   }
 
   if (data) {
-    // Добавляем его в массив
+    // //добавляем созданный проект в массив
     allProjects.push(data);
-    // Можно сразу перерисовать последнюю порцию (либо вызывать renderProjectsChunked заново).
-    // Но для простоты — просто делаем новую порцию:
-    // currentIndex = allProjects.length - 1; // Чтобы нарисовать именно этот проект
-    // renderProjectsChunked(1);
   }
 }
 
+// //функция удаления проекта
 async function deleteProject(projectId) {
-  const { error } = await supabase
-    .from('projects')
-    .delete()
-    .eq('project_id', projectId);
-
+  const { error } = await supabase.from('projects').delete().eq('project_id', projectId);
   if (error) {
     console.error('Ошибка удаления проекта:', error);
     return;
   }
+  removeProjectInDOM(projectId);
+}
 
+// //функция удаления DOM-элемента проекта
+function removeProjectInDOM(projectId) {
   const elem = projectsContainer.querySelector(`[data-id="${projectId}"]`);
   if (elem) {
     projectsContainer.removeChild(elem);
@@ -690,7 +604,7 @@ async function deleteProject(projectId) {
   allProjects = allProjects.filter(p => p.project_id !== projectId);
 }
 
-// // Открытие окна редактирования
+// //функции для модального окна редактирования
 function openEditModal(projectId) {
   const elem = projectsContainer.querySelector(`[data-id="${projectId}"]`);
   if (!elem) return;
@@ -728,6 +642,7 @@ function closeEditModal() {
   currentEditingProject = null;
 }
 
+// //функция сохранения изменений проекта
 async function saveProject() {
   if (!currentEditingProject) return;
 
@@ -757,46 +672,81 @@ async function saveProject() {
   }
 
   if (data) {
-    const elem = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
-    if (elem) {
-      elem.dataset.projectName = data.project_name;
-      elem.dataset.status = data.status;
-      elem.dataset.contractAmount = data.contract_amount;
-      elem.dataset.contractCosts = data.contract_costs;
-      elem.dataset.contractProfit = data.contract_profit;
-      elem.dataset.profitPercentage = data.profit_percentage;
-      elem.dataset.companySeller = data.company_seller;
-      elem.dataset.tinSeller = data.tin_seller;
-      elem.dataset.buyerCompany = data.buyer_company;
-      elem.dataset.tinBuyer = data.tin_buyer;
-
-      const fields = [
-        'project_name','status','contract_amount','contract_costs',
-        'contract_profit','profit_percentage','company_seller','tin_seller',
-        'buyer_company','tin_buyer'
-      ];
-      fields.forEach((field) => {
-        const input = elem.querySelector(`[data-field="${field}"]`);
-        if (input) {
-          input.value = data[field] || '';
-        }
-      });
-    }
-
-    const idx = allProjects.findIndex(p => p.project_id === data.project_id);
-    if (idx !== -1) {
-      allProjects[idx] = data;
-    }
-
-    changedRows.add(currentEditingProject.project_id);
+    updateProjectInDOM(data);
   }
 
   closeEditModal();
 }
 
-// ---------------------------------------------------------------------
-// // ОБРАБОТЧИКИ
-// ---------------------------------------------------------------------
+// //"функция точечного обновления DOM" (при UPDATE через Realtime или вручную)
+function updateProjectInDOM(updatedProj) {
+  const elem = projectsContainer.querySelector(`[data-id="${updatedProj.project_id}"]`);
+  if (!elem) return;
+
+  // //обновляем dataset
+  elem.dataset.projectName = updatedProj.project_name || '';
+  elem.dataset.status = updatedProj.status || '';
+  elem.dataset.contractAmount = updatedProj.contract_amount || 0;
+  elem.dataset.contractCosts = updatedProj.contract_costs || 0;
+  elem.dataset.contractProfit = updatedProj.contract_profit || 0;
+  elem.dataset.profitPercentage = updatedProj.profit_percentage || 0;
+  elem.dataset.companySeller = updatedProj.company_seller || '';
+  elem.dataset.tinSeller = updatedProj.tin_seller || '';
+  elem.dataset.buyerCompany = updatedProj.buyer_company || '';
+  elem.dataset.tinBuyer = updatedProj.tin_buyer || '';
+
+  // //обновляем поля внутри карточки
+  const fields = [
+    'project_name','status','contract_amount','contract_costs','contract_profit',
+    'profit_percentage','company_seller','tin_seller','buyer_company','tin_buyer'
+  ];
+  fields.forEach(field => {
+    const input = elem.querySelector(`[data-field="${field}"]`);
+    if (input) {
+      input.value = updatedProj[field] || '';
+    }
+  });
+
+  // //обновляем запись в allProjects
+  const idx = allProjects.findIndex(p => p.project_id === updatedProj.project_id);
+  if (idx !== -1) {
+    allProjects[idx] = updatedProj;
+  }
+}
+
+// //"функция добавления карточки в DOM" (при INSERT через Realtime)
+function addProjectInDOM(newProj) {
+  // //проверяем, нет ли такого project_id уже
+  const exists = allProjects.some(p => p.project_id === newProj.project_id);
+  if (exists) return;
+
+  allProjects.push(newProj);
+  // //добавляем новую карточку в конец
+  const el = createProjectContainer(newProj);
+  if (el) {
+    projectsContainer.appendChild(el);
+  }
+}
+
+// //"функция обработки событий Realtime"
+function handleRealtimeChange(payload) {
+  const eventType = payload.eventType; 
+  const newData = payload.new;
+  const oldData = payload.old;
+
+  if (eventType === 'INSERT' && newData) {
+    console.log('INSERT:', newData);
+    addProjectInDOM(newData);
+  } else if (eventType === 'UPDATE' && newData) {
+    console.log('UPDATE:', newData);
+    updateProjectInDOM(newData);
+  } else if (eventType === 'DELETE' && oldData) {
+    console.log('DELETE:', oldData);
+    removeProjectInDOM(oldData.project_id);
+  }
+}
+
+// //"обработчики кликов/действий в контейнере"
 projectsContainer.addEventListener('click', (e) => {
   const icon = e.target.closest('.modal1-icon');
   if (!icon) return;
@@ -811,28 +761,28 @@ projectsContainer.addEventListener('click', (e) => {
   }
 });
 
+// //"обработчики для кнопок"
 addProjectButton?.addEventListener('click', addNewProject);
-
 closeMainModalBtn.addEventListener('click', () => {
   if (window.closeModal) {
     window.closeModal();
   }
 });
-
 closeEditModalBtn.addEventListener('click', closeEditModal);
 saveEditBtn.addEventListener('click', saveProject);
 
-// ---------------------------------------------------------------------
-// // ИНИЦИАЛИЗАЦИЯ
-// ---------------------------------------------------------------------
+// //"инициализация (замена поллинга на realtime-подписку)"
 async function init() {
-  await loadAllProjects();            // Загружаем проекты, но не выводим
-
-  // Рендерим проекты «пакетами» (по 10 штук, например)
+  await loadAllProjects();  
   renderProjectsChunked(CHUNK_SIZE);
 
-  // Запуск опроса каждые 5 секунд (pollChanges)
-  pollingInterval = setInterval(pollChanges, POLLING_MS);
+  // //Подписка на события изменения таблицы projects
+  const channel = supabase
+    .channel('projects-changes')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, (payload) => {
+      handleRealtimeChange(payload);
+    })
+    .subscribe();
 }
 
 init();
