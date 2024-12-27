@@ -762,7 +762,7 @@ async function init() {
 
   // //Подписка на события изменения таблицы projects
   supabase
-    .channel('projects-changes')
+ //   .channel('projects-changes')
     .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, (payload) => {
       handleRealtimeChange(payload);
     })
