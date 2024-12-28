@@ -318,10 +318,10 @@
 /* Стили фоновой анимации */
 canvas#canvas {
   position: fixed; 
-  bottom: 0%;    
-  right: 0%;      
-  width: 50%;
-  height: 50%; 
+  bottom: -35%;    
+  right: -35%;      
+  width: 100%;
+  height: 100%; 
   z-index: 1;    
   background-color: transparent;
 }
@@ -330,7 +330,7 @@ canvas#canvas {
 </head>
 <body>
 
-  <!-- анимация на фон  -->
+  <!-- анимация на фон -->
   <canvas id="canvas"></canvas>
   
   <div id="app">
@@ -507,7 +507,7 @@ canvas#canvas {
 /* Функция загрузки HTML контента */
 async function loadModalContent(modalId) {
   const fileName = modalId + '.html';
-  const url = `./pages/${fileName}?t=${Date.now()}`; // предотвращение кэширования
+  const url = ./pages/${fileName}?t=${Date.now()}; // предотвращение кэширования
   console.log("Загружаемый путь:", url);
 
   try {
@@ -652,8 +652,8 @@ async function loadModalContent(modalId) {
   (function() {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
-    const numPointsX = 8;
-    const numPointsY = 10;
+    const numPointsX = 80;
+    const numPointsY = 100;
     const pointSize = 6;
     const gap = 4;
     const displayPercent1 = 0.005;
