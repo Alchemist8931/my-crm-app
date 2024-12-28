@@ -1,12 +1,11 @@
-<!-- ////////////// Шапка модального окна ///////////// -->
 <!-- /pages/modal1.html -->
-<button class="close-modal" onclick="closeModal()">×</button>
+<button class="close-modal">×</button>
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
-  <button id="add-project-button" class="button-D" style="top: 2.7vw; left: 20vw;"> 
-    <span class="btn-txt">new project</span>
-  </button> 
+  <button id="add-project-button" style="margin-top: -4.2vw; padding: 0.5vw 1vw; font-size: 0.4vw; cursor: pointer;">
+    Добавить проект
+  </button>
 
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 99%;">
     <div class="modalVNUT-content" id="projects-container">
@@ -21,6 +20,8 @@
     <button class="close-edit-modal">×</button>
     <h3>Редактирование проекта</h3>
     <form id="edit-form">
+      <!-- Поля редактирования -->
+
       <!-- Название проекта -->
       <label for="edit-project-name">Название проекта</label>
       <input type="text" id="edit-project-name" placeholder="Введите название проекта" required />
@@ -67,90 +68,8 @@
   </div>
 </div>
 
-<!-- ////////////// Шаблон одного проекта ///////////// -->
-<!--template для проекта-->
-<template id="project-template">
-  <div class="modal1-container" data-id="">
-    <!-- Иконка Редактировать -->
-    <span class="modal1-icon" style="left: 1vw;" data-action="edit" data-id="">
-      <i class="material-symbols-outlined">edit</i>
-    </span>
-
-    <!-- Project ID -->
-    <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" placeholder=" " data-field="project_id" readonly />
-      <label>Project ID</label>
-    </div>
-
-    <!-- Project Name -->
-    <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" placeholder=" " data-field="project_name" readonly />
-      <label>Project Name</label>
-    </div>
-
-    <!-- Status -->
-    <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" placeholder=" " data-field="status" readonly />
-      <label>Status</label>
-    </div>
-
-    <!-- Contract Amount -->
-    <div class="modal1-input-group left">
-      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="contract_amount" readonly />
-      <label>Contract Amount</label>
-    </div>
-
-    <!-- Contract Costs -->
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="contract_costs" readonly />
-      <label>Contract Costs</label>
-    </div>
-
-    <!-- Contract Profit -->
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="contract_profit" readonly />
-      <label>Contract Profit</label>
-    </div>
-
-    <!-- Profit % -->
-    <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="profit_percentage" readonly />
-      <label>Profit %</label>
-    </div>
-
-    <!-- Company Seller -->
-    <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" placeholder=" " data-field="company_seller" readonly />
-      <label>Company Seller</label>
-    </div>
-
-    <!-- TIN Seller -->
-    <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" placeholder=" " data-field="tin_seller" readonly />
-      <label>TIN Seller</label>
-    </div>
-
-    <!-- Buyer Company -->
-    <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" placeholder=" " data-field="buyer_company" readonly />
-      <label>Buyer Company</label>
-    </div>
-
-    <!-- TIN Buyer -->
-    <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" placeholder=" " data-field="tin_buyer" readonly />
-      <label>TIN Buyer</label>
-    </div>
-
-    <!-- Иконка Удалить -->
-    <span class="modal1-icon" style="margin-left: 6vw; right: 1vw;" data-action="delete" data-id="">
-      <i class="material-symbols-outlined">delete</i>
-    </span>
-  </div>
-</template>
-
 <style>
-.close-modal {
+  .close-modal {
     position: absolute;
     top: 0.5vw;
     right: 0.5vw;
@@ -170,109 +89,81 @@
     color: var(--white-color2);
     background-color: none; /* Белый фон для контента */
     border-radius: var(--borderRadius);
-    height: calc(100vh - (var(--spacer)*2));
-    width: calc(100vw - (var(--spacer)*6));
+    height: calc(100vh - (var(--spacer) * 2));
+    width: calc(100vw - (var(--spacer) * 6));
     box-sizing: border-box;
     position: relative;
-    pading: 1vw
+    padding: 1vw; /* Исправлено */
   }
 
   /* Заголовок */
-.modal1-title {
-  color: var(--white-color2);
-  font-size: 0.7vw;
-  margin-top: 1vw;
-  margin-left: 1vw;
-  display: flex
-}
+  .modal1-title {
+    color: var(--white-color2);
+    font-size: 0.7vw;
+    margin-top: 1vw;
+    margin-left: 1vw;
+    display: flex;
+  }
 
-/* Подзаголовок */
-.modal1-subtitle {
-  color: var(--white-color2);
-  font-size: 0.45vw;
-  margin-top: 0.2vw;
-  margin-left: 1vw;
-  display: flex
-}
+  /* Подзаголовок */
+  .modal1-subtitle {
+    color: var(--white-color2);
+    font-size: 0.45vw;
+    margin-top: 0.2vw;
+    margin-left: 1vw;
+    display: flex;
+  }
 
   /* Если необходимо выровнять h2 и p внутри flex-контейнера, можно добавить */
-.modal1-content h2,
-.modal1-content p {
-  align-self: flex-start;
-  display: flex
-}
-  
-  
-  
+  .modal1-content h2,
+  .modal1-content p {
+    align-self: flex-start;
+    display: flex;
+  }
+
   /* _______________________________  стили модального окна с прокруткой / скроллом */
-  
+
   /* Модальное окно с прокруткой */
-.modalVNUT {
-  display: flex;
-  position: fixed;
-  background: none;
-  padding: 0vw;
-  border-radius: 0.4vw;
-  border: 0px solid rgba(255, 255, 255, 0.18);
-  color: black;
-  z-index: 1000;
-  overflow: hidden; /* Отключаем общий скролл */
-  box-sizing: border-box;
-}
+  .modalVNUT {
+    display: flex;
+    position: fixed;
+    background: none;
+    padding: 0vw;
+    border-radius: 0.4vw;
+    border: 0px solid rgba(255, 255, 255, 0.18);
+    color: black;
+    z-index: 1000;
+    overflow: hidden; /* Отключаем общий скролл */
+    box-sizing: border-box;
+  }
 
-/* Внутренний контейнер с прокруткой */
-.modalVNUT-content {
-  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
-  height: 100%;
-  width: 100%;
-  overflow-y: auto; /* Включаем вертикальную прокрутку */
-  box-sizing: border-box;
-}
-
-/* Стилизация скроллбара */
-.modalVNUT-content::-webkit-scrollbar {
-  width: 4px; /* Ширина скроллбара */
-  background-color: var(--scrollbar-color);
-}
-
-.modalVNUT-content::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
-  border-radius: 10px; /* Скругление */
-}
-
-.modalVNUT-content::-webkit-scrollbar-track {
-  background-color: var(--scrollbar-color);
-}
-  
   /* Внутренний контейнер с прокруткой */
-.modalVNUT-content {
-  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
-  height: 100%;
-  width: 100%;
-  overflow-y: auto; /* Включаем вертикальную прокрутку */
-  box-sizing: border-box;
-}
+  .modalVNUT-content {
+    padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
+    height: 100%;
+    width: 100%;
+    overflow-y: auto; /* Включаем вертикальную прокрутку */
+    box-sizing: border-box;
+  }
 
-/* Стилизация скроллбара */
-.modalVNUT-content::-webkit-scrollbar {
-  width: 4px; /* Ширина скроллбара */
-  background-color: var(--scrollbar-color);
-}
+  /* Стилизация скроллбара */
+  .modalVNUT-content::-webkit-scrollbar {
+    width: 4px; /* Ширина скроллбара */
+    background-color: var(--scrollbar-color);
+  }
 
-.modalVNUT-content::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
-  border-radius: 10px; /* Скругление */
-}
+  .modalVNUT-content::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
+    border-radius: 10px; /* Скругление */
+  }
 
-.modalVNUT-content::-webkit-scrollbar-track {
-  background-color: var(--scrollbar-color);
-}
+  .modalVNUT-content::-webkit-scrollbar-track {
+    background-color: var(--scrollbar-color);
+  }
 
+  /* _____________________________________________________________________ Контейнеры внутри модального окна */
 
-
-  /* _____________________________________________________________________    Контейнеры внутри модального окна */
-
-   .modal1-container {
+  .modal1-container {
     display: flex;
     align-items: center; /* Центрирование по вертикали */
     padding: 0.4vw;
@@ -281,8 +172,10 @@
     z-index: 1100;
     box-sizing: border-box;
     background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    width: 100%; /* Ширина контейнера остается неизменной */
+    width: 100%; /* Ширина контейнера остаётся неизменной */
     height: 2.1vw;
     transform: scale(0.86); /* Уменьшаем все элементы внутри контейнера на 30% */
     transform-origin: top left; /* Сохраняем ширину контейнера */
@@ -302,7 +195,7 @@
   .modal1-icon {
     color: rgba(255, 255, 255, 0.6);
     font-size: 1.4vw; /* Уменьшено на 30% */
-    margin-right: 0.2vw; /* Уменьшено на 30% */
+    margin-right: 0.175vw; /* Уменьшено на 30% */
     cursor: pointer;
     display: flex;
     align-items: center; /* Центрирование иконок по вертикали */
@@ -310,25 +203,25 @@
 
   .modal1-icon:hover {
     color: var(--white-color2);
-    transform: scale(0.7 * 1.1); /* Увеличение иконки при наведении с учетом масштаба */
+    transform: scale(1.1); /* Увеличение иконки при наведении */
   }
 
   .modal1-icon:active {
-    transform: scale(0.7 * 0.92); /* Сжатие иконки при клике с учетом масштаба */
+    transform: scale(0.92); /* Сжатие иконки при клике */
   }
 
   /* Input группы */
- .modal1-input-group {
+  .modal1-input-group {
     position: relative;
     font-family: "Comfortaa", sans-serif;
   }
 
   .modal1-input-group.left {
-    margin-left: 2vw; /* Уменьшено на 30% от 2.2vw */
+    margin-left: 1.54vw; /* Уменьшено на 30% от 2.2vw */
   }
 
   .modal1-input-group.right {
-    margin-left: 0.3vw; /* Уменьшено на 30% от 0.4vw */
+    margin-left: 0.28vw; /* Уменьшено на 30% от 0.4vw */
   }
 
   .modal1-input-group label {
@@ -370,7 +263,7 @@
     background: rgba(0, 0, 0, 0.5);
     border-radius: 7px; /* Уменьшено на 30% от 10px → 7px */
     color: var(--white-color2);
-  } 
+  }
 
   /* Input заголовок без границ */
   .modal1-input-TYPE1 {
@@ -384,26 +277,7 @@
     margin-top: 0.7vw; /* Уменьшено на 30% от 1vw */
   }
 
-  /* Иконки внутри контейнера */
-  .modal1-icon {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 1.4vw; /* Уменьшено на 30% от 2vw */
-    margin-right: 0.175vw; /* Уменьшено на 30% от 0.25vw */
-    cursor: pointer;
-    display: flex;
-    align-items: center; /* Центрирование иконок по вертикали */
-  }
-
-  .modal1-icon:hover {
-    color: var(--white-color2);
-    transform: scale(1.1); /* Увеличение иконки при наведении */
-  }
-
-  .modal1-icon:active {
-    transform: scale(0.92); /* Сжатие иконки при клике */
-  }
-
-    /* Дополнительные стили для кнопки добавления проекта */
+  /* Дополнительные стили для кнопки добавления проекта */
   #add-project-button {
     background-color: var(--white-color2);
     color: var(--black-color);
@@ -416,458 +290,426 @@
     background-color: var(--white-color1);
   }
 
-
-
-  
   /* Стили для модального окна редактирования */
-.edit-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(15px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1100;
-}
-
-.edit-modal.hidden {
-  display: none;
-}
-
-.edit-modal-content {
-  background: white;
-  padding: 2rem;
-  border-radius: 10px;
-  width: 50%;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.close-edit-modal {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-
-
-  .button-D {
-  height: 1vw;
-  width: 8vw;
-  position: fixed;
-  background-color: transparent;
-  cursor: pointer;
-  border: 2px solid var(--white-color2);
-  overflow: hidden;
-  border-radius: 10px;
-  color: var(--black-color);
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-txt {
-  z-index: 1;
-  font-weight: 800;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-size: 0.5vw;
-}
-
-.button-D:active {
-  transform: scale(0.9);
-  background-color: var(--white-color1);
+  .edit-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1100;
   }
-  
+
+  .edit-modal.hidden {
+    display: none;
+  }
+
+  .edit-modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    position: relative; /* Для позиционирования кнопки закрытия */
+  }
+
+  .close-edit-modal {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
 </style>
 
-<!-- ////////////// JS код ///////////// -->
 <script type="module">
-//функция фильтрации данных (пример из инструкции не требуется, но оставим комментарий как образец)
+  const supabase = window.supabase;
 
-//ключи для рендеринга карточек с данными (пример из инструкции не требуется, но оставим)
+  const projectsContainer = document.getElementById('projects-container');
+  const addProjectButton = document.getElementById('add-project-button');
+  const editModal = document.getElementById('editModal');
+  const editForm = document.getElementById('edit-form');
 
-// Инициализация Supabase (предполагаем, что window.supabase уже инициализирован где-то выше)
-const supabase = window.supabase;
+  let currentEditingProject = null;
 
-// Получаем необходимые элементы
-const projectsContainer = document.getElementById('projects-container');
-const addProjectButton = document.getElementById('add-project-button');
-const editModal = document.getElementById('editModal');
-const editForm = document.getElementById('edit-form');
+  // Генерация уникального project_id
+  const generateProjectID = () => 'proj_' + Math.random().toString(36).substr(2, 9);
 
-// Текущее редактируемое поле
-let currentEditingProject = null;
-
-// //функция генерации уникального project_id
-function generateProjectID() {
-  return 'proj_' + Math.random().toString(36).substr(2, 9);
-}
-
-// //функция создания контейнера проекта из шаблона
-function createProjectContainer(project) {
-  if (!project || !project.project_id) {
-    console.error('Некорректные данные проекта:', project);
-    return null;
-  }
-
-  // Находим сам <template> по id
-  const template = document.getElementById('project-template');
-  if (!template) {
-    console.error('Шаблон project-template не найден в HTML.');
-    return null;
-  }
-
-  // Клонируем содержимое шаблона (true — глубокое клонирование)
-  const clone = template.content.cloneNode(true);
-
-  // Ищем в клонированном фрагменте ".modal1-container"
-  const container = clone.querySelector('.modal1-container');
-
-  // Пропишем в dataset айди проекта
-  container.dataset.id = project.project_id;
-
-  // Иконки (редактировать/удалить) — проставляем data-id
-  const editIcon = container.querySelector('[data-action="edit"]');
-  const deleteIcon = container.querySelector('[data-action="delete"]');
-  if (editIcon) editIcon.dataset.id = project.project_id;
-  if (deleteIcon) deleteIcon.dataset.id = project.project_id;
-
-  // Дополнительно сохраняем данные проекта в data-атрибутах
-  container.dataset.projectName = project.project_name || '';
-  container.dataset.status = project.status || '';
-  container.dataset.contractAmount = project.contract_amount || 0;
-  container.dataset.contractCosts = project.contract_costs || 0;
-  container.dataset.contractProfit = project.contract_profit || 0;
-  container.dataset.profitPercentage = project.profit_percentage || 0;
-  container.dataset.companySeller = project.company_seller || '';
-  container.dataset.tinSeller = project.tin_seller || '';
-  container.dataset.buyerCompany = project.buyer_company || '';
-  container.dataset.tinBuyer = project.tin_buyer || '';
-
-  // Заполняем <input data-field="..."> значениями проекта
-  container.querySelector('[data-field="project_id"]').value = project.project_id;
-  container.querySelector('[data-field="project_name"]').value = project.project_name || '';
-  container.querySelector('[data-field="status"]').value = project.status || '';
-  container.querySelector('[data-field="contract_amount"]').value = project.contract_amount || 0;
-  container.querySelector('[data-field="contract_costs"]').value = project.contract_costs || 0;
-  container.querySelector('[data-field="contract_profit"]').value = project.contract_profit || 0;
-  container.querySelector('[data-field="profit_percentage"]').value = project.profit_percentage || 0;
-  container.querySelector('[data-field="company_seller"]').value = project.company_seller || '';
-  container.querySelector('[data-field="tin_seller"]').value = project.tin_seller || '';
-  container.querySelector('[data-field="buyer_company"]').value = project.buyer_company || '';
-  container.querySelector('[data-field="tin_buyer"]').value = project.tin_buyer || '';
-
-  return container; // возвращаем готовый узел
-}
-
-// //функция загрузки проектов
-async function loadProjects() {
-  const { data, error } = await supabase.from('projects').select('*');
-  if (error) {
-    console.error('Ошибка загрузки проектов:', error);
-    return;
-  }
-
-  projectsContainer.innerHTML = ''; // Очищаем контейнер
-
-  const fragment = document.createDocumentFragment();
-  data.forEach((project) => {
-    const projectElement = createProjectContainer(project);
-    if (projectElement) {
-      fragment.appendChild(projectElement);
+  // Создание HTML-контейнера проекта
+  function createProjectContainer(project) {
+    if (!project) {
+      console.error('createProjectContainer вызвана с null или undefined проектом');
+      return null;
     }
-  });
-  projectsContainer.appendChild(fragment);
-}
 
-// //функция добавления нового проекта
-async function addNewProject() {
-  const newProject = {
-    project_id: generateProjectID(),
-    project_name: 'Новый проект',
-    status: 'Новый',
-    contract_amount: 0.00,
-    contract_costs: 0.00,
-    contract_profit: 0.00,
-    profit_percentage: 0.00,
-    company_seller: '',
-    tin_seller: '',
-    buyer_company: '',
-    tin_buyer: '',
-  };
+    if (!project.project_id) {
+      console.error('Проект не имеет project_id:', project);
+      return null;
+    }
 
-  // Добавляем .select('*') для возврата всех полей вставленной записи
-  const { data, error } = await supabase
-    .from('projects')
-    .insert([newProject])
-    .select('*')
-    .single();
+    const container = document.createElement('div');
+    container.classList.add('modal1-container');
+    container.dataset.id = project.project_id;
 
-  if (error) {
-    console.error('Ошибка добавления проекта:', error);
-    return;
+    // Сохраняем все необходимые данные в data-атрибуты для легкого доступа
+    container.dataset.projectName = project.project_name || '';
+    container.dataset.status = project.status || '';
+    container.dataset.contractAmount = project.contract_amount || 0;
+    container.dataset.contractCosts = project.contract_costs || 0;
+    container.dataset.contractProfit = project.contract_profit || 0;
+    container.dataset.profitPercentage = project.profit_percentage || 0;
+    container.dataset.companySeller = project.company_seller || '';
+    container.dataset.tinSeller = project.tin_seller || '';
+    container.dataset.buyerCompany = project.buyer_company || '';
+    container.dataset.tinBuyer = project.tin_buyer || '';
+
+    container.innerHTML = `
+      <span class="modal1-icon" data-action="delete" data-id="${project.project_id}">
+        <i class="material-symbols-outlined">delete</i>
+      </span>
+      <span class="modal1-icon" data-action="edit" data-id="${project.project_id}">
+        <i class="material-symbols-outlined">edit</i>
+      </span>
+
+      <!-- Группы ввода данных -->
+      <div class="modal1-input-group left">
+        <input type="text" class="modal1-input" id="project-id-${project.project_id}" value="${project.project_id}" placeholder=" " data-field="project_id" readonly />
+        <label for="project-id-${project.project_id}">Project ID</label>
+      </div>
+
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input" id="project-name-${project.project_id}" value="${project.project_name}" placeholder=" " data-field="project_name" readonly />
+        <label for="project-name-${project.project_id}">Project Name</label>
+      </div>
+
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input" id="status-${project.project_id}" value="${project.status || ''}" placeholder=" " data-field="status" readonly />
+        <label for="status-${project.project_id}">Status</label>
+      </div>
+
+      <div class="modal1-input-group left">
+        <input type="number" step="0.01" class="modal1-input" id="contract-amount-${project.project_id}" value="${project.contract_amount || ''}" placeholder=" " data-field="contract_amount" readonly />
+        <label for="contract-amount-${project.project_id}">Contract Amount</label>
+      </div>
+
+      <div class="modal1-input-group right">
+        <input type="number" step="0.01" class="modal1-input" id="contract-costs-${project.project_id}" value="${project.contract_costs || ''}" placeholder=" " data-field="contract_costs" readonly />
+        <label for="contract-costs-${project.project_id}">Contract Costs</label>
+      </div>
+
+      <div class="modal1-input-group right">
+        <input type="number" step="0.01" class="modal1-input" id="contract-profit-${project.project_id}" value="${project.contract_profit || ''}" placeholder=" " data-field="contract_profit" readonly />
+        <label for="contract-profit-${project.project_id}">Contract Profit</label>
+      </div>
+
+      <div class="modal1-input-group right">
+        <input type="number" step="0.01" class="modal1-input" id="profit-percentage-${project.project_id}" value="${project.profit_percentage || ''}" placeholder=" " data-field="profit_percentage" readonly />
+        <label for="profit-percentage-${project.project_id}">Profit %</label>
+      </div>
+
+      <div class="modal1-input-group left">
+        <input type="text" class="modal1-input" id="company-seller-${project.project_id}" value="${project.company_seller || ''}" placeholder=" " data-field="company_seller" readonly />
+        <label for="company-seller-${project.project_id}">Company Seller</label>
+      </div>
+
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input" id="tin-seller-${project.project_id}" value="${project.tin_seller || ''}" placeholder=" " data-field="tin_seller" readonly />
+        <label for="tin-seller-${project.project_id}">TIN Seller</label>
+      </div>
+
+      <div class="modal1-input-group left">
+        <input type="text" class="modal1-input" id="buyer-company-${project.project_id}" value="${project.buyer_company || ''}" placeholder=" " data-field="buyer_company" readonly />
+        <label for="buyer-company-${project.project_id}">Buyer Company</label>
+      </div>
+
+      <div class="modal1-input-group right">
+        <input type="text" class="modal1-input" id="tin-buyer-${project.project_id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" readonly />
+        <label for="tin-buyer-${project.project_id}">TIN Buyer</label>
+      </div>
+    `;
+
+    return container;
   }
 
-  if (!data) {
-    console.error('Нет данных после вставки нового проекта');
-    return;
-  }
-  // Не вставляем вручную в DOM — сработает Realtime
-}
+  // Загрузка всех проектов
+  async function loadProjects() {
+    const { data, error } = await supabase.from('projects').select('*');
+    if (error) {
+      console.error('Ошибка загрузки проектов:', error);
+      return;
+    }
 
-// //функция удаления проекта
-async function deleteProject(projectId) {
-  const { error } = await supabase
-    .from('projects')
-    .delete()
-    .eq('project_id', projectId);
-  if (error) {
-    console.error('Ошибка удаления проекта:', error);
-    return;
-  }
+    projectsContainer.innerHTML = ''; // Очищаем контейнер
 
-  const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-  if (projectElement && projectsContainer.contains(projectElement)) {
-    projectsContainer.removeChild(projectElement);
-  } else {
-    console.error(`Элемент проекта с project_id ${projectId} не найден в projectsContainer.`);
-  }
-}
-
-// //функция открыть модальное редактирование
-function openEditModal(projectId) {
-  const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-  if (!projectElement) {
-    console.error(`Проект с project_id ${projectId} не найден.`);
-    return;
-  }
-
-  // Собираем данные из data-атрибутов
-  const project = {
-    project_id: projectId,
-    project_name: projectElement.dataset.projectName,
-    status: projectElement.dataset.status,
-    contract_amount: projectElement.dataset.contractAmount,
-    contract_costs: projectElement.dataset.contractCosts,
-    contract_profit: projectElement.dataset.contractProfit,
-    profit_percentage: projectElement.dataset.profitPercentage,
-    company_seller: projectElement.dataset.companySeller,
-    tin_seller: projectElement.dataset.tinSeller,
-    buyer_company: projectElement.dataset.buyerCompany,
-    tin_buyer: projectElement.dataset.tinBuyer,
-  };
-
-  currentEditingProject = project;
-
-  // Заполняем форму
-  editForm['edit-project-name'].value = project.project_name;
-  editForm['edit-status'].value = project.status;
-  editForm['edit-contract-amount'].value = project.contract_amount;
-  editForm['edit-contract-cost'].value = project.contract_costs;
-  editForm['edit-contract-profit'].value = project.contract_profit;
-  editForm['edit-profit-percentage'].value = project.profit_percentage;
-  editForm['edit-company-seller'].value = project.company_seller;
-  editForm['edit-tin-seller'].value = project.tin_seller;
-  editForm['edit-buyer-company'].value = project.buyer_company;
-  editForm['edit-tin-buyer'].value = project.tin_buyer;
-
-  // Показываем модал
-  editModal.classList.remove('hidden');
-}
-
-// //функция закрытия модального окна редактирования
-function closeEditModal() {
-  editModal.classList.add('hidden');
-  currentEditingProject = null;
-}
-
-// //функция закрытия основного модального окна (пример)
-function closeModal() {
-  // Здесь уже от вас зависит, как скрывать/закрывать окно
-  // Ниже просто пример:
-  document.querySelector('.modal111-content').style.display = 'none';
-}
-
-// //функция сохранения измененного проекта
-async function saveProject() {
-  if (!currentEditingProject) {
-    console.error('Нет текущего редактируемого проекта.');
-    return;
-  }
-
-  const updatedProject = {
-    project_name: editForm['edit-project-name'].value,
-    status: editForm['edit-status'].value,
-    contract_amount: parseFloat(editForm['edit-contract-amount'].value) || 0.00,
-    contract_costs: parseFloat(editForm['edit-contract-cost'].value) || 0.00,
-    contract_profit: parseFloat(editForm['edit-contract-profit'].value) || 0.00,
-    profit_percentage: parseFloat(editForm['edit-profit-percentage'].value) || 0.00,
-    company_seller: editForm['edit-company-seller'].value,
-    tin_seller: editForm['edit-tin-seller'].value,
-    buyer_company: editForm['edit-buyer-company'].value,
-    tin_buyer: editForm['edit-tin-buyer'].value,
-  };
-
-  const { data, error } = await supabase
-    .from('projects')
-    .update(updatedProject)
-    .eq('project_id', currentEditingProject.project_id)
-    .select('*')
-    .single();
-
-  if (error) {
-    console.error('Ошибка сохранения проекта:', error);
-    return;
-  }
-
-  // Найдем элемент проекта в DOM
-  const projectElement = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
-  if (projectElement) {
-    // Обновим data-атрибуты
-    projectElement.dataset.projectName = data.project_name || '';
-    projectElement.dataset.status = data.status || '';
-    projectElement.dataset.contractAmount = data.contract_amount || 0;
-    projectElement.dataset.contractCosts = data.contract_costs || 0;
-    projectElement.dataset.contractProfit = data.contract_profit || 0;
-    projectElement.dataset.profitPercentage = data.profit_percentage || 0;
-    projectElement.dataset.companySeller = data.company_seller || '';
-    projectElement.dataset.tinSeller = data.tin_seller || '';
-    projectElement.dataset.buyerCompany = data.buyer_company || '';
-    projectElement.dataset.tinBuyer = data.tin_buyer || '';
-
-    // Обновим значения инпутов
-    const fields = [
-      'project_id',
-      'project_name',
-      'status',
-      'contract_amount',
-      'contract_costs',
-      'contract_profit',
-      'profit_percentage',
-      'company_seller',
-      'tin_seller',
-      'buyer_company',
-      'tin_buyer'
-    ];
-    fields.forEach(field => {
-      const input = projectElement.querySelector(`[data-field="${field}"]`);
-      if (input) {
-        input.value = data[field] !== undefined ? data[field] : '';
+    const fragment = document.createDocumentFragment();
+    data.forEach((project) => {
+      const projectElement = createProjectContainer(project);
+      if (projectElement) {
+        fragment.appendChild(projectElement);
       }
+    });
+    projectsContainer.appendChild(fragment);
+  }
+
+  // Добавление нового проекта
+  async function addNewProject() {
+    const newProject = {
+      project_id: generateProjectID(),
+      project_name: 'Новый проект',
+      status: 'Новый',
+      contract_amount: 0.00,
+      contract_costs: 0.00,
+      contract_profit: 0.00,
+      profit_percentage: 0.00,
+      company_seller: '',
+      tin_seller: '',
+      buyer_company: '',
+      tin_buyer: '',
+    };
+
+    // Добавляем .select('*') для возврата всех полей вставленной записи
+    const { data, error } = await supabase
+      .from('projects')
+      .insert([newProject])
+      .select('*') // Добавлено для возврата данных
+      .single();    // Остаётся
+
+    if (error) {
+      console.error('Ошибка добавления проекта:', error);
+      return;
+    }
+
+    if (!data) {
+      console.error('Нет данных после вставки нового проекта');
+      return;
+    }
+
+    // Удаляем ручное добавление проекта в DOM
+    // Ручное добавление не требуется, Realtime обработает это событие
+  }
+
+  // Удаление проекта
+  async function deleteProject(projectId) {
+    const { error } = await supabase.from('projects').delete().eq('project_id', projectId);
+    if (error) {
+      console.error('Ошибка удаления проекта:', error);
+      return;
+    }
+
+    const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+    if (projectElement && projectsContainer.contains(projectElement)) {
+      projectsContainer.removeChild(projectElement);
+    } else {
+      console.error(`Элемент проекта с project_id ${projectId} не найден в projectsContainer.`);
+    }
+  }
+
+  // Открытие модального окна редактирования
+  function openEditModal(projectId) {
+    const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+    if (!projectElement) {
+      console.error(`Проект с project_id ${projectId} не найден.`);
+      return;
+    }
+
+    // Получаем данные из data-атрибутов
+    const project = {
+      project_id: projectId,
+      project_name: projectElement.dataset.projectName,
+      status: projectElement.dataset.status,
+      contract_amount: projectElement.dataset.contractAmount,
+      contract_costs: projectElement.dataset.contractCosts,
+      contract_profit: projectElement.dataset.contractProfit,
+      profit_percentage: projectElement.dataset.profitPercentage,
+      company_seller: projectElement.dataset.companySeller,
+      tin_seller: projectElement.dataset.tinSeller,
+      buyer_company: projectElement.dataset.buyerCompany,
+      tin_buyer: projectElement.dataset.tinBuyer,
+    };
+
+    currentEditingProject = project;
+
+    // Заполняем форму
+    editForm['edit-project-name'].value = project.project_name;
+    editForm['edit-status'].value = project.status;
+    editForm['edit-contract-amount'].value = project.contract_amount;
+    editForm['edit-contract-cost'].value = project.contract_costs;
+    editForm['edit-contract-profit'].value = project.contract_profit;
+    editForm['edit-profit-percentage'].value = project.profit_percentage;
+    editForm['edit-company-seller'].value = project.company_seller;
+    editForm['edit-tin-seller'].value = project.tin_seller;
+    editForm['edit-buyer-company'].value = project.buyer_company;
+    editForm['edit-tin-buyer'].value = project.tin_buyer;
+
+    // Показываем модальное окно
+    editModal.classList.remove('hidden');
+  }
+
+  // Закрытие модального окна редактирования
+  function closeEditModal() {
+    editModal.classList.add('hidden');
+    currentEditingProject = null;
+  }
+
+  // Сохранение изменений в проекте
+  async function saveProject() {
+    if (!currentEditingProject) {
+      console.error('Нет текущего редактируемого проекта.');
+      return;
+    }
+
+    const updatedProject = {
+      project_name: editForm['edit-project-name'].value,
+      status: editForm['edit-status'].value,
+      contract_amount: parseFloat(editForm['edit-contract-amount'].value) || 0.00,
+      contract_costs: parseFloat(editForm['edit-contract-cost'].value) || 0.00,
+      contract_profit: parseFloat(editForm['edit-contract-profit'].value) || 0.00,
+      profit_percentage: parseFloat(editForm['edit-profit-percentage'].value) || 0.00,
+      company_seller: editForm['edit-company-seller'].value,
+      tin_seller: editForm['edit-tin-seller'].value,
+      buyer_company: editForm['edit-buyer-company'].value,
+      tin_buyer: editForm['edit-tin-buyer'].value,
+    };
+
+    const { data, error } = await supabase
+      .from('projects')
+      .update(updatedProject)
+      .eq('project_id', currentEditingProject.project_id)
+      .select('*') // Добавлено для возврата обновлённой записи
+      .single();
+
+    if (error) {
+      console.error('Ошибка сохранения проекта:', error);
+      return;
+    }
+
+    // Обновляем все поля проекта в DOM
+    const projectElement = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
+    if (projectElement) {
+      // Обновляем data-атрибуты
+      projectElement.dataset.projectName = data.project_name || '';
+      projectElement.dataset.status = data.status || '';
+      projectElement.dataset.contractAmount = data.contract_amount || 0;
+      projectElement.dataset.contractCosts = data.contract_costs || 0;
+      projectElement.dataset.contractProfit = data.contract_profit || 0;
+      projectElement.dataset.profitPercentage = data.profit_percentage || 0;
+      projectElement.dataset.companySeller = data.company_seller || '';
+      projectElement.dataset.tinSeller = data.tin_seller || '';
+      projectElement.dataset.buyerCompany = data.buyer_company || '';
+      projectElement.dataset.tinBuyer = data.tin_buyer || '';
+
+      // Обновляем значения всех полей ввода
+      const fields = ['project_id', 'project_name', 'status', 'contract_amount', 'contract_costs', 'contract_profit', 'profit_percentage', 'company_seller', 'tin_seller', 'buyer_company', 'tin_buyer'];
+      fields.forEach(field => {
+        const input = projectElement.querySelector(`[data-field="${field}"]`);
+        if (input) {
+          input.value = data[field] !== undefined ? data[field] : '';
+        }
+      });
+    }
+
+    // Закрываем модальное окно
+    closeEditModal();
+  }
+
+  // Подписка на изменения в таблице projects (реальное время)
+  function setupRealtime() {
+    const channel = supabase
+      .channel('realtime_projects')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'projects' },
+        (payload) => {
+          const projectId = payload.new?.project_id || payload.old?.project_id;
+          if (!projectId) return;
+
+          if (payload.eventType === 'INSERT' && payload.new) {
+            // Проверяем, существует ли уже проект в DOM
+            if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
+              const projectElement = createProjectContainer(payload.new);
+              if (projectElement) {
+                projectsContainer.appendChild(projectElement);
+              }
+            }
+          } else if (payload.eventType === 'UPDATE' && payload.new) {
+            const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+            if (projectElement) {
+              const updatedProject = payload.new;
+
+              // Обновляем data-атрибуты
+              projectElement.dataset.projectName = updatedProject.project_name || '';
+              projectElement.dataset.status = updatedProject.status || '';
+              projectElement.dataset.contractAmount = updatedProject.contract_amount || 0;
+              projectElement.dataset.contractCosts = updatedProject.contract_costs || 0;
+              projectElement.dataset.contractProfit = updatedProject.contract_profit || 0;
+              projectElement.dataset.profitPercentage = updatedProject.profit_percentage || 0;
+              projectElement.dataset.companySeller = updatedProject.company_seller || '';
+              projectElement.dataset.tinSeller = updatedProject.tin_seller || '';
+              projectElement.dataset.buyerCompany = updatedProject.buyer_company || '';
+              projectElement.dataset.tinBuyer = updatedProject.tin_buyer || '';
+
+              // Обновляем значения всех полей ввода
+              const fields = ['project_id', 'project_name', 'status', 'contract_amount', 'contract_costs', 'contract_profit', 'profit_percentage', 'company_seller', 'tin_seller', 'buyer_company', 'tin_buyer'];
+              fields.forEach(field => {
+                const input = projectElement.querySelector(`[data-field="${field}"]`);
+                if (input) {
+                  input.value = updatedProject[field] !== undefined ? updatedProject[field] : '';
+                }
+              });
+            }
+          } else if (payload.eventType === 'DELETE') {
+            const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+            if (projectElement) {
+              projectsContainer.removeChild(projectElement);
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    channel.on('subscription_error', (status) => {
+      console.error('Ошибка подписки на канал:', status);
     });
   }
 
-  // Закрываем окно редактирования
-  closeEditModal();
-}
-
-// //функция настройки Realtime подписки
-function setupRealtime() {
-  const channel = supabase
-    .channel('realtime_projects')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'projects' },
-      (payload) => {
-        const projectId = payload.new?.project_id || payload.old?.project_id;
-        if (!projectId) return;
-
-        if (payload.eventType === 'INSERT' && payload.new) {
-          // Проверяем, есть ли уже проект в DOM
-          if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
-            const projectElement = createProjectContainer(payload.new);
-            if (projectElement) {
-              projectsContainer.appendChild(projectElement);
-            }
-          }
-        } else if (payload.eventType === 'UPDATE' && payload.new) {
-          const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-          if (projectElement) {
-            const updatedProject = payload.new;
-
-            // Обновляем data-атрибуты
-            projectElement.dataset.projectName = updatedProject.project_name || '';
-            projectElement.dataset.status = updatedProject.status || '';
-            projectElement.dataset.contractAmount = updatedProject.contract_amount || 0;
-            projectElement.dataset.contractCosts = updatedProject.contract_costs || 0;
-            projectElement.dataset.contractProfit = updatedProject.contract_profit || 0;
-            projectElement.dataset.profitPercentage = updatedProject.profit_percentage || 0;
-            projectElement.dataset.companySeller = updatedProject.company_seller || '';
-            projectElement.dataset.tinSeller = updatedProject.tin_seller || '';
-            projectElement.dataset.buyerCompany = updatedProject.buyer_company || '';
-            projectElement.dataset.tinBuyer = updatedProject.tin_buyer || '';
-
-            // Обновляем значения всех полей
-            const fields = [
-              'project_id',
-              'project_name',
-              'status',
-              'contract_amount',
-              'contract_costs',
-              'contract_profit',
-              'profit_percentage',
-              'company_seller',
-              'tin_seller',
-              'buyer_company',
-              'tin_buyer'
-            ];
-            fields.forEach(field => {
-              const input = projectElement.querySelector(`[data-field="${field}"]`);
-              if (input) {
-                input.value = updatedProject[field] !== undefined ? updatedProject[field] : '';
-              }
-            });
-          }
-        } else if (payload.eventType === 'DELETE') {
-          const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-          if (projectElement) {
-            projectsContainer.removeChild(projectElement);
-          }
-        }
-      }
-    )
-    .subscribe();
-
-  channel.on('subscription_error', (status) => {
-    console.error('Ошибка подписки на канал:', status);
-  });
-}
-
-// //инициализация
-if (addProjectButton) {
-  addProjectButton.addEventListener('click', addNewProject);
-}
-
-// //слушатель кликов на контейнере проектов
-projectsContainer.addEventListener('click', (event) => {
-  const icon = event.target.closest('.modal1-icon');
-  if (!icon) return;
-
-  const action = icon.dataset.action;
-  const projectId = icon.dataset.id;
-
-  if (action === 'delete') {
-    deleteProject(projectId);
-  } else if (action === 'edit') {
-    openEditModal(projectId);
+  // Обработка кликов на кнопке "Добавить проект"
+  if (addProjectButton) {
+    addProjectButton.addEventListener('click', addNewProject);
   }
-});
 
-// //закрыть окно редактирования
-document.querySelector('.close-edit-modal').addEventListener('click', closeEditModal);
-// //кнопка "Сохранить" в форме редактирования
-editForm.querySelector('.save-button').addEventListener('click', saveProject);
+  // Обработка кликов на иконках в контейнерах
+  projectsContainer.addEventListener('click', (event) => {
+    const icon = event.target.closest('.modal1-icon');
+    if (!icon) return;
 
-// //запуск начальной загрузки проектов + Realtime
-loadProjects();
-setupRealtime();
+    const action = icon.dataset.action;
+    const projectId = icon.dataset.id;
+
+    if (action === 'delete') {
+      deleteProject(projectId);
+    } else if (action === 'edit') {
+      openEditModal(projectId);
+    }
+  });
+
+  // Добавляем обработчики событий для кнопок закрытия и сохранения
+  document.querySelector('.close-modal').addEventListener('click', closeModal);
+  document.querySelector('.close-edit-modal').addEventListener('click', closeEditModal);
+  editForm.querySelector('.save-button').addEventListener('click', saveProject);
+
+  // Запуск
+  loadProjects();
+  setupRealtime();
+
+  // Экспорт функций в глобальную область видимости (если необходимо)
+  window.saveProject = saveProject;
+  window.closeModal = closeModal;
+  window.closeEditModal = closeEditModal;
 </script>
-
-</body>
-</html>
