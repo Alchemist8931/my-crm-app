@@ -3,9 +3,8 @@
 <div class="modal111-content" style="justify-content: flex-start;">
   <h2 class="modal1-title">ELABORATION SALES</h2>
   <p class="modal1-subtitle">проекты в работе</p>
-  <button id="add-project-button" style="margin-top: -4.2vw; padding: 0.5vw 1vw; font-size: 0.4vw; cursor: pointer;">
-    Добавить проект
-  </button>
+  <button id="add-project-button" class="button-D" style="top: 2.7vw; left: 20vw;"> <span class="btn-txt">new project</span> </button> 
+
 
   <div id="modalBottom" class="modalVNUT" style="top: 4.5vw; left: 6vw; right: 2vw; height: calc(100vh - 6.4vw); width: 99%;">
     <div class="modalVNUT-content" id="projects-container">
@@ -69,7 +68,7 @@
 </div>
 
 <style>
-  .close-modal {
+.close-modal {
     position: absolute;
     top: 0.5vw;
     right: 0.5vw;
@@ -89,79 +88,107 @@
     color: var(--white-color2);
     background-color: none; /* Белый фон для контента */
     border-radius: var(--borderRadius);
-    height: calc(100vh - (var(--spacer) * 2));
-    width: calc(100vw - (var(--spacer) * 6));
+    height: calc(100vh - (var(--spacer)*2));
+    width: calc(100vw - (var(--spacer)*6));
     box-sizing: border-box;
     position: relative;
-    padding: 1vw; /* Исправлено */
+    pading: 1vw
   }
 
   /* Заголовок */
-  .modal1-title {
-    color: var(--white-color2);
-    font-size: 0.7vw;
-    margin-top: 1vw;
-    margin-left: 1vw;
-    display: flex;
-  }
+.modal1-title {
+  color: var(--white-color2);
+  font-size: 0.7vw;
+  margin-top: 1vw;
+  margin-left: 1vw;
+  display: flex
+}
 
-  /* Подзаголовок */
-  .modal1-subtitle {
-    color: var(--white-color2);
-    font-size: 0.45vw;
-    margin-top: 0.2vw;
-    margin-left: 1vw;
-    display: flex;
-  }
+/* Подзаголовок */
+.modal1-subtitle {
+  color: var(--white-color2);
+  font-size: 0.45vw;
+  margin-top: 0.2vw;
+  margin-left: 1vw;
+  display: flex
+}
 
   /* Если необходимо выровнять h2 и p внутри flex-контейнера, можно добавить */
-  .modal1-content h2,
-  .modal1-content p {
-    align-self: flex-start;
-    display: flex;
-  }
-
+.modal1-content h2,
+.modal1-content p {
+  align-self: flex-start;
+  display: flex
+}
+  
+  
+  
   /* _______________________________  стили модального окна с прокруткой / скроллом */
-
+  
   /* Модальное окно с прокруткой */
-  .modalVNUT {
-    display: flex;
-    position: fixed;
-    background: none;
-    padding: 0vw;
-    border-radius: 0.4vw;
-    border: 0px solid rgba(255, 255, 255, 0.18);
-    color: black;
-    z-index: 1000;
-    overflow: hidden; /* Отключаем общий скролл */
-    box-sizing: border-box;
-  }
+.modalVNUT {
+  display: flex;
+  position: fixed;
+  background: none;
+  padding: 0vw;
+  border-radius: 0.4vw;
+  border: 0px solid rgba(255, 255, 255, 0.18);
+  color: black;
+  z-index: 1000;
+  overflow: hidden; /* Отключаем общий скролл */
+  box-sizing: border-box;
+}
 
+/* Внутренний контейнер с прокруткой */
+.modalVNUT-content {
+  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
+  height: 100%;
+  width: 100%;
+  overflow-y: auto; /* Включаем вертикальную прокрутку */
+  box-sizing: border-box;
+}
+
+/* Стилизация скроллбара */
+.modalVNUT-content::-webkit-scrollbar {
+  width: 4px; /* Ширина скроллбара */
+  background-color: var(--scrollbar-color);
+}
+
+.modalVNUT-content::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
+  border-radius: 10px; /* Скругление */
+}
+
+.modalVNUT-content::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-color);
+}
+  
   /* Внутренний контейнер с прокруткой */
-  .modalVNUT-content {
-    padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
-    height: 100%;
-    width: 100%;
-    overflow-y: auto; /* Включаем вертикальную прокрутку */
-    box-sizing: border-box;
-  }
+.modalVNUT-content {
+  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
+  height: 100%;
+  width: 100%;
+  overflow-y: auto; /* Включаем вертикальную прокрутку */
+  box-sizing: border-box;
+}
 
-  /* Стилизация скроллбара */
-  .modalVNUT-content::-webkit-scrollbar {
-    width: 4px; /* Ширина скроллбара */
-    background-color: var(--scrollbar-color);
-  }
+/* Стилизация скроллбара */
+.modalVNUT-content::-webkit-scrollbar {
+  width: 4px; /* Ширина скроллбара */
+  background-color: var(--scrollbar-color);
+}
 
-  .modalVNUT-content::-webkit-scrollbar-thumb {
-    background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
-    border-radius: 10px; /* Скругление */
-  }
+.modalVNUT-content::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
+  border-radius: 10px; /* Скругление */
+}
 
-  .modalVNUT-content::-webkit-scrollbar-track {
-    background-color: var(--scrollbar-color);
-  }
+.modalVNUT-content::-webkit-scrollbar-track {
+  background-color: var(--scrollbar-color);
+}
 
-  /* _____________________________________________________________________ Контейнеры внутри модального окна */
+
+
+  /* _____________________________________________________________________    Контейнеры внутри модального окна */
 
   .modal1-container {
     display: flex;
@@ -175,7 +202,7 @@
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    width: 100%; /* Ширина контейнера остаётся неизменной */
+    width: 100%; /* Ширина контейнера остается неизменной */
     height: 2.1vw;
     transform: scale(0.86); /* Уменьшаем все элементы внутри контейнера на 30% */
     transform-origin: top left; /* Сохраняем ширину контейнера */
@@ -195,7 +222,7 @@
   .modal1-icon {
     color: rgba(255, 255, 255, 0.6);
     font-size: 1.4vw; /* Уменьшено на 30% */
-    margin-right: 0.175vw; /* Уменьшено на 30% */
+    margin-right: 0.2vw; /* Уменьшено на 30% */
     cursor: pointer;
     display: flex;
     align-items: center; /* Центрирование иконок по вертикали */
@@ -203,11 +230,11 @@
 
   .modal1-icon:hover {
     color: var(--white-color2);
-    transform: scale(1.1); /* Увеличение иконки при наведении */
+    transform: scale(0.7 * 1.1); /* Увеличение иконки при наведении с учетом масштаба */
   }
 
   .modal1-icon:active {
-    transform: scale(0.92); /* Сжатие иконки при клике */
+    transform: scale(0.7 * 0.92); /* Сжатие иконки при клике с учетом масштаба */
   }
 
   /* Input группы */
@@ -217,11 +244,11 @@
   }
 
   .modal1-input-group.left {
-    margin-left: 1.54vw; /* Уменьшено на 30% от 2.2vw */
+    margin-left: 2vw; /* Уменьшено на 30% от 2.2vw */
   }
 
   .modal1-input-group.right {
-    margin-left: 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    margin-left: 0.3vw; /* Уменьшено на 30% от 0.4vw */
   }
 
   .modal1-input-group label {
@@ -277,7 +304,26 @@
     margin-top: 0.7vw; /* Уменьшено на 30% от 1vw */
   }
 
-  /* Дополнительные стили для кнопки добавления проекта */
+  /* Иконки внутри контейнера */
+  .modal1-icon {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1.4vw; /* Уменьшено на 30% от 2vw */
+    margin-right: 0.175vw; /* Уменьшено на 30% от 0.25vw */
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Центрирование иконок по вертикали */
+  }
+
+  .modal1-icon:hover {
+    color: var(--white-color2);
+    transform: scale(1.1); /* Увеличение иконки при наведении */
+  }
+
+  .modal1-icon:active {
+    transform: scale(0.92); /* Сжатие иконки при клике */
+  }
+
+    /* Дополнительные стили для кнопки добавления проекта */
   #add-project-button {
     background-color: var(--white-color2);
     color: var(--black-color);
@@ -290,43 +336,74 @@
     background-color: var(--white-color1);
   }
 
+
+
+  
   /* Стили для модального окна редактирования */
-  .edit-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(15px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1100;
-  }
+.edit-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(15px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1100;
+}
 
-  .edit-modal.hidden {
-    display: none;
-  }
+.edit-modal.hidden {
+  display: none;
+}
 
-  .edit-modal-content {
-    background: white;
-    padding: 2rem;
-    border-radius: 10px;
-    width: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    position: relative; /* Для позиционирования кнопки закрытия */
-  }
+.edit-modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 50%;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
 
-  .close-edit-modal {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
+.close-edit-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+
+
+  .button-D {
+  height: 1vw;
+  width: 8vw;
+  position: fixed;
+  background-color: transparent;
+  cursor: pointer;
+  border: 2px solid var(--white-color2);
+  overflow: hidden;
+  border-radius: 10px;
+  color: var(--black-color);
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-txt {
+  z-index: 1;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 0.5vw;
+}
+
+.button-D:active {
+  transform: scale(0.9);
+  background-color: var(--white-color1);
   }
+  
 </style>
 
 <script type="module">
@@ -370,11 +447,8 @@
     container.dataset.buyerCompany = project.buyer_company || '';
     container.dataset.tinBuyer = project.tin_buyer || '';
 
-    container.innerHTML = `
-      <span class="modal1-icon" data-action="delete" data-id="${project.project_id}">
-        <i class="material-symbols-outlined">delete</i>
-      </span>
-      <span class="modal1-icon" data-action="edit" data-id="${project.project_id}">
+    container.innerHTML = 
+      <span class="modal1-icon" style="left: 1vw;" data-action="edit" data-id="${project.project_id}">
         <i class="material-symbols-outlined">edit</i>
       </span>
 
@@ -433,7 +507,11 @@
         <input type="text" class="modal1-input" id="tin-buyer-${project.project_id}" value="${project.tin_buyer || ''}" placeholder=" " data-field="tin_buyer" readonly />
         <label for="tin-buyer-${project.project_id}">TIN Buyer</label>
       </div>
-    `;
+
+      <span class="modal1-icon" style="margin-left: 6vw; right: 1vw;" data-action="delete" data-id="${project.project_id}">
+        <i class="material-symbols-outlined">delete</i>
+      </span>
+    ;
 
     return container;
   }
@@ -503,19 +581,19 @@
       return;
     }
 
-    const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+    const projectElement = projectsContainer.querySelector([data-id="${projectId}"]);
     if (projectElement && projectsContainer.contains(projectElement)) {
       projectsContainer.removeChild(projectElement);
     } else {
-      console.error(`Элемент проекта с project_id ${projectId} не найден в projectsContainer.`);
+      console.error(Элемент проекта с project_id ${projectId} не найден в projectsContainer.);
     }
   }
 
   // Открытие модального окна редактирования
   function openEditModal(projectId) {
-    const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+    const projectElement = projectsContainer.querySelector([data-id="${projectId}"]);
     if (!projectElement) {
-      console.error(`Проект с project_id ${projectId} не найден.`);
+      console.error(Проект с project_id ${projectId} не найден.);
       return;
     }
 
@@ -591,7 +669,7 @@
     }
 
     // Обновляем все поля проекта в DOM
-    const projectElement = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
+    const projectElement = projectsContainer.querySelector([data-id="${currentEditingProject.project_id}"]);
     if (projectElement) {
       // Обновляем data-атрибуты
       projectElement.dataset.projectName = data.project_name || '';
@@ -608,7 +686,7 @@
       // Обновляем значения всех полей ввода
       const fields = ['project_id', 'project_name', 'status', 'contract_amount', 'contract_costs', 'contract_profit', 'profit_percentage', 'company_seller', 'tin_seller', 'buyer_company', 'tin_buyer'];
       fields.forEach(field => {
-        const input = projectElement.querySelector(`[data-field="${field}"]`);
+        const input = projectElement.querySelector([data-field="${field}"]);
         if (input) {
           input.value = data[field] !== undefined ? data[field] : '';
         }
@@ -632,14 +710,14 @@
 
           if (payload.eventType === 'INSERT' && payload.new) {
             // Проверяем, существует ли уже проект в DOM
-            if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
+            if (!projectsContainer.querySelector([data-id="${projectId}"])) {
               const projectElement = createProjectContainer(payload.new);
               if (projectElement) {
                 projectsContainer.appendChild(projectElement);
               }
             }
           } else if (payload.eventType === 'UPDATE' && payload.new) {
-            const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+            const projectElement = projectsContainer.querySelector([data-id="${projectId}"]);
             if (projectElement) {
               const updatedProject = payload.new;
 
@@ -658,14 +736,14 @@
               // Обновляем значения всех полей ввода
               const fields = ['project_id', 'project_name', 'status', 'contract_amount', 'contract_costs', 'contract_profit', 'profit_percentage', 'company_seller', 'tin_seller', 'buyer_company', 'tin_buyer'];
               fields.forEach(field => {
-                const input = projectElement.querySelector(`[data-field="${field}"]`);
+                const input = projectElement.querySelector([data-field="${field}"]);
                 if (input) {
                   input.value = updatedProject[field] !== undefined ? updatedProject[field] : '';
                 }
               });
             }
           } else if (payload.eventType === 'DELETE') {
-            const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+            const projectElement = projectsContainer.querySelector([data-id="${projectId}"]);
             if (projectElement) {
               projectsContainer.removeChild(projectElement);
             }
