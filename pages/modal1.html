@@ -272,10 +272,10 @@
 
   /* _____________________________________________________________________    Контейнеры внутри модального окна */
 
-  .modal1-container {
+    .modal1-container {
     display: flex;
     align-items: center; /* Центрирование по вертикали */
-    padding: 0.4vw;
+    padding: 14px;
     border-radius: var(--borderRadius);
     color: var(--white-color2);
     z-index: 1100;
@@ -285,7 +285,7 @@
     -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.18);
     width: 100%; /* Ширина контейнера остается неизменной */
-    height: 2.1vw;
+    height: 50px;
     transform: scale(0.86); /* Уменьшаем все элементы внутри контейнера на 30% */
     transform-origin: top left; /* Сохраняем ширину контейнера */
   }
@@ -297,14 +297,14 @@
 
   /* Отступы только между контейнерами */
   .modal1-container:not(:last-child) {
-    margin-bottom: 0.5vw; /* Отступ снизу только между контейнерами */
+    margin-bottom: 20px; /* Отступ снизу только между контейнерами */
   }
 
   /* Иконки */
   .modal1-icon {
     color: rgba(255, 255, 255, 0.6);
     font-size: 1.4vw; /* Уменьшено на 30% */
-    margin-right: 0.2vw; /* Уменьшено на 30% */
+    margin-right: 10px; /* Уменьшено на 30% */
     cursor: pointer;
     display: flex;
     align-items: center; /* Центрирование иконок по вертикали */
@@ -319,26 +319,27 @@
     transform: scale(0.7 * 0.92); /* Сжатие иконки при клике с учетом масштаба */
   }
 
-  /* Input группы */
+
+ /* Input группы */
   .modal1-input-group {
     position: relative;
     font-family: "Comfortaa", sans-serif;
   }
 
   .modal1-input-group.left {
-    margin-left: 2vw; /* Уменьшено на 30% от 2.2vw */
+    margin-left: 50px; /* Уменьшено на 30% от 2.2vw */
   }
 
   .modal1-input-group.right {
-    margin-left: 0.3vw; /* Уменьшено на 30% от 0.4vw */
+    margin-left: 10px; /* Уменьшено на 30% от 0.4vw */
   }
 
   .modal1-input-group label {
     background: none;
     color: rgba(255, 255, 255, 0.6);
     position: absolute;
-    top: 0.61vw; /* Уменьшено на 30% от 0.86vw */
-    left: 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    top: 15px; /* Уменьшено на 30% от 0.86vw */
+    left: 8px; /* Уменьшено на 30% от 0.4vw */
     transform: translateY(-50%);
     text-transform: uppercase;
     font-weight: 700;
@@ -348,7 +349,7 @@
   }
 
   .modal1-input-group .modal1-input {
-    padding: 0.28vw 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    padding: 6px 6px; /* Уменьшено на 30% от 0.4vw */
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.18);
     outline: none;
@@ -366,9 +367,9 @@
 
   .modal1-input-group .modal1-input:focus + label,
   .modal1-input-group .modal1-input:not(:placeholder-shown) + label {
-    top: -0.06vw; /* Уменьшено на 30% от -0.5vw */
+    top: -4px; /* Уменьшено на 30% от -0.5vw */
     font-size: 0.28vw; /* Уменьшено на 30% от 0.4vw */
-    padding: 0 0.28vw; /* Уменьшено на 30% от 0.4vw */
+    padding: 0 6px; /* Уменьшено на 30% от 0.4vw */
     background: rgba(0, 0, 0, 0.5);
     border-radius: 7px; /* Уменьшено на 30% от 10px → 7px */
     color: var(--white-color2);
@@ -378,7 +379,7 @@
   .modal1-input-TYPE1 {
     position: relative;
     font-family: "Comfortaa", sans-serif;
-    width: 1.4vw; /* Уменьшено на 30% от 2vw */
+    width: 36px; /* Уменьшено на 30% от 2vw */
     border: none;
     outline: none;
     color: rgba(255, 255, 255, 0.6);
@@ -390,7 +391,7 @@
   .modal1-icon {
     color: rgba(255, 255, 255, 0.6);
     font-size: 1.4vw; /* Уменьшено на 30% от 2vw */
-    margin-right: 0.175vw; /* Уменьшено на 30% от 0.25vw */
+    margin-right: 10px; /* Уменьшено на 30% от 0.25vw */
     cursor: pointer;
     display: flex;
     align-items: center; /* Центрирование иконок по вертикали */
