@@ -609,8 +609,8 @@ async function loadModalContent(modalId) {
       contentArea.classList.remove('visible');
     }
 
-    // Ждём окончания анимации (0.5s)
-    await new Promise(resolve => setTimeout(resolve, 500));
+    // Ждём окончания анимации (1s)
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Скрываем модальное окно
     totalmodal.classList.remove('show');
