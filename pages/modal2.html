@@ -303,27 +303,30 @@
 
   // ================== Функция добавления тестовой задачи ================== //
   async function addTestTask() {
-    const newTask = {
-      title: 'Задача ' + Math.floor(Math.random() * 1000),
-      status: 'created'
-    };
-    try {
-      const { data, error } = await supabase
-        .from('tasks')
-        .insert(newTask)
-        .select()
-        .single();
-      if (error) throw error;
+  const newTask = {
+    title: 'Задача ' + Math.floor(Math.random() * 1000),
+    status: 'created'
+  };
+  try {
+    const { data, error } = await supabase
+      .from('tasks')
+      .insert(newTask)
+      .select()
+      .single();
 
-      // Мгновенно отобразим в текущем клиенте (DOM)
-      if (data) {
-        const taskEl = createTaskElement(data);
-        columnCreated.appendChild(taskEl);
-      }
-    } catch (err) {
-      console.error('Ошибка добавления задачи:', err);
+    // добавьте явный лог
+    console.log('addTestTask response:', data, error);
+
+    if (error) {
+      throw error;
     }
+
+    // ...
+  } catch (err) {
+    console.error('Ошибка добавления задачи:', err);
   }
+}
+
 
   // ================== Функция обновления статуса задачи в Supabase ================== //
   async function updateTaskStatus(taskId, newStatus) {
