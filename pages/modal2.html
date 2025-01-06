@@ -312,31 +312,18 @@
 
   // ================== Функция добавления тестовой задачи ================== //
   async function addTestTask() {
-  console.log('addTestTask clicked!'); // ← Добавьте это
+  console.log('addTestTask clicked!'); // ...
+  const { data, error } = await supabase
+    .from('tasks')
+    .insert([ newTask ])
+    .select();
+  console.log('after insert(), data =', data, 'error =', error);
 
-  const newTask = {
-    title: 'Задача ' + Math.floor(Math.random() * 1000),
-    status: 'created'
-  };
-
-  try {
-   const { data, error } = await supabase
-  .from('tasks')
-  .insert([ newTask ])   // <-- МАССИВ, как в modal1
-  .select()
-  .single();
-
-    console.log('addTestTask response:', data, error);
-
-    if (error) {
-      throw error;
-    }
-    
-    // ...
-  } catch (err) {
-    console.error('Ошибка добавления задачи:', err);
+  if (error) {
+    throw error;
   }
 }
+
 
 
 
