@@ -25,7 +25,7 @@
     </div>
   </div>
 
-  <!--   Кнопка добавления тестовой задачи (для примера)  --->
+  <!--   Кнопка добавления тестовой задачи  -->
   <button id="addTaskBtn" class="add-task-btn">Добавить тестовую задачу</button>
 </div>
 
@@ -33,17 +33,12 @@
 <template id="task-template">
   <div class="task-item">
     <div class="task-title"></div>
-    <select class="task-status-select">
-      <option value="created">Создано</option>
-      <option value="in_progress">В работе</option>
-      <option value="done">Завершено</option>
-    </select>
   </div>
 </template>
 
 <style>
   :root {
-    --white-color2: #D1D5D0; /* Как и в index.html */
+    --white-color2: #D1D5D0; 
     --black-color: #121212;
     --borderRadius: 10px;
     --spacer: 1vw;
@@ -61,12 +56,10 @@
     color: var(--white-color2);
     z-index: 999;
   }
-
   .close-modal:hover {
     color: red;
   }
 
-  /* Контейнер всей страницы (как пример расположения контента) */
   .kanban-content {
     font-family: "Comfortaa", sans-serif;
     color: var(--white-color2);
@@ -93,20 +86,19 @@
     margin-bottom: 1vw;
   }
 
-  /* Стили Kanban доски */
+  /* Стили доски */
   .kanban-board {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 1vw;
-    flex-grow: 1; /* чтобы колонки занимали доступное пространство по высоте */
+    flex-grow: 1;
     overflow: hidden;
   }
 
   .kanban-column {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: var(--borderRadius);
     width: 32%;
@@ -129,20 +121,17 @@
     flex-grow: 1;
     overflow-y: auto;
   }
-
-  /* Стилизация скролла */
   .task-list::-webkit-scrollbar {
     width: 4px;
   }
   .task-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(255,255,255,0.04);
   }
   .task-list::-webkit-scrollbar-thumb {
     background: var(--white-color2);
     border-radius: 2px;
   }
 
-  /* Стиль отдельных задач */
   .task-item {
     position: relative;
     background: rgba(255, 255, 255, 0.15);
@@ -150,308 +139,136 @@
     padding: 0.5vw;
     margin-bottom: 0.5vw;
     color: #fff;
-    transition: height 0.3s ease, margin 0.3s ease, opacity 0.3s ease;
-    overflow: hidden; /* чтобы анимация скрытия шла плавно */
+    transition: all 0.3s ease;
+    overflow: hidden;
   }
-
-  /* Задержка исчезновения через класс .task-leave */
-  .task-leave {
-    opacity: 0;
-    margin-bottom: 0;
-    height: 0 !important;
-    padding: 0 !important;
-    border: none;
-  }
-
   .task-title {
     font-size: 0.7vw;
     margin-bottom: 0.3vw;
   }
 
-  .task-status-select {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--white-color2);
-    border-radius: 5px;
-    color: var(--white-color2);
-    padding: 0.2vw;
-    cursor: pointer;
-    font-size: 0.6vw;
-    outline: none;
-  }
-
-  .task-status-select:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  /* Кнопка Добавить */
+  /* Кнопка "Добавить тестовую задачу" */
   .add-task-btn {
-  height: 1vw;
-  width: 8vw;
-  position: fixed;
-  background-color: transparent;
-  cursor: pointer;
-  border: 2px solid var(--white-color2);
-  overflow: hidden;
-  border-radius: 10px;
-  color: var(--black-color);
-  transition: all 0.2s ease-in-out;
+    height: 1vw;
+    width: 8vw;
+    position: fixed;
+    background-color: transparent;
+    cursor: pointer;
+    border: 2px solid var(--white-color2);
+    border-radius: 10px;
+    color: var(--black-color);
+    transition: all 0.2s ease-in-out;
     z-index: 5000;
-}
-
-.add-task-btn:active {
-  transform: scale(0.9);
-  background-color: var(--white-color1);
+  }
+  .add-task-btn:active {
+    transform: scale(0.9);
   }
 </style>
 
 <script type="module">
+  // Предполагаем, что window.supabase уже создан в index.html
+  // Пример: const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  // window.supabase = supabase;
+
   const supabase = window.supabase;
+
+  // Селекторы колонок
   const columnCreated = document.getElementById('column-created');
   const columnInProgress = document.getElementById('column-in-progress');
   const columnDone = document.getElementById('column-done');
-  const addTaskBtn = document.getElementById('addTaskBtn');
-  console.log("=== modal2.js loaded! ===");
 
+  // Кнопка
+  const addTaskBtn = document.getElementById('addTaskBtn');
 
   // Шаблон задачи
   const taskTemplate = document.getElementById('task-template');
 
-  // Список колонок и их соответствующих контейнеров
+  // Сопоставление статусов со столбцами
   const columnMap = {
     created: columnCreated,
     in_progress: columnInProgress,
     done: columnDone
   };
 
-  // ================== Функция создания DOM-элемента задачи ================== //
+  // Создание DOM-элемента задачи из шаблона
   function createTaskElement(taskData) {
     const taskEl = taskTemplate.content.cloneNode(true).querySelector('.task-item');
     const titleEl = taskEl.querySelector('.task-title');
-    const selectEl = taskEl.querySelector('.task-status-select');
-
-    taskEl.dataset.id = taskData.id;
+    // Заполним заголовок задачи
     titleEl.textContent = taskData.title || 'Без названия';
-    selectEl.value = taskData.status;
-
-    // При изменении статуса в select — обновляем задачу в Supabase
-    selectEl.addEventListener('change', async (event) => {
-      const newStatus = event.target.value;
-      await updateTaskStatus(taskData.id, newStatus);
-    });
-
     return taskEl;
   }
 
-  // ================== Функция плавного удаления (исчезновения) элемента ================== //
-  function animateRemoveTask(taskEl) {
-    return new Promise((resolve) => {
-      taskEl.classList.add('task-leave');
-      // Ждем завершения transition
-      const duration = 300; // совпадает с transition: 0.3s
-      setTimeout(() => {
-        // Удаляем элемент из DOM по завершении анимации
-        if (taskEl.parentNode) {
-          taskEl.parentNode.removeChild(taskEl);
-        }
-        resolve();
-      }, duration);
-    });
-  }
-
-  // ================== Функция плавного добавления элемента в новую колонку ================== //
-  function animateAddTask(taskEl, targetContainer) {
-    // Сначала вставим элемент (но скрытым), чтобы произошёл "сдвиг" существующих задач
-    taskEl.style.opacity = '0';
-    taskEl.style.height = '0';
-    taskEl.style.marginBottom = '0';
-
-    targetContainer.appendChild(taskEl);
-
-    // Делаем небольшую задержку, чтобы браузер применил стили
-    requestAnimationFrame(() => {
-      // А теперь плавно показываем элемент
-      taskEl.style.transition = 'opacity 0.3s ease, height 0.3s ease, margin 0.3s ease';
-      taskEl.style.opacity = '1';
-      taskEl.style.height = '';
-      taskEl.style.marginBottom = '';
-    });
-  }
-
-  // ================== Функция загрузки всех задач из Supabase ================== //
+  // Загрузка всех задач из Supabase и отображение
   async function loadTasks() {
-  console.log("loadTasks called...");
-
-  try {
-    const { data, error } = await supabase
-      .from('tasks')
-      .select('*')
-      .order('created_at', { ascending: true });
-
-    console.log("fetch tasks results:", data, error);
-
-    if (error) throw error;
-
-    // 1. Очищаем колонки
-    columnCreated.innerHTML = '';
-    columnInProgress.innerHTML = '';
-    columnDone.innerHTML = '';
-
-    // 2. Перебираем полученные задачи
-    data.forEach(task => {
-      const taskEl = createTaskElement(task);
-      const container = columnMap[task.status];
-      if (container) {
-        container.appendChild(taskEl);
-      }
-    });
-  } catch (err) {
-    console.error('Ошибка загрузки задач:', err);
-  }
-}
-
-
-  // ================== Функция добавления тестовой задачи ================== //
-  async function addTestTask() {
-  console.log('addTestTask clicked!'); // ...
-  const { data, error } = await supabase
-    .from('tasks')
-    .insert([ newTask ])
-    .select();
-  console.log('after insert(), data =', data, 'error =', error);
-
-  if (error) {
-    throw error;
-  }
-}
-
-
-
-
-  // ================== Функция обновления статуса задачи в Supabase ================== //
-  async function updateTaskStatus(taskId, newStatus) {
+    console.log("loadTasks called...");
     try {
-      // Находим задачу в DOM, чтобы анимировать её уход
-      const allColumns = document.querySelectorAll('.task-list');
-      let taskEl = null;
-      for (const col of allColumns) {
-        taskEl = col.querySelector(`[data-id="${taskId}"]`);
-        if (taskEl) break;
-      }
-
-      // Плавно убираем задачу из прежней колонки
-      if (taskEl) {
-        await animateRemoveTask(taskEl); 
-      }
-
-      // Обновляем задачу в базе
       const { data, error } = await supabase
         .from('tasks')
-        .update({ status: newStatus })
-        .eq('id', taskId)
-        .select()
-        .single();
+        .select('*')
+        .order('created_at', { ascending: true });
+      
       if (error) throw error;
+      console.log("fetch tasks results:", data);
 
-      // Когда обновление завершилось, отрисуем задачу в новой колонке
-      if (data) {
-        const updatedTaskEl = createTaskElement(data);
-        const container = columnMap[data.status];
-        if (container) {
-          animateAddTask(updatedTaskEl, container);
+      // Очищаем все колонки
+      columnCreated.innerHTML = '';
+      columnInProgress.innerHTML = '';
+      columnDone.innerHTML = '';
+
+      // Разносим задачи по колонкам
+      data.forEach(task => {
+        const col = columnMap[task.status];
+        if (col) {
+          const taskEl = createTaskElement(task);
+          col.appendChild(taskEl);
         }
+      });
+    } catch (err) {
+      console.error('Ошибка загрузки задач:', err);
+    }
+  }
+
+  // Добавление тестовой задачи
+  async function addTestTask() {
+    console.log('addTestTask clicked!');
+
+    // Создаём новую запись со статусом "created"
+    const newTask = {
+      title: 'Задача ' + Math.floor(Math.random() * 1000),
+      status: 'created'
+    };
+
+    try {
+      const { data, error } = await supabase
+        .from('tasks')
+        .insert([newTask])  // передаём массив из одного объекта
+        .select();          // вернуть все поля
+
+      console.log('after insert(), data =', data, 'error =', error);
+
+      if (error) {
+        throw error;
+      }
+
+      // Если запись успешно создалась, отрисуем её в колонке "Создано"
+      if (data && data.length > 0) {
+        const insertedTask = data[0];
+        // Создаём DOM-элемент
+        const taskEl = createTaskElement(insertedTask);
+        columnCreated.appendChild(taskEl);
       }
     } catch (err) {
-      console.error('Ошибка при обновлении статуса задачи:', err);
+      console.error('Ошибка добавления задачи:', err);
     }
   }
 
-  // ================== Настройка Realtime подписки ================== //
-  function setupRealtime() {
-    // Создаем канал (название любое, лишь бы было уникально в рамках подписок)
-    const channel = supabase
-      .channel('realtime_tasks')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'tasks' },
-        (payload) => {
-          // Обновляем DOM при вставке/изменении/удалении
-          handleRealtimeChange(payload);
-        }
-      )
-      .subscribe();
-
-    channel.on('subscription_error', (status) => {
-      console.error('Ошибка подписки на канал:', status);
-    });
-  }
-
-  // ================== Обработка изменений Realtime (INSERT/UPDATE/DELETE) ================== //
-  async function handleRealtimeChange(payload) {
-    const { eventType, new: newRec, old: oldRec } = payload;
-
-    if (eventType === 'INSERT') {
-      // Проверим, нет ли уже такой задачи
-      const existingEl = document.querySelector(`[data-id="${newRec.id}"]`);
-      if (!existingEl) {
-        // Создаем задачу в DOM
-        const newTaskEl = createTaskElement(newRec);
-        const container = columnMap[newRec.status];
-        if (container) {
-          animateAddTask(newTaskEl, container);
-        }
-      }
-    } else if (eventType === 'UPDATE') {
-      // Если статус поменялся из другой вкладки/пользователя — надо убрать из одной колонки и поместить в другую
-      const oldStatus = oldRec.status;
-      const newStatus = newRec.status;
-      // Если статус не поменялся, ничего не делаем
-      if (oldStatus !== newStatus) {
-        // Найти старый элемент
-        const oldTaskEl = document.querySelector(`[data-id="${oldRec.id}"]`);
-        if (oldTaskEl) {
-          await animateRemoveTask(oldTaskEl);
-        }
-        // Добавляем обновлённый элемент
-        const newTaskEl = createTaskElement(newRec);
-        const container = columnMap[newRec.status];
-        if (container) {
-          animateAddTask(newTaskEl, container);
-        }
-      } else {
-        // Если статус тот же самый, но, к примеру, изменился title:
-        const existingEl = document.querySelector(`[data-id="${newRec.id}"]`);
-        if (existingEl) {
-          existingEl.querySelector('.task-title').textContent = newRec.title;
-        }
-      }
-    } else if (eventType === 'DELETE') {
-      // Удаляем задачу из DOM
-      const deletedEl = document.querySelector(`[data-id="${oldRec.id}"]`);
-      if (deletedEl) {
-        animateRemoveTask(deletedEl);
-      }
-    }
-  }
-
-  // ================== Инициализация при загрузке ================== //
+  // Инициализация при загрузке
   document.addEventListener('DOMContentLoaded', async () => {
-  console.log("loadTasks called...");
-  // 1) Загружаем задачи
-  await loadTasks();
-  // 2) Настраиваем realtime
-  setupRealtime();
+    // Загрузим уже существующие задачи
+    await loadTasks();
 
-  // 3) Кнопка "Добавить тестовую задачу"
-  const addTaskBtn = document.getElementById('addTaskBtn');
-  console.log("addTaskBtn element:", addTaskBtn);
-
-  // Простейший лог
-  addTaskBtn.addEventListener('click', () => {
-    console.log("addTaskBtn was clicked!");
+    // Навесим обработчик на кнопку "Добавить тестовую задачу"
+    addTaskBtn.addEventListener('click', addTestTask);
   });
-
-  // Основной обработчик вставки
-  addTaskBtn.addEventListener('click', addTestTask);
-});
-
 </script>
