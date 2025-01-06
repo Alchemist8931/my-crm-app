@@ -321,10 +321,10 @@
 
   try {
     const { data, error } = await supabase
-      .from('tasks')
-      .insert(newTask)
-      .select()
-      .single();
+  .from('tasks')
+  .insert([ newTask ])   // <-- МАССИВ, как в modal1
+  .select()
+  .single();
 
     console.log('addTestTask response:', data, error);
 
