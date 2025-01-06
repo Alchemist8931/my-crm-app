@@ -278,7 +278,7 @@
   // ================== Функция загрузки всех задач из Supabase ================== //
   async function loadTasks() {
   console.log("loadTasks called...");
-  console.log("fetch tasks results:", data, error);
+
   try {
     const { data, error } = await supabase
       .from('tasks')
@@ -289,24 +289,24 @@
 
     if (error) throw error;
 
-      // Очищаем колонки
-      columnCreated.innerHTML = '';
-      columnInProgress.innerHTML = '';
-      columnDone.innerHTML = '';
+    // 1. Очищаем колонки
+    columnCreated.innerHTML = '';
+    columnInProgress.innerHTML = '';
+    columnDone.innerHTML = '';
 
-      // Перебираем полученные задачи
-      data.forEach(task => {
-        const taskEl = createTaskElement(task);
-        // Помещаем в соответствующую колонку
-        const container = columnMap[task.status];
-        if (container) {
-          container.appendChild(taskEl);
-        }
-      });
-    } catch (err) {
-      console.error('Ошибка загрузки задач:', err);
-    }
+    // 2. Перебираем полученные задачи
+    data.forEach(task => {
+      const taskEl = createTaskElement(task);
+      const container = columnMap[task.status];
+      if (container) {
+        container.appendChild(taskEl);
+      }
+    });
+  } catch (err) {
+    console.error('Ошибка загрузки задач:', err);
   }
+}
+
 
   // ================== Функция добавления тестовой задачи ================== //
   async function addTestTask() {
