@@ -458,4 +458,14 @@
     const addTaskBtn = document.getElementById('addTaskBtn');
     addTaskBtn.addEventListener('click', addTestTask);
   });
+
+  document.addEventListener('DOMContentLoaded', () => {
+  const addTaskBtn = document.getElementById('addTaskBtn');
+  console.log("addTaskBtn element:", addTaskBtn);
+
+  addTaskBtn.addEventListener('click', () => {
+    console.log("addTaskBtn was clicked!");
+  });
+});
+
 </script>
