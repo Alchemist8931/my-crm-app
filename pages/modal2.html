@@ -25,11 +25,11 @@
     </div>
   </div>
 
-  <!--   Кнопка добавления тестовой задачи  -->
+  <!-- Кнопка добавления задачи -->
   <button id="addTaskBtn" class="add-task-btn">Добавить тестовую задачу</button>
 </div>
 
-<!-- Шаблон одной задачи (container) -->
+<!-- Шаблон задачи (минимальный) -->
 <template id="task-template">
   <div class="task-item">
     <div class="task-title"></div>
@@ -60,6 +60,7 @@
     color: red;
   }
 
+  /* Общие стили контейнера */
   .kanban-content {
     font-family: "Comfortaa", sans-serif;
     color: var(--white-color2);
@@ -73,20 +74,18 @@
     display: flex;
     flex-direction: column;
   }
-
   .kanban-title {
     color: var(--white-color2);
     font-size: 1vw;
     margin-bottom: 0.3vw;
   }
-
   .kanban-subtitle {
     color: var(--white-color2);
     font-size: 0.6vw;
     margin-bottom: 1vw;
   }
 
-  /* Стили доски */
+  /* Доска */
   .kanban-board {
     display: flex;
     justify-content: space-between;
@@ -95,7 +94,6 @@
     flex-grow: 1;
     overflow: hidden;
   }
-
   .kanban-column {
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(8px);
@@ -103,13 +101,11 @@
     border-radius: var(--borderRadius);
     width: 32%;
     min-height: 70%;
-    max-height: 100%;
     display: flex;
     flex-direction: column;
     padding: 0.5vw;
     box-sizing: border-box;
   }
-
   .kanban-column h3 {
     font-size: 0.7vw;
     margin-bottom: 0.5vw;
@@ -132,6 +128,7 @@
     border-radius: 2px;
   }
 
+  /* Задача */
   .task-item {
     position: relative;
     background: rgba(255, 255, 255, 0.15);
@@ -147,7 +144,7 @@
     margin-bottom: 0.3vw;
   }
 
-  /* Кнопка "Добавить тестовую задачу" */
+  /* Кнопка "Добавить" */
   .add-task-btn {
     height: 1vw;
     width: 8vw;
@@ -166,16 +163,13 @@
 </style>
 
 <script type="module">
-  // Предполагаем, что window.supabase уже создан в index.html
-  // Пример: const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  // window.supabase = supabase;
-
+  // Предполагается, что window.supabase уже инициализирован (в index.html)
   const supabase = window.supabase;
 
-  // Селекторы колонок
-  const columnCreated = document.getElementById('column-created');
-  const columnInProgress = document.getElementById('column-in-progress');
-  const columnDone = document.getElementById('column-done');
+  // Колонки
+  const columnCreated   = document.getElementById('column-created');
+  const columnInProgress= document.getElementById('column-in-progress');
+  const columnDone      = document.getElementById('column-done');
 
   // Кнопка
   const addTaskBtn = document.getElementById('addTaskBtn');
@@ -184,23 +178,22 @@
   // Шаблон задачи
   const taskTemplate = document.getElementById('task-template');
 
-  // Сопоставление статусов со столбцами
+  // Карта статусов
   const columnMap = {
     created: columnCreated,
     in_progress: columnInProgress,
     done: columnDone
   };
 
-  // Создание DOM-элемента задачи из шаблона
+  // Создание DOM-элемента из шаблона
   function createTaskElement(taskData) {
     const taskEl = taskTemplate.content.cloneNode(true).querySelector('.task-item');
     const titleEl = taskEl.querySelector('.task-title');
-    // Заполним заголовок задачи
     titleEl.textContent = taskData.title || 'Без названия';
     return taskEl;
   }
 
-  // Загрузка всех задач из Supabase и отображение
+  // Загрузить все задачи из Supabase и отобразить
   async function loadTasks() {
     console.log("loadTasks called...");
     try {
@@ -208,16 +201,16 @@
         .from('tasks')
         .select('*')
         .order('created_at', { ascending: true });
-      
+
       if (error) throw error;
       console.log("fetch tasks results:", data);
 
-      // Очищаем все колонки
+      // Очищаем колонки
       columnCreated.innerHTML = '';
       columnInProgress.innerHTML = '';
       columnDone.innerHTML = '';
 
-      // Разносим задачи по колонкам
+      // Раскладываем по колонкам
       data.forEach(task => {
         const col = columnMap[task.status];
         if (col) {
@@ -230,11 +223,10 @@
     }
   }
 
-  // Добавление тестовой задачи
+  // Добавить тестовую задачу
   async function addTestTask() {
     console.log('addTestTask clicked!');
-
-    // Создаём новую запись со статусом "created"
+    // Создаём задачу со статусом "created"
     const newTask = {
       title: 'Задача ' + Math.floor(Math.random() * 1000),
       status: 'created'
@@ -243,8 +235,8 @@
     try {
       const { data, error } = await supabase
         .from('tasks')
-        .insert([newTask])  // передаём массив из одного объекта
-        .select();          // вернуть все поля
+        .insert([newTask])  // массив из одного объекта
+        .select();
 
       console.log('after insert(), data =', data, 'error =', error);
 
@@ -252,10 +244,9 @@
         throw error;
       }
 
-      // Если запись успешно создалась, отрисуем её в колонке "Создано"
+      // Если вставка прошла, отрисуем задачу в колонке "Создано"
       if (data && data.length > 0) {
         const insertedTask = data[0];
-        // Создаём DOM-элемент
         const taskEl = createTaskElement(insertedTask);
         columnCreated.appendChild(taskEl);
       }
@@ -264,14 +255,19 @@
     }
   }
 
-  // Инициализация при загрузке
+  // При загрузке документа
   document.addEventListener('DOMContentLoaded', () => {
-  const addTaskBtn = document.getElementById('addTaskBtn');
-  if (!addTaskBtn) {
-    console.error('Кнопка addTaskBtn не найдена!');
-    return;
-  }
-  
-  addTaskBtn.addEventListener('click', addTestTask);
-});
+    // Проверим саму кнопку
+    if (!addTaskBtn) {
+      console.error('Кнопка addTaskBtn не найдена!');
+      return;
+    }
+
+    // Навешиваем обработчик на кнопку
+    addTaskBtn.addEventListener('click', addTestTask);
+
+    // Загрузим существующие задачи
+    loadTasks();
+  });
 </script>
+
