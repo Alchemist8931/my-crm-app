@@ -275,12 +275,16 @@
 
   // ================== Функция загрузки всех задач из Supabase ================== //
   async function loadTasks() {
-    try {
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .order('created_at', { ascending: true }); 
-      if (error) throw error;
+  console.log("loadTasks called...");
+  try {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    console.log("fetch tasks results:", data, error);
+
+    if (error) throw error;
 
       // Очищаем колонки
       columnCreated.innerHTML = '';
