@@ -185,20 +185,22 @@
 
   /* Кнопка Добавить */
   .add-task-btn {
-    width: 14vw;
-    font-size: 0.7vw;
-    background-color: var(--white-color2);
-    color: var(--black-color);
-    border: none;
-    border-radius: 5px;
-    padding: 0.5vw;
-    cursor: pointer;
-    margin-top: 1vw;
-    align-self: flex-start;
-  }
+  height: 1vw;
+  width: 8vw;
+  position: fixed;
+  background-color: transparent;
+  cursor: pointer;
+  border: 2px solid var(--white-color2);
+  overflow: hidden;
+  border-radius: 10px;
+  color: var(--black-color);
+  transition: all 0.2s ease-in-out;
+    z-index: 5000;
+}
 
-  .add-task-btn:hover {
-    background-color: #ffffff;
+.add-task-btn:active {
+  transform: scale(0.9);
+  background-color: var(--white-color1);
   }
 </style>
 
