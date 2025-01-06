@@ -174,6 +174,7 @@
   // Кнопка
   const addTaskBtn = document.getElementById('addTaskBtn');
   console.log("addTaskBtn element:", addTaskBtn);
+  console.log("addTaskBtn =", addTaskBtn);
 
   // Шаблон задачи
   const taskTemplate = document.getElementById('task-template');
@@ -257,17 +258,16 @@
 
   // При загрузке документа
   document.addEventListener('DOMContentLoaded', () => {
-    // Проверим саму кнопку
-    if (!addTaskBtn) {
-      console.error('Кнопка addTaskBtn не найдена!');
-      return;
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    console.log("addTaskBtn =", addTaskBtn);
+    
+    if (addTaskBtn) {
+      addTaskBtn.addEventListener('click', () => {
+        console.log("Кнопка была нажата!");
+      });
+    } else {
+      console.error("Кнопка не найдена в DOM!");
     }
-
-    // Навешиваем обработчик на кнопку
-    addTaskBtn.addEventListener('click', addTestTask);
-
-    // Загрузим существующие задачи
-    loadTasks();
   });
 </script>
 
