@@ -533,6 +533,7 @@ async function loadModalContent(modalId) {
       contentArea.innerHTML = html;
       // Показываем контент плавно
       contentArea.classList.add('visible');
+      console.log("HTML inserted for ", modalId);
 
       // Извлекаем и выполняем встроенные скрипты
       const scripts = contentArea.querySelectorAll('script');
