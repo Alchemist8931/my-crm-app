@@ -310,10 +310,13 @@
 
   // ================== Функция добавления тестовой задачи ================== //
   async function addTestTask() {
+  console.log('addTestTask clicked!'); // ← Добавьте это
+
   const newTask = {
     title: 'Задача ' + Math.floor(Math.random() * 1000),
     status: 'created'
   };
+
   try {
     const { data, error } = await supabase
       .from('tasks')
@@ -321,18 +324,18 @@
       .select()
       .single();
 
-    // добавьте явный лог
     console.log('addTestTask response:', data, error);
 
     if (error) {
       throw error;
     }
-
+    
     // ...
   } catch (err) {
     console.error('Ошибка добавления задачи:', err);
   }
 }
+
 
 
   // ================== Функция обновления статуса задачи в Supabase ================== //
