@@ -208,6 +208,8 @@
   const columnInProgress = document.getElementById('column-in-progress');
   const columnDone = document.getElementById('column-done');
   const addTaskBtn = document.getElementById('addTaskBtn');
+  console.log("=== modal2.js loaded! ===");
+
 
   // Шаблон задачи
   const taskTemplate = document.getElementById('task-template');
@@ -276,6 +278,7 @@
   // ================== Функция загрузки всех задач из Supabase ================== //
   async function loadTasks() {
   console.log("loadTasks called...");
+  console.log("fetch tasks results:", data, error);
   try {
     const { data, error } = await supabase
       .from('tasks')
