@@ -26,7 +26,7 @@
   </div>
 
   <!--   Кнопка добавления тестовой задачи (для примера)  --->
-  <button id="addTaskBtn" class="add-task-btn" onclick="console.log('inline click!')">Добавить тестовую задачу</button>
+  <button id="addTaskBtn" class="add-task-btn">Добавить тестовую задачу</button>
 </div>
 
 <!-- Шаблон одной задачи (container) -->
@@ -448,24 +448,23 @@
 
   // ================== Инициализация при загрузке ================== //
   document.addEventListener('DOMContentLoaded', async () => {
-    // Загружаем задачи
-    await loadTasks();
+  console.log("loadTasks called...");
+  // 1) Загружаем задачи
+  await loadTasks();
+  // 2) Настраиваем realtime
+  setupRealtime();
 
-    // Настраиваем realtime
-    setupRealtime();
-
-    // Кнопка "Добавить тестовую задачу"
-    const addTaskBtn = document.getElementById('addTaskBtn');
-    addTaskBtn.addEventListener('click', addTestTask);
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
+  // 3) Кнопка "Добавить тестовую задачу"
   const addTaskBtn = document.getElementById('addTaskBtn');
   console.log("addTaskBtn element:", addTaskBtn);
 
+  // Простейший лог
   addTaskBtn.addEventListener('click', () => {
     console.log("addTaskBtn was clicked!");
   });
+
+  // Основной обработчик вставки
+  addTaskBtn.addEventListener('click', addTestTask);
 });
 
 </script>
