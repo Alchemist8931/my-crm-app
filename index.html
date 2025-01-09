@@ -507,7 +507,7 @@ canvas#canvas {
 /* Функция загрузки HTML контента */
 async function loadModalContent(modalId) {
   const fileName = modalId + '.html';
-  const url = ./pages/${fileName}?t=${Date.now()}; // предотвращение кэширования
+  const url = `./pages/${fileName}?t=${Date.now()}`; // предотвращение кэширования
   console.log("Загружаемый путь:", url);
 
   try {
