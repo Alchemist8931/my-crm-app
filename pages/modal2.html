@@ -1,4 +1,5 @@
 <!-- /pages/modal2.html -->
+
 <button class="close-modal" onclick="closeModal()">×</button>
 <div class="kanban-content" style="justify-content: flex-start;">
   <h2 class="kanban-title">TASK MANAGER</h2>
@@ -29,14 +30,93 @@
   <button id="addTaskBtn" class="add-task-btn">Добавить тестовую задачу</button>
 </div>
 
-<!-- Шаблон задачи (минимальный) -->
+<!-- Шаблон задачи (Вид 1: краткая карточка) -->
 <template id="task-template">
+  <!--вид 1 (краткий)-->
   <div class="task-item">
-    <div class="task-title"></div>
+    <!-- Название проекта -->
+    <div class="task-project-name">Project Name</div>
+    <!-- Сумма проекта -->
+    <div class="task-sum">123 456,78</div>
+    <!-- Куратор задачи -->
+    <div class="task-responsible">Иванов И.И.</div>
+    <!-- Наименование задачи (2 строки) -->
+    <textarea rows="2" class="task-title"></textarea>
+    
+    <!-- Мини-таблица подзадач -->
+    <table class="subtasks-table">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Subtask</th>
+          <th>Responsible</th>
+        </tr>
+      </thead>
+      <tbody class="subtasks-body">
+        <!-- Здесь динамически будут добавляться строки подзадач -->
+      </tbody>
+    </table>
   </div>
 </template>
 
+<!-- Модальное окно (Вид 2: развернутый) -->
+<div id="taskModal" class="task-modal hidden">
+  <div class="task-modal-content">
+    <!-- Кнопка закрытия модалки -->
+    <button id="closeTaskModal" class="close-modal-button">×</button>
+
+    <!-- Наименование задачи (две строки, крупнее) -->
+    <h2 id="modalTaskTitle">Заголовок задачи</h2>
+
+    <!-- Дата создания / завершения -->
+    <div class="modal-dates">
+      <div>Creation date: <span id="modalCreationDate">—</span></div>
+      <div>Completion date: <span id="modalCompletionDate">—</span></div>
+    </div>
+
+    <!-- Прочие поля (имя проекта, сумма и т.д.) -->
+    <div class="modal-fields">
+      <p>Project name: <span id="modalProjectName"></span></p>
+      <p>Project sum: <span id="modalProjectSum"></span></p>
+      <p>Client name: <span id="modalClientName"></span></p>
+      <p>Responsible client: <span id="modalResponsibleClient"></span></p>
+      <p>Created a task: <span id="modalCreatedBy"></span></p>
+      <p>Responsible for implementation: <span id="modalImplementationResp"></span></p>
+    </div>
+
+    <!-- Кнопка добавления подзадачи -->
+    <button id="newSubtaskBtn">new subtask</button>
+
+    <!-- Кнопки-фильтры -->
+    <div class="filters">
+      <button data-filter="all">all</button>
+      <button data-filter="active">active</button>
+      <button data-filter="completed">completed</button>
+      <button data-filter="deleted">deleted</button>
+    </div>
+
+    <!-- Расширенная таблица подзадач -->
+    <table class="subtasks-table-full">
+      <thead>
+        <tr>
+          <th>Status</th>
+          <th>Name subtask</th>
+          <th>Responsible</th>
+          <th>Creation date</th>
+          <th>Completion date</th>
+        </tr>
+      </thead>
+      <tbody id="modalSubtasksBody">
+        <!-- Строки подзадач будут генерироваться через JS -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
 <style>
+  /*--------------------------------------------
+    Базовые переменные из вашего проекта
+  --------------------------------------------*/
   :root {
     --white-color2: #D1D5D0; 
     --black-color: #121212;
@@ -45,6 +125,9 @@
     --transition: 250ms ease all;
   }
 
+  /*--------------------------------------------
+    Кнопка "закрыть" на общем модальном окне
+  --------------------------------------------*/
   .close-modal {
     position: absolute;
     top: 1vw;
@@ -60,7 +143,9 @@
     color: red;
   }
 
-  /* Общие стили контейнера */
+  /*--------------------------------------------
+    Основная канбан-разметка
+  --------------------------------------------*/
   .kanban-content {
     font-family: "Comfortaa", sans-serif;
     color: var(--white-color2);
@@ -84,8 +169,6 @@
     font-size: 0.6vw;
     margin-bottom: 1vw;
   }
-
-  /* Доска */
   .kanban-board {
     display: flex;
     justify-content: space-between;
@@ -112,7 +195,6 @@
     text-transform: uppercase;
     color: var(--white-color2);
   }
-
   .task-list {
     flex-grow: 1;
     overflow-y: auto;
@@ -128,23 +210,9 @@
     border-radius: 2px;
   }
 
-  /* Задача */
-  .task-item {
-    position: relative;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: var(--borderRadius);
-    padding: 0.5vw;
-    margin-bottom: 0.5vw;
-    color: #fff;
-    transition: all 0.3s ease;
-    overflow: hidden;
-  }
-  .task-title {
-    font-size: 0.7vw;
-    margin-bottom: 0.3vw;
-  }
-
-  /* Кнопка "Добавить" */
+  /*--------------------------------------------
+    Кнопка "Добавить" (Add Task)
+  --------------------------------------------*/
   .add-task-btn {
     height: 1vw;
     width: 8vw;
@@ -160,113 +228,453 @@
   .add-task-btn:active {
     transform: scale(0.9);
   }
+
+  /*--------------------------------------------
+    Краткая карточка задачи (Вид 1)
+  --------------------------------------------*/
+  .task-item {
+    position: relative;
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: var(--borderRadius);
+    padding: 0.5vw;
+    margin-bottom: 0.5vw;
+    color: #fff;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    cursor: pointer; /* чтобы показывать, что карточка кликабельная */
+  }
+  .task-item:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+  .task-project-name {
+    font-size: 0.7vw;
+    font-weight: bold;
+  }
+  .task-sum {
+    font-size: 0.6vw;
+  }
+  .task-responsible {
+    font-size: 0.6vw;
+    margin-bottom: 0.4vw;
+  }
+  .task-title {
+    width: 100%;
+    resize: none;
+    font-size: 0.7vw;
+    margin-bottom: 0.5vw;
+  }
+  /* Мини-таблица подзадач (Вид 1) */
+  .subtasks-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.3vw;
+  }
+  .subtasks-table th, .subtasks-table td {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 0.3vw;
+    font-size: 0.6vw;
+    text-align: left;
+  }
+
+  /*--------------------------------------------
+    Модальное окно (Вид 2: развернутый)
+  --------------------------------------------*/
+  .task-modal.hidden {
+    display: none;
+  }
+  .task-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5); /* полупрозрачный фон */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; 
+  }
+  .task-modal-content {
+    background: #ffffff;
+    color: #000;
+    border-radius: var(--borderRadius);
+    width: 70%;
+    max-height: 80%;
+    padding: 1vw;
+    box-sizing: border-box;
+    overflow-y: auto;
+    position: relative;
+  }
+  .close-modal-button {
+    position: absolute;
+    top: 1vw;
+    right: 1vw;
+    border: none;
+    background: none;
+    font-size: 1.5vw;
+    cursor: pointer;
+  }
+  .close-modal-button:hover {
+    color: red;
+  }
+
+  /* Заголовок задачи в модалке (крупнее) */
+  #modalTaskTitle {
+    font-size: 1.2vw;
+    margin-bottom: 1vw;
+  }
+  .modal-dates, .modal-fields {
+    font-size: 0.8vw;
+    margin-bottom: 1vw;
+  }
+
+  /* Кнопки-фильтры в модалке */
+  .filters {
+    margin-bottom: 1vw;
+  }
+  .filters button {
+    margin-right: 0.5vw;
+    padding: 0.3vw 0.6vw;
+    border: 1px solid #ccc;
+    background: #eee;
+    cursor: pointer;
+  }
+  .filters button.active {
+    background: #999;
+    color: #fff;
+  }
+
+  /* Расширенная таблица подзадач в модалке */
+  .subtasks-table-full {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.3vw;
+  }
+  .subtasks-table-full th, .subtasks-table-full td {
+    border: 1px solid #ccc;
+    padding: 0.4vw;
+    font-size: 0.8vw;
+  }
+  .subtasks-table-full th {
+    background: #f5f5f5;
+  }
+  /* Состояние выполненной подзадачи (пример стиля) */
+  .completed-subtask {
+    text-decoration: line-through;
+    opacity: 0.6;
+  }
 </style>
 
 <script type="module">
-  // Предполагается, что window.supabase уже инициализирован (в index.html)
-  const supabase = window.supabase;
+//функция фильтрации данных
 
-  // Колонки
-  const columnCreated   = document.getElementById('column-created');
-  const columnInProgress= document.getElementById('column-in-progress');
-  const columnDone      = document.getElementById('column-done');
+// Предполагается, что window.supabase уже инициализирован (в index.html)
+const supabase = window.supabase;
 
-  // Кнопка
-  console.log("addTaskBtn element:", addTaskBtn);
-  console.log("addTaskBtn =", addTaskBtn);
+// Ссылки на колонки
+const columnCreated    = document.getElementById('column-created');
+const columnInProgress = document.getElementById('column-in-progress');
+const columnDone       = document.getElementById('column-done');
 
-  // Шаблон задачи
-  const taskTemplate = document.getElementById('task-template');
+// Шаблон задачи (Вид 1)
+const taskTemplate = document.getElementById('task-template');
 
-  // Карта статусов
-  const columnMap = {
-    created: columnCreated,
-    in_progress: columnInProgress,
-    done: columnDone
+// Модальное окно (Вид 2)
+const taskModal        = document.getElementById('taskModal');
+const closeTaskModal   = document.getElementById('closeTaskModal');
+const modalTaskTitle   = document.getElementById('modalTaskTitle');
+const modalCreationDate= document.getElementById('modalCreationDate');
+const modalCompletionDate  = document.getElementById('modalCompletionDate');
+const modalProjectName = document.getElementById('modalProjectName');
+const modalProjectSum  = document.getElementById('modalProjectSum');
+const modalClientName  = document.getElementById('modalClientName');
+const modalResponsibleClient = document.getElementById('modalResponsibleClient');
+const modalCreatedBy   = document.getElementById('modalCreatedBy');
+const modalImplementationResp = document.getElementById('modalImplementationResp');
+const modalSubtasksBody= document.getElementById('modalSubtasksBody');
+const newSubtaskBtn    = document.getElementById('newSubtaskBtn');
+const filterButtons    = document.querySelectorAll('.filters button');
+
+// Пример массива подзадач, в реальном проекте можно хранить в Supabase
+let currentTaskSubtasks = []; // при открытии модалки будем подгружать сюда подзадачи
+
+// Карта статусов
+const columnMap = {
+  created: columnCreated,
+  in_progress: columnInProgress,
+  done: columnDone
+};
+
+//----------------------------------
+// Создание DOM-элемента (Вид 1)
+//----------------------------------
+function createTaskElement(taskData) {
+  const taskEl = taskTemplate.content.cloneNode(true).querySelector('.task-item');
+
+  // Подставляем реальные данные в элементы Вид 1
+  const projectNameEl   = taskEl.querySelector('.task-project-name');
+  const projectSumEl    = taskEl.querySelector('.task-sum');
+  const responsibleEl   = taskEl.querySelector('.task-responsible');
+  const taskTitleEl     = taskEl.querySelector('.task-title');
+  const subtasksBodyEl  = taskEl.querySelector('.subtasks-body');
+
+  projectNameEl.textContent = taskData.project_name || 'No project name';
+  projectSumEl.textContent  = taskData.project_sum || '—';
+  responsibleEl.textContent = taskData.responsible || '—';
+  taskTitleEl.value         = taskData.title || 'Без названия';
+
+  // Если есть подзадачи (в простом варианте), отрисуем их
+  // (Предполагаем, что в taskData.subtasks — массив, если вы храните в Supabase как JSON)
+  if (Array.isArray(taskData.subtasks)) {
+    taskData.subtasks.forEach((sub) => {
+      const tr = document.createElement('tr');
+      const statusTd  = document.createElement('td');
+      const nameTd    = document.createElement('td');
+      const respTd    = document.createElement('td');
+
+      // чекбокс статуса подзадачи
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.checked = sub.status === 'completed';
+      statusTd.appendChild(checkbox);
+
+      nameTd.textContent = sub.name || '—';
+      respTd.textContent = sub.responsible || '—';
+
+      tr.appendChild(statusTd);
+      tr.appendChild(nameTd);
+      tr.appendChild(respTd);
+      subtasksBodyEl.appendChild(tr);
+    });
+  }
+
+  // Событие: двойной клик для открытия "Вид 2"
+  taskEl.addEventListener('dblclick', () => {
+    openModal(taskData);
+  });
+
+  return taskEl;
+}
+
+//----------------------------------
+// Загрузка задач из Supabase
+//----------------------------------
+async function loadTasks() {
+  console.log("loadTasks called...");
+  try {
+    const { data, error } = await supabase
+      .from('tasks')
+      .select('*')
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    console.log("fetch tasks results:", data);
+
+    // Очищаем колонки
+    columnCreated.innerHTML    = '';
+    columnInProgress.innerHTML = '';
+    columnDone.innerHTML       = '';
+
+    // Раскладываем задачи по колонкам
+    data.forEach(task => {
+      const col = columnMap[task.status];
+      if (col) {
+        const taskEl = createTaskElement(task);
+        col.appendChild(taskEl);
+      }
+    });
+  } catch (err) {
+    console.error('Ошибка загрузки задач:', err);
+  }
+}
+
+//----------------------------------
+// Добавить тестовую задачу
+//----------------------------------
+async function addTestTask() {
+  console.log('addTestTask clicked!');
+  const newTask = {
+    title: 'Задача ' + Math.floor(Math.random() * 1000),
+    status: 'created',
+    project_name: 'Demo project',
+    project_sum: '100 000,00',
+    responsible: 'Петров П.П.',
+    // можно хранить подзадачи как JSON (опционально)
+    subtasks: [
+      { status: 'active', name: 'Создать дизайн', responsible: 'Дизайнер' },
+      { status: 'active', name: 'Утвердить ТЗ', responsible: 'Менеджер' }
+    ],
+    // дополнительные поля для "Вид 2"
+    creation_date: new Date().toISOString(),
+    completion_date: null,
+    client_name: 'ООО Ромашка',
+    responsible_client: 'Иванов И.И.',
+    created_by: 'admin',
+    implementation_resp: 'Петров П.П.'
   };
 
-  // Создание DOM-элемента из шаблона
-  function createTaskElement(taskData) {
-    const taskEl = taskTemplate.content.cloneNode(true).querySelector('.task-item');
-    const titleEl = taskEl.querySelector('.task-title');
-    titleEl.textContent = taskData.title || 'Без названия';
-    return taskEl;
+  try {
+    const { data, error } = await supabase
+      .from('tasks')
+      .insert([newTask])  // массив из одного объекта
+      .select();
+
+    if (error) {
+      throw error;
+    }
+
+    if (data && data.length > 0) {
+      const insertedTask = data[0];
+      // Добавим сразу в DOM
+      const taskEl = createTaskElement(insertedTask);
+      columnCreated.appendChild(taskEl);
+    }
+  } catch (err) {
+    console.error('Ошибка добавления задачи:', err);
+  }
+}
+
+//----------------------------------
+// Открыть модальное окно (Вид 2)
+//----------------------------------
+function openModal(taskData) {
+  // Заполняем поля модалки
+  modalTaskTitle.textContent = taskData.title || 'Без названия';
+  modalCreationDate.textContent = taskData.creation_date ? new Date(taskData.creation_date).toLocaleDateString() : '—';
+  modalCompletionDate.textContent = taskData.completion_date ? new Date(taskData.completion_date).toLocaleDateString() : '—';
+  modalProjectName.textContent    = taskData.project_name || '—';
+  modalProjectSum.textContent     = taskData.project_sum || '—';
+  modalClientName.textContent     = taskData.client_name || '—';
+  modalResponsibleClient.textContent = taskData.responsible_client || '—';
+  modalCreatedBy.textContent      = taskData.created_by || '—';
+  modalImplementationResp.textContent = taskData.implementation_resp || '—';
+
+  // Сбросим массив текущих подзадач и отрисуем заново
+  currentTaskSubtasks = Array.isArray(taskData.subtasks) ? taskData.subtasks.map(s => ({...s})) : [];
+  renderModalSubtasks('all');
+
+  // Открываем модальное окно
+  taskModal.classList.remove('hidden');
+}
+
+//----------------------------------
+// Закрыть модальное окно
+//----------------------------------
+function closeModalWindow() {
+  taskModal.classList.add('hidden');
+}
+
+//----------------------------------
+// Рендеринг подзадач в модалке
+//----------------------------------
+function renderModalSubtasks(filter) {
+  modalSubtasksBody.innerHTML = '';
+
+  let filtered = currentTaskSubtasks;
+  if (filter === 'active') {
+    filtered = currentTaskSubtasks.filter(s => s.status === 'active');
+  } else if (filter === 'completed') {
+    filtered = currentTaskSubtasks.filter(s => s.status === 'completed');
+  } else if (filter === 'deleted') {
+    filtered = currentTaskSubtasks.filter(s => s.status === 'deleted');
   }
 
-  // Загрузить все задачи из Supabase и отобразить
-  async function loadTasks() {
-    console.log("loadTasks called...");
-    try {
-      const { data, error } = await supabase
-        .from('tasks')
-        .select('*')
-        .order('created_at', { ascending: true });
+  filtered.forEach((sub, idx) => {
+    const tr = document.createElement('tr');
 
-      if (error) throw error;
-      console.log("fetch tasks results:", data);
+    // чекбокс статуса
+    const tdStatus = document.createElement('td');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = (sub.status === 'completed');
+    // При клике меняем статус
+    checkbox.addEventListener('change', () => {
+      sub.status = checkbox.checked ? 'completed' : 'active';
+      renderModalSubtasks(filter);
+    });
+    tdStatus.appendChild(checkbox);
 
-      // Очищаем колонки
-      columnCreated.innerHTML = '';
-      columnInProgress.innerHTML = '';
-      columnDone.innerHTML = '';
-
-      // Раскладываем по колонкам
-      data.forEach(task => {
-        const col = columnMap[task.status];
-        if (col) {
-          const taskEl = createTaskElement(task);
-          col.appendChild(taskEl);
-        }
-      });
-    } catch (err) {
-      console.error('Ошибка загрузки задач:', err);
+    // Название подзадачи
+    const tdName = document.createElement('td');
+    tdName.textContent = sub.name || '—';
+    if (sub.status === 'completed') {
+      tdName.classList.add('completed-subtask');
     }
-  }
 
-  // Добавить тестовую задачу
-  async function addTestTask() {
-    console.log('addTestTask clicked!');
-    // Создаём задачу со статусом "created"
-    const newTask = {
-      title: 'Задача ' + Math.floor(Math.random() * 1000),
-      status: 'created'
-    };
+    // Ответственный
+    const tdResp = document.createElement('td');
+    tdResp.textContent = sub.responsible || '—';
 
-    try {
-      const { data, error } = await supabase
-        .from('tasks')
-        .insert([newTask])  // массив из одного объекта
-        .select();
+    // Дата создания
+    const tdCreationDate = document.createElement('td');
+    tdCreationDate.textContent = sub.creation_date ? new Date(sub.creation_date).toLocaleDateString() : '—';
 
-      console.log('after insert(), data =', data, 'error =', error);
+    // Дата завершения
+    const tdCompletionDate = document.createElement('td');
+    tdCompletionDate.textContent = sub.completion_date ? new Date(sub.completion_date).toLocaleDateString() : '—';
 
-      if (error) {
-        throw error;
-      }
-
-      // Если вставка прошла, отрисуем задачу в колонке "Создано"
-      if (data && data.length > 0) {
-        const insertedTask = data[0];
-        const taskEl = createTaskElement(insertedTask);
-        columnCreated.appendChild(taskEl);
-      }
-    } catch (err) {
-      console.error('Ошибка добавления задачи:', err);
-    }
-  }
-
-  // При загрузке документа
-  document.addEventListener('DOMContentLoaded', () => {
-    const addTaskBtn = document.getElementById('addTaskBtn');
-    console.log("addTaskBtn =", addTaskBtn);
-    
-    if (addTaskBtn) {
-      addTaskBtn.addEventListener('click', () => {
-        console.log("Кнопка была нажата!");
-      });
-    } else {
-      console.error("Кнопка не найдена в DOM!");
-    }
+    tr.appendChild(tdStatus);
+    tr.appendChild(tdName);
+    tr.appendChild(tdResp);
+    tr.appendChild(tdCreationDate);
+    tr.appendChild(tdCompletionDate);
+    modalSubtasksBody.appendChild(tr);
   });
-</script>
+}
 
+//----------------------------------
+// Добавить новую подзадачу
+//----------------------------------
+function addNewSubtask() {
+  // Демонстрация: создаём заготовку новой подзадачи
+  const newSubtask = {
+    status: 'active',
+    name: 'Новая подзадача ' + (currentTaskSubtasks.length + 1),
+    responsible: 'Не назначен',
+    creation_date: new Date().toISOString(),
+    completion_date: null
+  };
+  currentTaskSubtasks.push(newSubtask);
+
+  // Перерисуем (по умолчанию показываем все)
+  renderModalSubtasks('all');
+}
+
+//----------------------------------
+// Фильтрация подзадач (Вид 2)
+//----------------------------------
+function handleFilterClick(e) {
+  const filter = e.target.getAttribute('data-filter');
+  // Удаляем класс active у всех кнопок
+  filterButtons.forEach(btn => btn.classList.remove('active'));
+  // Назначаем active на нажатую кнопку
+  e.target.classList.add('active');
+
+  renderModalSubtasks(filter);
+}
+
+//----------------------------------
+// Инициализация при DOMContentLoaded
+//----------------------------------
+document.addEventListener('DOMContentLoaded', () => {
+  const addTaskBtn = document.getElementById('addTaskBtn');
+  
+  if (addTaskBtn) {
+    addTaskBtn.addEventListener('click', addTestTask);
+  }
+
+  // Клик на «закрыть» в модалке
+  closeTaskModal.addEventListener('click', closeModalWindow);
+  
+  // Клик по кнопкам-фильтрам
+  filterButtons.forEach(btn => {
+    btn.addEventListener('click', handleFilterClick);
+  });
+
+  // Кнопка «new subtask»
+  newSubtaskBtn.addEventListener('click', addNewSubtask);
+
+  // Загрузим все задачи при инициализации
+  loadTasks();
+});
+</script>
