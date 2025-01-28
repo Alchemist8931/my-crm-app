@@ -14,7 +14,7 @@
   </div>
 </div>
 
-<!-- Модальное окно редактирования -->
+<!-- Модальное окно редактирования проекта -->
 <div id="editModal" class="edit-modal hidden">
   <div class="edit-modal-content">
     <button class="close-edit-modal">×</button>
@@ -62,6 +62,46 @@
 
       <!-- Кнопка для сохранения изменений -->
       <button type="button" class="save-button">Сохранить</button>
+    </form>
+  </div>
+</div>
+
+<!-- Модальное окно редактирования спецификации -->
+<div id="editSpecModal" class="edit-modal hidden">
+  <div class="edit-modal-content">
+    <button class="close-edit-spec-modal">×</button>
+    <h3>Редактирование спецификации</h3>
+    <form id="edit-spec-form">
+      <!-- Название спецификации -->
+      <label for="edit-spec-name">Название спецификации</label>
+      <input type="text" id="edit-spec-name" placeholder="Например: «Spec #1»" required />
+
+      <!-- Статус -->
+      <label for="edit-spec-status">Статус</label>
+      <input type="text" id="edit-spec-status" placeholder="draft / active / closed" required />
+
+      <!-- Сумма -->
+      <label for="edit-spec-amount">Сумма</label>
+      <input type="number" id="edit-spec-amount" step="0.01" placeholder="Введите сумму" />
+
+      <!-- Стоимость -->
+      <label for="edit-spec-costs">Стоимость</label>
+      <input type="number" id="edit-spec-costs" step="0.01" placeholder="Введите стоимость" />
+
+      <!-- Прибыль -->
+      <label for="edit-spec-profit">Прибыль</label>
+      <input type="number" id="edit-spec-profit" step="0.01" placeholder="Введите прибыль" />
+
+      <!-- Процент прибыли -->
+      <label for="edit-spec-profit-pct">Процент прибыли</label>
+      <input type="number" id="edit-spec-profit-pct" step="0.01" placeholder="%" />
+
+      <!-- Ответственный -->
+      <label for="edit-spec-responsible">Ответственный</label>
+      <input type="text" id="edit-spec-responsible" placeholder="ФИО / отдел" />
+
+      <!-- Кнопка для сохранения изменений спецификации -->
+      <button type="button" class="save-spec-button">Сохранить</button>
     </form>
   </div>
 </div>
@@ -160,6 +200,15 @@
 <!-- Шаблон для спецификации -->
 <template id="specification-template">
   <div class="spec-container" data-spec-id="">
+    <!-- Иконка Редактировать спецификацию -->
+    <span class="spec-icon" data-action="edit-spec" data-spec-id="">
+      <i class="material-symbols-outlined">edit_note</i>
+    </span>
+    <!-- Иконка Удалить спецификацию -->
+    <span class="spec-icon" data-action="delete-spec" data-spec-id="">
+      <i class="material-symbols-outlined">delete</i>
+    </span>
+
     <!-- Specification Name -->
     <div class="modal1-input-group left">
       <input type="text" class="modal1-input" placeholder=" " data-field="specification_name" readonly />
@@ -352,10 +401,29 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
-  width: 68vw; /* 25% уже родителя (90.5vw - ~25% = ~68vw) */
+  width: 68vw; /* примерно 25% уже родителя */
   height: 2.1vw;
   margin-left: 5vw; /* смещение вправо для наглядной иерархии */
   margin-top: 0.5vw;
+  position: relative;
+}
+
+/* Иконки спецификации (редактировать/удалить) */
+.spec-icon {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7vw;
+  margin-right: 0.5vw;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.spec-icon:hover {
+  color: var(--white-color2);
+  transform: scale(1.1);
+}
+.spec-icon:active {
+  transform: scale(0.92);
 }
 
 /* Группы инпутов */
@@ -419,7 +487,7 @@
   background-color: var(--white-color1);
 }
 
-/* Стили модального окна редактирования */
+/* Стили модального окна редактирования (общие) */
 .edit-modal {
   position: fixed;
   top: 0;
@@ -443,7 +511,8 @@
   width: 50%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-.close-edit-modal {
+.close-edit-modal,
+.close-edit-spec-modal {
   position: absolute;
   top: 1vw;
   right: 1vw;
@@ -451,6 +520,10 @@
   border: none;
   font-size: 0.7vw;
   cursor: pointer;
+}
+.close-edit-modal:hover,
+.close-edit-spec-modal:hover {
+  color: red;
 }
 
 /* Кнопка add project */
@@ -489,11 +562,18 @@ const supabase = window.supabase;
 // Элементы
 const projectsContainer = document.getElementById('projects-container');
 const addProjectButton = document.getElementById('add-project-button');
+
+// Модальное окно + форма редактирования проектов
 const editModal = document.getElementById('editModal');
 const editForm = document.getElementById('edit-form');
 
-// Для отслеживания, что мы редактируем
+// Модальное окно + форма редактирования спецификаций
+const editSpecModal = document.getElementById('editSpecModal');
+const editSpecForm = document.getElementById('edit-spec-form');
+
+// Для отслеживания текущего редактируемого проекта / спецификации
 let currentEditingProject = null;
+let currentEditingSpec = null;
 
 /**********************/
 /*  ГЕНЕРАЦИЯ ID-шников */
@@ -521,7 +601,6 @@ function createProjectContainer(project) {
   const clone = template.content.cloneNode(true);
   const block = clone.querySelector('.project-block'); 
   const container = block.querySelector('.modal1-container'); 
-  const specsWrapper = block.querySelector('.specifications-wrapper');
 
   // Заполним data-id
   container.dataset.id = project.project_id;
@@ -546,7 +625,7 @@ function createProjectContainer(project) {
   container.dataset.buyerCompany = project.buyer_company || '';
   container.dataset.tinBuyer = project.tin_buyer || '';
 
-  // Заполнение инпутов
+  // Заполнение инпутов (readonly)
   container.querySelector('[data-field="project_id"]').value = project.project_id;
   container.querySelector('[data-field="project_name"]').value = project.project_name || '';
   container.querySelector('[data-field="status"]').value = project.status || '';
@@ -576,8 +655,25 @@ function createSpecificationContainer(spec) {
   const specContainer = clone.querySelector('.spec-container');
 
   specContainer.dataset.specId = spec.specification_id;
+  // Чтобы при редактировании/удалении мы могли быстро определить parent project
+  specContainer.dataset.projectId = spec.project_id;
 
-  // Заполняем поля
+  // Иконки редактирования/удаления
+  const editSpecIcon = specContainer.querySelector('[data-action="edit-spec"]');
+  const deleteSpecIcon = specContainer.querySelector('[data-action="delete-spec"]');
+  if (editSpecIcon) editSpecIcon.dataset.specId = spec.specification_id;
+  if (deleteSpecIcon) deleteSpecIcon.dataset.specId = spec.specification_id;
+
+  // Сохраняем данные в data-атрибутах (при желании)
+  specContainer.dataset.specificationName = spec.specification_name || '';
+  specContainer.dataset.status = spec.status || '';
+  specContainer.dataset.specificationAmount = spec.specification_amount || 0;
+  specContainer.dataset.specificationCosts = spec.specification_costs || 0;
+  specContainer.dataset.specificationProfit = spec.specification_profit || 0;
+  specContainer.dataset.profitPercentage = spec.profit_percentage || 0;
+  specContainer.dataset.responsible = spec.responsible || '';
+
+  // Заполняем поля (readonly)
   specContainer.querySelector('[data-field="specification_name"]').value = spec.specification_name || '';
   specContainer.querySelector('[data-field="status"]').value = spec.status || '';
   specContainer.querySelector('[data-field="specification_amount"]').value = spec.specification_amount || 0;
@@ -619,7 +715,6 @@ async function loadSpecifications() {
     // Найдём блок проекта, куда добавить
     const projectContainer = projectsContainer.querySelector(`[data-id="${spec.project_id}"]`);
     if (projectContainer) {
-      // Ближайший родитель project-block
       const projectBlock = projectContainer.closest('.project-block');
       const specsWrapper = projectBlock.querySelector('.specifications-wrapper');
       if (specsWrapper) {
@@ -649,14 +744,11 @@ async function addNewProject() {
     buyer_company: '',
     tin_buyer: '',
   };
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('projects')
-    .insert([newProject])
-    .select('*')
-    .single();
+    .insert([newProject]);
   if (error) {
     console.error('Ошибка добавления проекта:', error);
-    return;
   }
 }
 
@@ -673,19 +765,16 @@ async function addNewSpecification(projectId) {
     profit_percentage: 0.00,
     responsible: '',
   };
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('specifications')
-    .insert([newSpec])
-    .select('*')
-    .single();
+    .insert([newSpec]);
   if (error) {
     console.error('Ошибка добавления спецификации:', error);
-    return;
   }
 }
 
 /**********************/
-/*     УДАЛЕНИЕ        */
+/*   УДАЛЕНИЕ / ПРОЕКТ */
 
 async function deleteProject(projectId) {
   const { error } = await supabase
@@ -706,8 +795,25 @@ async function deleteProject(projectId) {
 }
 
 /**********************/
+/*  УДАЛЕНИЕ / СПЕЦИИ  */
+
+async function deleteSpecification(specId) {
+  // Просто удаляем из таблицы specifications
+  const { error } = await supabase
+    .from('specifications')
+    .delete()
+    .eq('specification_id', specId);
+  if (error) {
+    console.error('Ошибка удаления спецификации:', error);
+    return;
+  }
+  // Удалится из DOM через Realtime (или можно вручную убрать)
+}
+
+/**********************/
 /*    РЕДАКТИРОВАНИЕ   */
 
+/* Редактировать проект */
 function openEditModal(projectId) {
   const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
   if (!projectContainer) return;
@@ -758,52 +864,68 @@ async function saveProject() {
     buyer_company: editForm['edit-buyer-company'].value,
     tin_buyer: editForm['edit-tin-buyer'].value,
   };
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('projects')
     .update(updatedProject)
-    .eq('project_id', currentEditingProject.project_id)
-    .select('*')
-    .single();
+    .eq('project_id', currentEditingProject.project_id);
   if (error) {
     console.error('Ошибка сохранения проекта:', error);
-    return;
-  }
-
-  // Обновим DOM
-  const projectContainer = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
-  if (projectContainer && data) {
-    projectContainer.dataset.projectName = data.project_name || '';
-    projectContainer.dataset.status = data.status || '';
-    projectContainer.dataset.contractAmount = data.contract_amount || 0;
-    projectContainer.dataset.contractCosts = data.contract_costs || 0;
-    projectContainer.dataset.contractProfit = data.contract_profit || 0;
-    projectContainer.dataset.profitPercentage = data.profit_percentage || 0;
-    projectContainer.dataset.companySeller = data.company_seller || '';
-    projectContainer.dataset.tinSeller = data.tin_seller || '';
-    projectContainer.dataset.buyerCompany = data.buyer_company || '';
-    projectContainer.dataset.tinBuyer = data.tin_buyer || '';
-
-    const fields = [
-      'project_id',
-      'project_name',
-      'status',
-      'contract_amount',
-      'contract_costs',
-      'contract_profit',
-      'profit_percentage',
-      'company_seller',
-      'tin_seller',
-      'buyer_company',
-      'tin_buyer'
-    ];
-    fields.forEach(field => {
-      const input = projectContainer.querySelector(`[data-field="${field}"]`);
-      if (input) {
-        input.value = data[field] !== undefined ? data[field] : '';
-      }
-    });
   }
   closeEditModal();
+}
+
+/* Редактировать спецификацию */
+function openEditSpecModal(specId) {
+  const specContainer = projectsContainer.querySelector(`[data-spec-id="${specId}"]`);
+  if (!specContainer) return;
+
+  const spec = {
+    specification_id: specId,
+    project_id: specContainer.dataset.projectId,
+    specification_name: specContainer.dataset.specificationName,
+    status: specContainer.dataset.status,
+    specification_amount: specContainer.dataset.specificationAmount,
+    specification_costs: specContainer.dataset.specificationCosts,
+    specification_profit: specContainer.dataset.specificationProfit,
+    profit_percentage: specContainer.dataset.profitPercentage,
+    responsible: specContainer.dataset.responsible,
+  };
+  currentEditingSpec = spec;
+
+  // Заполняем форму редактирования спецификации
+  editSpecForm['edit-spec-name'].value = spec.specification_name;
+  editSpecForm['edit-spec-status'].value = spec.status;
+  editSpecForm['edit-spec-amount'].value = spec.specification_amount;
+  editSpecForm['edit-spec-costs'].value = spec.specification_costs;
+  editSpecForm['edit-spec-profit'].value = spec.specification_profit;
+  editSpecForm['edit-spec-profit-pct'].value = spec.profit_percentage;
+  editSpecForm['edit-spec-responsible'].value = spec.responsible;
+
+  editSpecModal.classList.remove('hidden');
+}
+function closeEditSpecModal() {
+  editSpecModal.classList.add('hidden');
+  currentEditingSpec = null;
+}
+async function saveSpecification() {
+  if (!currentEditingSpec) return;
+  const updatedSpec = {
+    specification_name: editSpecForm['edit-spec-name'].value,
+    status: editSpecForm['edit-spec-status'].value,
+    specification_amount: parseFloat(editSpecForm['edit-spec-amount'].value) || 0.00,
+    specification_costs: parseFloat(editSpecForm['edit-spec-costs'].value) || 0.00,
+    specification_profit: parseFloat(editSpecForm['edit-spec-profit'].value) || 0.00,
+    profit_percentage: parseFloat(editSpecForm['edit-spec-profit-pct'].value) || 0.00,
+    responsible: editSpecForm['edit-spec-responsible'].value,
+  };
+  const { error } = await supabase
+    .from('specifications')
+    .update(updatedSpec)
+    .eq('specification_id', currentEditingSpec.specification_id);
+  if (error) {
+    console.error('Ошибка сохранения спецификации:', error);
+  }
+  closeEditSpecModal();
 }
 
 /**********************/
@@ -821,7 +943,6 @@ function setupRealtime() {
         if (!projectId) return;
 
         if (payload.eventType === 'INSERT' && payload.new) {
-          // Добавим, если нет в DOM
           if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
             const block = createProjectContainer(payload.new);
             if (block) projectsContainer.appendChild(block);
@@ -830,6 +951,7 @@ function setupRealtime() {
           const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
           if (projectContainer) {
             const updatedProject = payload.new;
+            // Обновить data-атрибуты
             projectContainer.dataset.projectName = updatedProject.project_name || '';
             projectContainer.dataset.status = updatedProject.status || '';
             projectContainer.dataset.contractAmount = updatedProject.contract_amount || 0;
@@ -841,6 +963,7 @@ function setupRealtime() {
             projectContainer.dataset.buyerCompany = updatedProject.buyer_company || '';
             projectContainer.dataset.tinBuyer = updatedProject.tin_buyer || '';
 
+            // Обновить readonly поля
             const fields = [
               'project_id',
               'project_name',
@@ -907,6 +1030,16 @@ function setupRealtime() {
             const specElem = projectBlock.querySelector(`[data-spec-id="${specId}"]`);
             if (specElem) {
               const updatedSpec = payload.new;
+              // Обновляем data-атрибуты
+              specElem.dataset.specificationName = updatedSpec.specification_name || '';
+              specElem.dataset.status = updatedSpec.status || '';
+              specElem.dataset.specificationAmount = updatedSpec.specification_amount || 0;
+              specElem.dataset.specificationCosts = updatedSpec.specification_costs || 0;
+              specElem.dataset.specificationProfit = updatedSpec.specification_profit || 0;
+              specElem.dataset.profitPercentage = updatedSpec.profit_percentage || 0;
+              specElem.dataset.responsible = updatedSpec.responsible || '';
+
+              // Обновить readonly поля
               specElem.querySelector('[data-field="specification_name"]').value = updatedSpec.specification_name || '';
               specElem.querySelector('[data-field="status"]').value = updatedSpec.status || '';
               specElem.querySelector('[data-field="specification_amount"]').value = updatedSpec.specification_amount || 0;
@@ -940,35 +1073,59 @@ function setupRealtime() {
 }
 
 /**********************/
-/*      ИНИЦИАЛИЗАЦИЯ  */
+/*   НАСТРОЙКА EVENTS  */
+
 if (addProjectButton) {
   addProjectButton.addEventListener('click', addNewProject);
 }
+
+// Один общий слушатель для кликов внутри projectsContainer
 projectsContainer.addEventListener('click', (event) => {
-  const icon = event.target.closest('.modal1-icon');
-  if (!icon) return;
-  const action = icon.dataset.action;
-  const projectId = icon.dataset.id;
-  if (action === 'delete') {
-    deleteProject(projectId);
-  } else if (action === 'edit') {
-    openEditModal(projectId);
-  } else if (action === 'new-specificstion') {
-    addNewSpecification(projectId);
+  // Проекты
+  const iconProject = event.target.closest('.modal1-icon');
+  if (iconProject) {
+    const action = iconProject.dataset.action;
+    const projectId = iconProject.dataset.id;
+    if (action === 'delete') {
+      deleteProject(projectId);
+    } else if (action === 'edit') {
+      openEditModal(projectId);
+    } else if (action === 'new-specificstion') {
+      addNewSpecification(projectId);
+    }
+    return; // не обрабатываем дальше
+  }
+
+  // Спецификации
+  const iconSpec = event.target.closest('.spec-icon');
+  if (iconSpec) {
+    const specAction = iconSpec.dataset.action;
+    const specId = iconSpec.dataset.specId;
+    if (specAction === 'delete-spec') {
+      deleteSpecification(specId);
+    } else if (specAction === 'edit-spec') {
+      openEditSpecModal(specId);
+    }
   }
 });
 
-// Закрыть окно редактирования
+// Кнопки закрыть / сохранить в модалке проектов
 document.querySelector('.close-edit-modal').addEventListener('click', closeEditModal);
-// Сохранить изменения
 editForm.querySelector('.save-button').addEventListener('click', saveProject);
 
-// Запуск
+// Кнопки закрыть / сохранить в модалке спецификаций
+document.querySelector('.close-edit-spec-modal').addEventListener('click', closeEditSpecModal);
+editSpecForm.querySelector('.save-spec-button').addEventListener('click', saveSpecification);
+
+/**********************/
+/*   ЗАПУСК ПРИ ЗАГРУЗКЕ */
+
 loadProjects()
   .then(loadSpecifications)
   .then(setupRealtime);
 
-// Пример закрытия всего модала
+/**********************/
+/*   Пример закрытия всего модала, если нужно */
 function closeModal() {
   document.querySelector('.modal111-content').style.display = 'none';
 }
