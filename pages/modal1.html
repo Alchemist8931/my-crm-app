@@ -553,13 +553,10 @@
 </style>
 
 <script type="module">
-//функция фильтрации данных (пример из инструкции - не требуется)
-//ключи для рендеринга карточек с данными (пример из инструкции - не требуется)
-
 // Инициализация Supabase (предполагаем, что window.supabase уже инициализирован)
 const supabase = window.supabase;
 
-// Элементы
+// Получаем основные элементы
 const projectsContainer = document.getElementById('projects-container');
 const addProjectButton = document.getElementById('add-project-button');
 
@@ -571,7 +568,7 @@ const editForm = document.getElementById('edit-form');
 const editSpecModal = document.getElementById('editSpecModal');
 const editSpecForm = document.getElementById('edit-spec-form');
 
-// Для отслеживания текущего редактируемого проекта / спецификации
+// Текущее редактируемое поле (проект / спецификация)
 let currentEditingProject = null;
 let currentEditingSpec = null;
 
@@ -587,22 +584,21 @@ function generateSpecificationID() {
 /**********************/
 /*   ШАБЛОНЫ/ОТРИСОВКА */
 
+// Создаём блок проекта
 function createProjectContainer(project) {
   if (!project || !project.project_id) {
-    console.error('Некорректные данные проекта:', project);
+    console.error('[LOG] Некорректные данные проекта:', project);
     return null;
   }
   const template = document.getElementById('project-template');
   if (!template) {
-    console.error('Шаблон project-template не найден.');
+    console.error('[LOG] Шаблон project-template не найден.');
     return null;
   }
-  // Клонируем весь .project-block
   const clone = template.content.cloneNode(true);
   const block = clone.querySelector('.project-block'); 
   const container = block.querySelector('.modal1-container'); 
 
-  // Заполним data-id
   container.dataset.id = project.project_id;
 
   // Иконки
@@ -613,7 +609,7 @@ function createProjectContainer(project) {
   if (deleteIcon) deleteIcon.dataset.id = project.project_id;
   if (newSpecIcon) newSpecIcon.dataset.id = project.project_id;
 
-  // data-атрибуты
+  // Сохраняем данные в data-атрибутах
   container.dataset.projectName = project.project_name || '';
   container.dataset.status = project.status || '';
   container.dataset.contractAmount = project.contract_amount || 0;
@@ -625,7 +621,7 @@ function createProjectContainer(project) {
   container.dataset.buyerCompany = project.buyer_company || '';
   container.dataset.tinBuyer = project.tin_buyer || '';
 
-  // Заполнение инпутов (readonly)
+  // Заполняем инпуты (readonly)
   container.querySelector('[data-field="project_id"]').value = project.project_id;
   container.querySelector('[data-field="project_name"]').value = project.project_name || '';
   container.querySelector('[data-field="status"]').value = project.status || '';
@@ -638,33 +634,34 @@ function createProjectContainer(project) {
   container.querySelector('[data-field="buyer_company"]').value = project.buyer_company || '';
   container.querySelector('[data-field="tin_buyer"]').value = project.tin_buyer || '';
 
-  return block; // Возвращаем весь блок (и проект, и specsWrapper)
+  return block;
 }
 
+// Создаём блок спецификации
 function createSpecificationContainer(spec) {
   if (!spec || !spec.specification_id) {
-    console.error('Некорректные данные спецификации:', spec);
+    console.error('[LOG] Некорректные данные спецификации:', spec);
     return null;
   }
   const template = document.getElementById('specification-template');
   if (!template) {
-    console.error('Шаблон specification-template не найден.');
+    console.error('[LOG] Шаблон specification-template не найден.');
     return null;
   }
   const clone = template.content.cloneNode(true);
   const specContainer = clone.querySelector('.spec-container');
 
   specContainer.dataset.specId = spec.specification_id;
-  // Чтобы при редактировании/удалении мы могли быстро определить parent project
+  // Для удобства - храним и project_id
   specContainer.dataset.projectId = spec.project_id;
 
-  // Иконки редактирования/удаления
+  // Иконки
   const editSpecIcon = specContainer.querySelector('[data-action="edit-spec"]');
   const deleteSpecIcon = specContainer.querySelector('[data-action="delete-spec"]');
   if (editSpecIcon) editSpecIcon.dataset.specId = spec.specification_id;
   if (deleteSpecIcon) deleteSpecIcon.dataset.specId = spec.specification_id;
 
-  // Сохраняем данные в data-атрибутах (при желании)
+  // Сохраняем данные в data-атрибутах
   specContainer.dataset.specificationName = spec.specification_name || '';
   specContainer.dataset.status = spec.status || '';
   specContainer.dataset.specificationAmount = spec.specification_amount || 0;
@@ -688,12 +685,15 @@ function createSpecificationContainer(spec) {
 /**********************/
 /*      ЗАГРУЗКА ДАННЫХ */
 
+// Загрузка проектов из БД
 async function loadProjects() {
+  console.log('[LOG] Загрузка списка проектов из БД...');
   const { data, error } = await supabase.from('projects').select('*');
   if (error) {
-    console.error('Ошибка загрузки проектов:', error);
+    console.error('[LOG] Ошибка загрузки проектов:', error);
     return;
   }
+  console.log('[LOG] Загружено проектов:', data?.length || 0);
   projectsContainer.innerHTML = '';
   const fragment = document.createDocumentFragment();
   data.forEach((project) => {
@@ -705,14 +705,17 @@ async function loadProjects() {
   projectsContainer.appendChild(fragment);
 }
 
+// Загрузка спецификаций из БД
 async function loadSpecifications() {
+  console.log('[LOG] Загрузка списка спецификаций из БД...');
   const { data, error } = await supabase.from('specifications').select('*');
   if (error) {
-    console.error('Ошибка загрузки спецификаций:', error);
+    console.error('[LOG] Ошибка загрузки спецификаций:', error);
     return;
   }
+  console.log('[LOG] Загружено спецификаций:', data?.length || 0);
   data.forEach((spec) => {
-    // Найдём блок проекта, куда добавить
+    // Найдём родительский проект
     const projectContainer = projectsContainer.querySelector(`[data-id="${spec.project_id}"]`);
     if (projectContainer) {
       const projectBlock = projectContainer.closest('.project-block');
@@ -730,6 +733,7 @@ async function loadSpecifications() {
 /**********************/
 /*    ДОБАВЛЕНИЕ ЗАПИСЕЙ */
 
+// Создать новый проект (сделку)
 async function addNewProject() {
   const newProject = {
     project_id: generateProjectID(),
@@ -744,15 +748,21 @@ async function addNewProject() {
     buyer_company: '',
     tin_buyer: '',
   };
-  const { error } = await supabase
+  console.log('[LOG] Создаём новый проект в БД:', newProject);
+  const { data, error } = await supabase
     .from('projects')
-    .insert([newProject]);
+    .insert([newProject])
+    .select('*');  // хотим вернуть вставленные данные
+
   if (error) {
-    console.error('Ошибка добавления проекта:', error);
+    console.error('[LOG] Ошибка добавления проекта в БД:', error);
+    return;
   }
+  console.log('[LOG] Успешно добавлен проект в БД:', data);
+  // Не вставляем вручную в DOM — пусть это делает Realtime по событию INSERT
 }
 
-/* Создаём спецификацию к конкретному projectId */
+// Создать новую спецификацию (дочерний контейнер)
 async function addNewSpecification(projectId) {
   const newSpec = {
     specification_id: generateSpecificationID(),
@@ -765,55 +775,57 @@ async function addNewSpecification(projectId) {
     profit_percentage: 0.00,
     responsible: '',
   };
-  const { error } = await supabase
+  console.log('[LOG] Создаём новую спецификацию к проекту', projectId, ':', newSpec);
+  const { data, error } = await supabase
     .from('specifications')
-    .insert([newSpec]);
+    .insert([newSpec])
+    .select('*');
+
   if (error) {
-    console.error('Ошибка добавления спецификации:', error);
+    console.error('[LOG] Ошибка добавления спецификации в БД:', error);
+    return;
   }
+  console.log('[LOG] Успешно добавлена спецификация в БД:', data);
+  // Отрисовка произойдёт через Realtime
 }
 
 /**********************/
 /*   УДАЛЕНИЕ / ПРОЕКТ */
 
 async function deleteProject(projectId) {
+  console.log('[LOG] Удаляем проект (и связанные с ним спецификации) из БД, projectId=', projectId);
   const { error } = await supabase
     .from('projects')
     .delete()
     .eq('project_id', projectId);
   if (error) {
-    console.error('Ошибка удаления проекта:', error);
+    console.error('[LOG] Ошибка удаления проекта из БД:', error);
     return;
   }
-  const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-  if (projectContainer) {
-    const projectBlock = projectContainer.closest('.project-block');
-    if (projectBlock && projectsContainer.contains(projectBlock)) {
-      projectsContainer.removeChild(projectBlock);
-    }
-  }
+  console.log('[LOG] Запрос на удаление проекта отправлен в БД');
+  // Удаление из DOM произойдёт в колбэке Realtime по событию DELETE
 }
 
 /**********************/
 /*  УДАЛЕНИЕ / СПЕЦИИ  */
 
 async function deleteSpecification(specId) {
-  // Просто удаляем из таблицы specifications
+  console.log('[LOG] Удаляем спецификацию (specId=)', specId);
   const { error } = await supabase
     .from('specifications')
     .delete()
     .eq('specification_id', specId);
   if (error) {
-    console.error('Ошибка удаления спецификации:', error);
+    console.error('[LOG] Ошибка удаления спецификации из БД:', error);
     return;
   }
-  // Удалится из DOM через Realtime (или можно вручную убрать)
+  console.log('[LOG] Запрос на удаление спецификации отправлен в БД');
 }
 
 /**********************/
 /*    РЕДАКТИРОВАНИЕ   */
 
-/* Редактировать проект */
+// Открыть модалку редактирования проекта
 function openEditModal(projectId) {
   const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
   if (!projectContainer) return;
@@ -832,7 +844,6 @@ function openEditModal(projectId) {
   };
   currentEditingProject = project;
 
-  // Заполняем форму
   editForm['edit-project-name'].value = project.project_name;
   editForm['edit-status'].value = project.status;
   editForm['edit-contract-amount'].value = project.contract_amount;
@@ -864,17 +875,21 @@ async function saveProject() {
     buyer_company: editForm['edit-buyer-company'].value,
     tin_buyer: editForm['edit-tin-buyer'].value,
   };
+  console.log('[LOG] Сохраняем изменения проекта (project_id=)', currentEditingProject.project_id, ':', updatedProject);
   const { error } = await supabase
     .from('projects')
     .update(updatedProject)
     .eq('project_id', currentEditingProject.project_id);
+
   if (error) {
-    console.error('Ошибка сохранения проекта:', error);
+    console.error('[LOG] Ошибка сохранения проекта в БД:', error);
+    return;
   }
+  console.log('[LOG] Проект обновлён в БД, Realtime перерисует данные');
   closeEditModal();
 }
 
-/* Редактировать спецификацию */
+// Открыть модалку редактирования спецификации
 function openEditSpecModal(specId) {
   const specContainer = projectsContainer.querySelector(`[data-spec-id="${specId}"]`);
   if (!specContainer) return;
@@ -892,7 +907,6 @@ function openEditSpecModal(specId) {
   };
   currentEditingSpec = spec;
 
-  // Заполняем форму редактирования спецификации
   editSpecForm['edit-spec-name'].value = spec.specification_name;
   editSpecForm['edit-spec-status'].value = spec.status;
   editSpecForm['edit-spec-amount'].value = spec.specification_amount;
@@ -918,13 +932,17 @@ async function saveSpecification() {
     profit_percentage: parseFloat(editSpecForm['edit-spec-profit-pct'].value) || 0.00,
     responsible: editSpecForm['edit-spec-responsible'].value,
   };
+  console.log('[LOG] Сохраняем изменения спецификации (spec_id=)', currentEditingSpec.specification_id, ':', updatedSpec);
   const { error } = await supabase
     .from('specifications')
     .update(updatedSpec)
     .eq('specification_id', currentEditingSpec.specification_id);
+
   if (error) {
-    console.error('Ошибка сохранения спецификации:', error);
+    console.error('[LOG] Ошибка сохранения спецификации в БД:', error);
+    return;
   }
+  console.log('[LOG] Спецификация обновлена в БД, Realtime перерисует данные');
   closeEditSpecModal();
 }
 
@@ -932,7 +950,7 @@ async function saveSpecification() {
 /*   REALTIME-ПОДПИСКА */
 
 function setupRealtime() {
-  // Подписка на проекты
+  // Подписка на изменения в таблице projects
   const channelProjects = supabase
     .channel('realtime_projects')
     .on(
@@ -943,15 +961,20 @@ function setupRealtime() {
         if (!projectId) return;
 
         if (payload.eventType === 'INSERT' && payload.new) {
+          console.log('[LOG] Realtime (INSERT) Проект добавлен в БД:', payload.new);
+          // Проверяем, нет ли уже в DOM этого проекта
           if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
             const block = createProjectContainer(payload.new);
-            if (block) projectsContainer.appendChild(block);
+            if (block) {
+              projectsContainer.appendChild(block);
+            }
           }
         } else if (payload.eventType === 'UPDATE' && payload.new) {
+          console.log('[LOG] Realtime (UPDATE) Проект обновлён в БД:', payload.new);
           const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
           if (projectContainer) {
             const updatedProject = payload.new;
-            // Обновить data-атрибуты
+            // Обновим data-атрибуты
             projectContainer.dataset.projectName = updatedProject.project_name || '';
             projectContainer.dataset.status = updatedProject.status || '';
             projectContainer.dataset.contractAmount = updatedProject.contract_amount || 0;
@@ -963,7 +986,7 @@ function setupRealtime() {
             projectContainer.dataset.buyerCompany = updatedProject.buyer_company || '';
             projectContainer.dataset.tinBuyer = updatedProject.tin_buyer || '';
 
-            // Обновить readonly поля
+            // Обновим поля (readonly)
             const fields = [
               'project_id',
               'project_name',
@@ -985,6 +1008,7 @@ function setupRealtime() {
             });
           }
         } else if (payload.eventType === 'DELETE') {
+          console.log('[LOG] Realtime (DELETE) Проект удалён из БД:', payload.old);
           const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
           if (projectContainer) {
             const projectBlock = projectContainer.closest('.project-block');
@@ -997,7 +1021,7 @@ function setupRealtime() {
     )
     .subscribe();
 
-  // Подписка на спецификации
+  // Подписка на изменения в таблице specifications
   const channelSpecs = supabase
     .channel('realtime_specifications')
     .on(
@@ -1010,7 +1034,7 @@ function setupRealtime() {
         if (!projectId) return;
 
         if (payload.eventType === 'INSERT' && payload.new) {
-          // Добавляем под нужный проект
+          console.log('[LOG] Realtime (INSERT) Спецификация добавлена в БД:', payload.new);
           const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
           if (projectContainer) {
             const projectBlock = projectContainer.closest('.project-block');
@@ -1023,14 +1047,14 @@ function setupRealtime() {
             }
           }
         } else if (payload.eventType === 'UPDATE' && payload.new) {
-          // Найти существующую
+          console.log('[LOG] Realtime (UPDATE) Спецификация обновлена в БД:', payload.new);
           const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
           if (projectContainer) {
             const projectBlock = projectContainer.closest('.project-block');
             const specElem = projectBlock.querySelector(`[data-spec-id="${specId}"]`);
             if (specElem) {
               const updatedSpec = payload.new;
-              // Обновляем data-атрибуты
+              // Обновим data-атрибуты
               specElem.dataset.specificationName = updatedSpec.specification_name || '';
               specElem.dataset.status = updatedSpec.status || '';
               specElem.dataset.specificationAmount = updatedSpec.specification_amount || 0;
@@ -1039,7 +1063,7 @@ function setupRealtime() {
               specElem.dataset.profitPercentage = updatedSpec.profit_percentage || 0;
               specElem.dataset.responsible = updatedSpec.responsible || '';
 
-              // Обновить readonly поля
+              // Обновим поля
               specElem.querySelector('[data-field="specification_name"]').value = updatedSpec.specification_name || '';
               specElem.querySelector('[data-field="status"]').value = updatedSpec.status || '';
               specElem.querySelector('[data-field="specification_amount"]').value = updatedSpec.specification_amount || 0;
@@ -1050,7 +1074,7 @@ function setupRealtime() {
             }
           }
         } else if (payload.eventType === 'DELETE') {
-          // Удалить элемент
+          console.log('[LOG] Realtime (DELETE) Спецификация удалена из БД:', payload.old);
           const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
           if (projectContainer) {
             const projectBlock = projectContainer.closest('.project-block');
@@ -1065,23 +1089,24 @@ function setupRealtime() {
     .subscribe();
 
   channelProjects.on('subscription_error', (status) => {
-    console.error('Ошибка подписки (projects):', status);
+    console.error('[LOG] Ошибка подписки (projects):', status);
   });
   channelSpecs.on('subscription_error', (status) => {
-    console.error('Ошибка подписки (specifications):', status);
+    console.error('[LOG] Ошибка подписки (specifications):', status);
   });
 }
 
 /**********************/
 /*   НАСТРОЙКА EVENTS  */
 
+// Кнопка «new project»
 if (addProjectButton) {
   addProjectButton.addEventListener('click', addNewProject);
 }
 
-// Один общий слушатель для кликов внутри projectsContainer
+// Один общий слушатель кликов внутри projectsContainer
 projectsContainer.addEventListener('click', (event) => {
-  // Проекты
+  // Проверим, кликнули ли по иконке проекта
   const iconProject = event.target.closest('.modal1-icon');
   if (iconProject) {
     const action = iconProject.dataset.action;
@@ -1093,10 +1118,10 @@ projectsContainer.addEventListener('click', (event) => {
     } else if (action === 'new-specificstion') {
       addNewSpecification(projectId);
     }
-    return; // не обрабатываем дальше
+    return; // выходим, чтобы не ловить spec-icon
   }
 
-  // Спецификации
+  // Или кликнули по иконке спецификации
   const iconSpec = event.target.closest('.spec-icon');
   if (iconSpec) {
     const specAction = iconSpec.dataset.action;
@@ -1109,11 +1134,11 @@ projectsContainer.addEventListener('click', (event) => {
   }
 });
 
-// Кнопки закрыть / сохранить в модалке проектов
+// Кнопки закрыть/сохранить в модалке проектов
 document.querySelector('.close-edit-modal').addEventListener('click', closeEditModal);
 editForm.querySelector('.save-button').addEventListener('click', saveProject);
 
-// Кнопки закрыть / сохранить в модалке спецификаций
+// Кнопки закрыть/сохранить в модалке спецификаций
 document.querySelector('.close-edit-spec-modal').addEventListener('click', closeEditSpecModal);
 editSpecForm.querySelector('.save-spec-button').addEventListener('click', saveSpecification);
 
@@ -1122,10 +1147,14 @@ editSpecForm.querySelector('.save-spec-button').addEventListener('click', saveSp
 
 loadProjects()
   .then(loadSpecifications)
-  .then(setupRealtime);
+  .then(() => {
+    console.log('[LOG] Проекты и спецификации загружены из БД. Настраиваем Realtime...');
+    setupRealtime();
+    console.log('[LOG] Realtime подписки настроены.');
+  });
 
 /**********************/
-/*   Пример закрытия всего модала, если нужно */
+/*   Пример закрытия всего основного модала, если нужно */
 function closeModal() {
   document.querySelector('.modal111-content').style.display = 'none';
 }
