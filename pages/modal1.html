@@ -112,53 +112,53 @@
   <div class="project-block">
     <div class="modal1-container" data-id="">
       <!-- Иконка Редактировать -->
-      <span class="modal1-icon" style="left: 1vw;" data-action="edit" data-id="">
+      <span class="modal1-icon" style="left: 0.2vw;" data-action="edit" data-id="">
         <i class="material-symbols-outlined">receipt</i>
       </span>
       <!-- Иконка Создать спецификацию -->
-      <span class="modal1-icon" style="left: 1vw;" data-action="new-specificstion" data-id="">
+      <span class="modal1-icon" style="left: 0.2vw;" data-action="new-specificstion" data-id="">
         <i class="material-symbols-outlined">stat_minus_2</i>
       </span>
 
       <!-- Project ID -->
       <div class="modal1-input-group left">
-        <input type="text" class="modal1-input" placeholder=" " data-field="project_id" readonly />
+        <input type="text" style="width: 5vw" class="modal1-input" placeholder=" " data-field="project_id" readonly />
         <label>Project ID</label>
       </div>
 
       <!-- Project Name -->
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input" placeholder=" " data-field="project_name" readonly />
+        <input type="text" style="width: 20vw" class="modal1-input" placeholder=" " data-field="project_name" readonly />
         <label>Project Name</label>
       </div>
 
       <!-- Status -->
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input" placeholder=" " data-field="status" readonly />
+        <input type="text" style="width: 7vw" class="modal1-input" placeholder=" " data-field="status" readonly />
         <label>Status</label>
       </div>
 
       <!-- Contract Amount -->
       <div class="modal1-input-group left">
-        <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="contract_amount" readonly />
+        <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="contract_amount" readonly />
         <label>Contract Amount</label>
       </div>
 
       <!-- Contract Costs -->
       <div class="modal1-input-group right">
-        <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="contract_costs" readonly />
+        <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="contract_costs" readonly />
         <label>Contract Costs</label>
       </div>
 
       <!-- Contract Profit -->
       <div class="modal1-input-group right">
-        <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="contract_profit" readonly />
+        <input type="number" style="width: 4.5vw"step="0.01" class="modal1-input" placeholder=" " data-field="contract_profit" readonly />
         <label>Contract Profit</label>
       </div>
 
       <!-- Profit % -->
       <div class="modal1-input-group right">
-        <input type="number" step="0.01" class="modal1-input" style="width: 2.6vw;" placeholder=" " data-field="profit_percentage" readonly />
+        <input type="number" style="width: 2vw" step="0.01" class="modal1-input" style="width: 2.6vw;" placeholder=" " data-field="profit_percentage" readonly />
         <label>Profit %</label>
       </div>
 
@@ -170,7 +170,7 @@
 
       <!-- TIN Seller -->
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input" placeholder=" " data-field="tin_seller" readonly />
+        <input type="text" style="width: 5vw" class="modal1-input" placeholder=" " data-field="tin_seller" readonly />
         <label>TIN Seller</label>
       </div>
 
@@ -182,12 +182,12 @@
 
       <!-- TIN Buyer -->
       <div class="modal1-input-group right">
-        <input type="text" class="modal1-input" placeholder=" " data-field="tin_buyer" readonly />
+        <input type="text" style="width: 5vw" class="modal1-input" placeholder=" " data-field="tin_buyer" readonly />
         <label>TIN Buyer</label>
       </div>
 
       <!-- Иконка Удалить -->
-      <span class="modal1-icon" style="margin-left: 6vw; right: 1vw;" data-action="delete" data-id="">
+      <span class="modal1-icon" style="right: -2.4vw;" data-action="delete" data-id="">
         <i class="material-symbols-outlined">delete</i>
       </span>
     </div>
@@ -201,37 +201,37 @@
 <template id="specification-template">
   <div class="spec-container" data-spec-id="">
     <!-- Иконка Редактировать спецификацию -->
-    <span class="spec-icon" data-action="edit-spec" data-spec-id="">
+    <span class="spec-icon" style="left: 0.2vw;" data-action="edit-spec" data-spec-id="">
       <i class="material-symbols-outlined">edit_note</i>
     </span>
     <!-- Specification Name -->
-    <div class="modal1-input-group left">
-      <input type="text" class="modal1-input" placeholder=" " data-field="specification_name" readonly />
+    <div class="modal1-input-group left" style="margin-left: 1.3vw;">
+      <input type="text" style="width: 20vw" class="modal1-input" placeholder=" " data-field="specification_name" readonly />
       <label>Spec Name</label>
     </div>
     <!-- Status -->
     <div class="modal1-input-group right">
-      <input type="text" class="modal1-input" placeholder=" " data-field="status" readonly />
+      <input type="text" style="width: 7vw" class="modal1-input" placeholder=" " data-field="status" readonly />
       <label>Status</label>
     </div>
     <!-- Amount -->
     <div class="modal1-input-group left">
-      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="specification_amount" readonly />
+      <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="specification_amount" readonly />
       <label>Amount</label>
     </div>
     <!-- Costs -->
     <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="specification_costs" readonly />
+      <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="specification_costs" readonly />
       <label>Costs</label>
     </div>
     <!-- Profit -->
     <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="specification_profit" readonly />
+      <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="specification_profit" readonly />
       <label>Profit</label>
     </div>
     <!-- Profit % -->
     <div class="modal1-input-group right">
-      <input type="number" step="0.01" class="modal1-input" style="width: 2.6vw;" placeholder=" " data-field="profit_percentage" readonly />
+      <input type="number" style="width: 2vw" step="0.01" class="modal1-input" style="width: 2.6vw;" placeholder=" " data-field="profit_percentage" readonly />
       <label>Profit %</label>
     </div>
     <!-- Responsible -->
@@ -240,7 +240,7 @@
       <label>Responsible</label>
     </div>
     <!-- Иконка Удалить спецификацию -->
-    <span class="spec-icon" data-action="delete-spec" data-spec-id="">
+    <span class="spec-icon" style="right: -22.5vw;" data-action="delete-spec" data-spec-id="">
       <i class="material-symbols-outlined">delete</i>
     </span>
   </div>
@@ -347,17 +347,17 @@
 
 /* Родительский контейнер (сделка) */
 .modal1-container {
-  display: flex;
+    display: flex;
   align-items: center;
   padding: 0.4vw;
   border-radius: var(--borderRadius);
   color: var(--white-color2);
   z-index: 1100;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.04);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 0.1px solid rgba(179, 185, 193, 0.15);
   width: 90.5vw;
   height: 2.1vw;
   transform-origin: top left;
@@ -365,7 +365,7 @@
 }
 .modal1-container:hover,
 .modal1-container:focus {
-  border: 1px solid var(--white-color2);
+  border: 0.1px solid var(--white-color2);
 }
 
 /* Иконки (редактировать/удалить/новая спецификация) */
@@ -403,13 +403,13 @@
   color: var(--white-color2);
   z-index: 1100;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-  border: 0.6px solid rgba(255, 255, 255, 0.18);
-  width: 88vw;
+  background: rgba(179, 185, 193, 0.025);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 0.1px solid rgba(179, 185, 193, 0.15);
+  width: 83vw;
   height: 2.1vw;
-  margin-left: 2.5vw;
+  margin-left: 6.5vw;
   margin-top: 0.5vw;
   position: relative;
 }
