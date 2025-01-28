@@ -1114,72 +1114,76 @@ function setupRealtime() {
 
   // Подписка на спецификации
   const channelSpecs = supabase
-    .channel('realtime_specifications')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'specifications' },
-      (payload) => {
-        const specId = payload.new?.specification_id || payload.old?.specification_id;
-        if (!specId) return;
-        const projectId = payload.new?.project_id || payload.old?.project_id;
-        if (!projectId) return;
+  .channel('realtime_specifications')
+  .on(
+    'postgres_changes',
+    { event: '*', schema: 'public', table: 'specifications' },
+    (payload) => {
+      // Определяем specId (при DELETE часто лежит в payload.old, при INSERT/UPDATE - в payload.new)
+      const specId = payload.new?.specification_id || payload.old?.specification_id;
+      if (!specId) return;
 
-        if (payload.eventType === 'INSERT' && payload.new) {
-          console.log('[LOG] Realtime: INSERT specification:', payload.new);
-          const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-          if (projectContainer) {
-            const projectBlock = projectContainer.closest('.project-block');
-            const specsWrapper = projectBlock.querySelector('.specifications-wrapper');
-            if (specsWrapper) {
-              const specEl = createSpecificationContainer(payload.new);
-              if (specEl) {
-                specsWrapper.appendChild(specEl);
-              }
-            }
-          }
-        } else if (payload.eventType === 'UPDATE' && payload.new) {
-          console.log('[LOG] Realtime: UPDATE specification:', payload.new);
-          const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-          if (projectContainer) {
-            const projectBlock = projectContainer.closest('.project-block');
-            const specElem = projectBlock.querySelector(`[data-spec-id="${specId}"]`);
-            if (specElem) {
-              const updatedSpec = payload.new;
-              // Обновить data-атрибуты
-              specElem.dataset.specificationName = updatedSpec.specification_name || '';
-              specElem.dataset.status = updatedSpec.status || '';
-              specElem.dataset.specificationAmount = updatedSpec.specification_amount || 0;
-              specElem.dataset.specificationCosts = updatedSpec.specification_costs || 0;
-              specElem.dataset.specificationProfit = updatedSpec.specification_profit || 0;
-              specElem.dataset.profitPercentage = updatedSpec.profit_percentage || 0;
-              specElem.dataset.responsible = updatedSpec.responsible || '';
+      // Смотрим тип события
+      if (payload.eventType === 'INSERT' && payload.new) {
+        console.log('[LOG] Realtime: INSERT specification:', payload.new);
 
-              // Обновить поля
-              specElem.querySelector('[data-field="specification_name"]').value = updatedSpec.specification_name || '';
-              specElem.querySelector('[data-field="status"]').value = updatedSpec.status || '';
-              specElem.querySelector('[data-field="specification_amount"]').value = updatedSpec.specification_amount || 0;
-              specElem.querySelector('[data-field="specification_costs"]').value = updatedSpec.specification_costs || 0;
-              specElem.querySelector('[data-field="specification_profit"]').value = updatedSpec.specification_profit || 0;
-              specElem.querySelector('[data-field="profit_percentage"]').value = updatedSpec.profit_percentage || 0;
-              specElem.querySelector('[data-field="responsible"]').value = updatedSpec.responsible || '';
+        // Логика создания DOM-элемента (если нужно):
+        // Для вставки нам нужен project_id, чтобы найти родительский контейнер
+        // (как вариант — project_id = payload.new.project_id)
+        const projectId = payload.new.project_id;
+        const projectContainer = document.querySelector(`[data-id="${projectId}"]`);
+        if (projectContainer) {
+          const projectBlock = projectContainer.closest('.project-block');
+          const specsWrapper = projectBlock?.querySelector('.specifications-wrapper');
+          if (specsWrapper) {
+            // Функция createSpecificationContainer() создаёт DOM-элемент из шаблона
+            const specEl = createSpecificationContainer(payload.new);
+            if (specEl) {
+              specsWrapper.appendChild(specEl);
             }
           }
-        } else if (payload.eventType === 'DELETE') {
-          console.log('[LOG] Realtime: DELETE specification:', payload.old);
-          const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-          if (projectContainer) {
-            const projectBlock = projectContainer.closest('.project-block');
-            const specElem = projectBlock.querySelector(`[data-spec-id="${specId}"]`);
-            if (specElem) {
-              specElem.remove();
-            }
-          }
-          // Скрываем loader, т.к. удаление (и из DOM) завершено
-          hideLoader();
         }
+
+      } else if (payload.eventType === 'UPDATE' && payload.new) {
+        console.log('[LOG] Realtime: UPDATE specification:', payload.new);
+
+        // Найдём в DOM элемент спецификации напрямую по specId
+        const specElem = document.querySelector(`[data-spec-id="${specId}"]`);
+        if (specElem) {
+          // Обновляем data-атрибуты
+          const updatedSpec = payload.new;
+          specElem.dataset.specificationName = updatedSpec.specification_name || '';
+          specElem.dataset.status = updatedSpec.status || '';
+          specElem.dataset.specificationAmount = updatedSpec.specification_amount || 0;
+          specElem.dataset.specificationCosts = updatedSpec.specification_costs || 0;
+          specElem.dataset.specificationProfit = updatedSpec.specification_profit || 0;
+          specElem.dataset.profitPercentage = updatedSpec.profit_percentage || 0;
+          specElem.dataset.responsible = updatedSpec.responsible || '';
+
+          // Обновляем поля readonly
+          specElem.querySelector('[data-field="specification_name"]').value = updatedSpec.specification_name || '';
+          specElem.querySelector('[data-field="status"]').value = updatedSpec.status || '';
+          specElem.querySelector('[data-field="specification_amount"]').value = updatedSpec.specification_amount || 0;
+          specElem.querySelector('[data-field="specification_costs"]').value = updatedSpec.specification_costs || 0;
+          specElem.querySelector('[data-field="specification_profit"]').value = updatedSpec.specification_profit || 0;
+          specElem.querySelector('[data-field="profit_percentage"]').value = updatedSpec.profit_percentage || 0;
+          specElem.querySelector('[data-field="responsible"]').value = updatedSpec.responsible || '';
+        }
+
+      } else if (payload.eventType === 'DELETE') {
+        console.log('[LOG] Realtime: DELETE specification:', payload.old);
+
+        // Удаляем элемент спецификации напрямую по specId (не используем project_id)
+        const specElem = document.querySelector(`[data-spec-id="${specId}"]`);
+        if (specElem) {
+          specElem.remove();
+        }
+        // Скрываем лоадер, если мы его показывали на момент удаления
+        hideLoader();
       }
-    )
-    .subscribe();
+    }
+  )
+  .subscribe();
 
   channelProjects.on('subscription_error', (status) => {
     console.error('[LOG] Ошибка подписки (projects):', status);
