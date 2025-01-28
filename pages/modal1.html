@@ -9,7 +9,7 @@
 
   <div id="modalBottom" class="modalVNUT" style="top: 5.5vw; left: 6vw; right: 2vw; height: calc(100vh - 7.4vw); width: 99%;">
     <div class="modalVNUT-content" id="projects-container">
-      <!-- Контейнеры проектов будут динамически добавляться   здесь -->
+      <!-- Контейнеры проектов будут динамически добавляться здесь -->
     </div>
   </div>
 </div>
@@ -66,13 +66,14 @@
   </div>
 </div>
 
-<!--template для проекта-->
+<!-- Шаблон для проекта -->
 <template id="project-template" style="width: 91vw;">
   <div class="modal1-container" data-id="">
     <!-- Иконка Редактировать -->
     <span class="modal1-icon" style="left: 1vw;" data-action="edit" data-id="">
       <i class="material-symbols-outlined">receipt</i>
     </span>
+    <!-- Иконка Создать спецификацию -->
     <span class="modal1-icon" style="left: 1vw;" data-action="new-specificstion" data-id="">
       <i class="material-symbols-outlined">stat_minus_2</i>
     </span>
@@ -147,47 +148,93 @@
     <span class="modal1-icon" style="margin-left: 6vw; right: 1vw;" data-action="delete" data-id="">
       <i class="material-symbols-outlined">delete</i>
     </span>
+
+    <!-- Внутренний контейнер для спецификаций этого проекта -->
+    <div class="specifications-wrapper"></div>
+  </div>
+</template>
+
+<!-- Шаблон для спецификации -->
+<template id="specification-template">
+  <div class="spec-container" data-spec-id="">
+    <!-- Specification Name -->
+    <div class="modal1-input-group left">
+      <input type="text" class="modal1-input" placeholder=" " data-field="specification_name" readonly />
+      <label>Spec Name</label>
+    </div>
+    <!-- Status -->
+    <div class="modal1-input-group right">
+      <input type="text" class="modal1-input" placeholder=" " data-field="status" readonly />
+      <label>Status</label>
+    </div>
+    <!-- Amount -->
+    <div class="modal1-input-group left">
+      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="specification_amount" readonly />
+      <label>Amount</label>
+    </div>
+    <!-- Costs -->
+    <div class="modal1-input-group right">
+      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="specification_costs" readonly />
+      <label>Costs</label>
+    </div>
+    <!-- Profit -->
+    <div class="modal1-input-group right">
+      <input type="number" step="0.01" class="modal1-input" placeholder=" " data-field="specification_profit" readonly />
+      <label>Profit</label>
+    </div>
+    <!-- Profit % -->
+    <div class="modal1-input-group right">
+      <input type="number" step="0.01" class="modal1-input" style="width: 2.6vw;" placeholder=" " data-field="profit_percentage" readonly />
+      <label>Profit %</label>
+    </div>
+    <!-- Responsible -->
+    <div class="modal1-input-group left">
+      <input type="text" class="modal1-input" placeholder=" " data-field="responsible" readonly />
+      <label>Responsible</label>
+    </div>
   </div>
 </template>
 
 <style>
-
-  :root {
-      --scrollbar-color: rgba(255, 255, 255, 0.04); 
+:root {
+  --scrollbar-color: rgba(255, 255, 255, 0.04); 
   --scrollbar-thumb-color: #D1D5D0; 
   --scroll-y-position: 10%;
   --reflection-y-position: 50%;
-  }
+  --borderRadius: 0.4vw;
+  --white-color2: #ffffff;
+  --white-color1: #eee;
+  --black-color: #000000;
+  --spacer: 1vw; 
+}
 
-  
 .close-modal {
-    position: absolute;
-    top: 1vw;
-    right: 1vw;
-    background: none;
-    border: none;
-    font-size: 1vw;
-    cursor: pointer;
-    color: var(--white-color2);
-  }
+  position: absolute;
+  top: 1vw;
+  right: 1vw;
+  background: none;
+  border: none;
+  font-size: 1vw;
+  cursor: pointer;
+  color: var(--white-color2);
+}
+.close-modal:hover {
+  color: #393E41;
+}
 
-  .close-modal:hover {
-    color: #393E41;
-  }
+.modal111-content {
+  font-family: "Comfortaa", sans-serif;
+  color: var(--white-color2);
+  background-color: none;
+  border-radius: var(--borderRadius);
+  height: calc(100vh - (var(--spacer)*2));
+  width: calc(100vw - (var(--spacer)*6));
+  box-sizing: border-box;
+  position: relative;
+  padding: 1vw;
+}
 
-  .modal111-content {
-    font-family: "Comfortaa", sans-serif;
-    color: var(--white-color2);
-    background-color: none; /* Белый фон для контента */
-    border-radius: var(--borderRadius);
-    height: calc(100vh - (var(--spacer)*2));
-    width: calc(100vw - (var(--spacer)*6));
-    box-sizing: border-box;
-    position: relative;
-    padding: 1vw;
-  }
-
-  /* Заголовок */
+/* Заголовок */
 .modal1-title {
   color: var(--white-color2);
   font-size: 0.7vw;
@@ -195,7 +242,6 @@
   margin-left: 0vw;
   display: flex
 }
-
 /* Подзаголовок */
 .modal1-subtitle {
   color: var(--white-color2);
@@ -204,19 +250,13 @@
   margin-left: 0vw;
   display: flex
 }
-
-  /* Если необходимо выровнять h2 и p внутри flex-контейнера, можно добавить */
 .modal1-content h2,
 .modal1-content p {
   align-self: flex-start;
   display: flex
 }
-  
-  
-  
-  /* ________________________ стили модального окна с прокруткой / скроллом */
-  
-  /* Модальное окно с прокруткой */
+
+/* Модальное окно с прокруткой */
 .modalVNUT {
   display: flex;
   position: fixed;
@@ -226,169 +266,165 @@
   border: 0px solid rgba(255, 255, 255, 0.18);
   color: black;
   z-index: 1000;
-  overflow: hidden; /* Отключаем общий скролл */
+  overflow: hidden; 
   box-sizing: border-box;
 }
-
-/* Внутренний контейнер с прокруткой */
 .modalVNUT-content {
-  padding: 0.5vh 2vh 0vw 0vw; /* Отступы внутри модального окна */
+  padding: 0.5vh 2vh 0vw 0vw; 
   height: 100%;
   width: 92vw;
-  overflow-y: scroll; /* Включаем вертикальную прокрутку */
+  overflow-y: scroll;
   box-sizing: border-box;
 }
-
-/* Стилизация скроллбара */
 .modalVNUT-content::-webkit-scrollbar {
-  width: 4px; /* Ширина скроллбара */
+  width: 4px;
   background-color: var(--scrollbar-color);
 }
-
 .modalVNUT-content::-webkit-scrollbar-thumb {
-  background-color: var(--scrollbar-thumb-color); /* Цвет ползунка */
-  border-radius: 10px; /* Скругление */
+  background-color: var(--scrollbar-thumb-color);
+  border-radius: 10px;
 }
-
 .modalVNUT-content::-webkit-scrollbar-track {
   background-color: var(--scrollbar-color);
 }
 
+/* Контейнеры проектов */
+.modal1-container {
+  display: flex;
+  align-items: center;
+  padding: 0.4vw;
+  border-radius: var(--borderRadius);
+  color: var(--white-color2);
+  z-index: 1100;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: 90.5vw;
+  height: 2.1vw;
+  transform-origin: top left; 
+  position: relative;
+}
+.modal1-container:hover,
+.modal1-container:focus {
+  border: 1px solid var(--white-color2);
+}
+.modal1-container:not(:last-child) {
+  margin-bottom: 0.5vw;
+}
 
+/* Иконки */
+.modal1-icon {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.7vw;
+  margin-right: 0.5vw;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.modal1-icon:hover {
+  color: var(--white-color2);
+  transform: scale(1.1);
+}
+.modal1-icon:active {
+  transform: scale(0.92);
+}
 
-  /* _____________________________________________________________________    Контейнеры внутри модального окна */
+/* Спецификации внутри проекта */
+.specifications-wrapper {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 0.5vw;
+  /* Чтобы спецификации размещались ниже (в отдельной строке) */
+  position: relative;
+  top: 2.3vw; /* Сдвигаем вниз, чтобы не наезжать на проект */
+}
 
-  .modal1-container {
-    display: flex;
-    align-items: center; /* Центрирование по вертикали */
-    padding: 0.4vw;
-    border-radius: var(--borderRadius);
-    color: var(--white-color2);
-    z-index: 1100;
-    box-sizing: border-box;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    width: 90.5vw;
-    height: 2.1vw;
-    /* transform: scale(0.86);*/
-    transform-origin: top left; 
-  }
+/* Карточка спецификации */
+.spec-container {
+  display: flex;
+  align-items: center;
+  padding: 0.4vw;
+  border-radius: var(--borderRadius);
+  color: var(--white-color2);
+  z-index: 1100;
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  width: 68vw; /* 25% уже, чем проект */
+  height: 2.1vw;
+  margin-left: 5vw; /* Визуально сместили вправо */
+  margin-top: 0.5vw;
+}
 
-  .modal1-container:hover,
-  .modal1-container:focus {
-    border: 1px solid var(--white-color2);
-  }
+/* Группы инпутов */
+.modal1-input-group {
+  position: relative;
+  font-family: "Comfortaa", sans-serif;
+}
+.modal1-input-group.left {
+  margin-left: 3vw;
+}
+.modal1-input-group.right {
+  margin-left: 0.4vw;
+}
 
-  /* Отступы только между контейнерами */
-  .modal1-container:not(:last-child) {
-    margin-bottom: 0.5vw;
-  }
+.modal1-input-group label {
+  background: none;
+  color: rgba(255, 255, 255, 0.6);
+  position: absolute;
+  top: 0.61vw;
+  left: 0.28vw;
+  transform: translateY(-50%);
+  text-transform: uppercase;
+  font-weight: 700;
+  pointer-events: none;
+  font-size: 0.42vw;
+  transition: all 0.3s;
+}
+.modal1-input-group .modal1-input {
+  padding: 0.28vw 0.28vw; 
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  outline: none;
+  color: var(--white-color2);
+  font-size: 0.49vw; 
+  font-family: inherit;
+  background-color: transparent;
+  border-radius: 7px; 
+}
+.modal1-input-group .modal1-input:hover,
+.modal1-input-group .modal1-input:focus {
+  border: 1px solid var(--white-color2);
+}
+.modal1-input-group .modal1-input:focus + label,
+.modal1-input-group .modal1-input:not(:placeholder-shown) + label {
+  top: -0.2vw;
+  font-size: 0.28vw;
+  padding: 0 0.28vw;
+  background: none;
+  border-radius: 7px; 
+  color: var(--white-color2);
+}
 
-  /* Иконки */
-  .modal1-icon {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.7vw; /* Уменьшено на 30% */
-    margin-right: 0.5vw; /* Уменьшено на 30% */
-    cursor: pointer;
-    display: flex;
-    align-items: center; /* Центрирование иконок по вертикали */
-  }
+/* Кнопка добавления проекта */
+#add-project-button {
+  background-color: var(--white-color2);
+  color: var(--black-color);
+  border: none;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+#add-project-button:hover {
+  background-color: var(--white-color1);
+}
 
-  .modal1-icon:hover {
-    color: var(--white-color2);
-    transform: scale(0.7 * 1.1); /* Увеличение иконки при наведении с учетом масштаба */
-  }
-
-  .modal1-icon:active {
-    transform: scale(0.7 * 0.92); /* Сжатие иконки при клике с учетом масштаба */
-  }
-
-  /* Input группы */
- .modal1-input-group {
-    position: relative;
-    font-family: "Comfortaa", sans-serif;
-  }
-
-  .modal1-input-group.left {
-    margin-left: 3vw; /* Уменьшено на 30% от 2.2vw */
-  }
-
-  .modal1-input-group.right {
-    margin-left: 0.4vw; /* Уменьшено на 30% от 0.4vw */
-  }
-
-  .modal1-input-group label {
-    background: none;
-    color: rgba(255, 255, 255, 0.6);
-    position: absolute;
-    top: 0.61vw; /* Уменьшено на 30% от 0.86vw */
-    left: 0.28vw; /* Уменьшено на 30% от 0.4vw */
-    transform: translateY(-50%);
-    text-transform: uppercase;
-    font-weight: 700;
-    pointer-events: none;
-    font-size: 0.42vw; /* Уменьшено на 30% от 0.6vw */
-    transition: all 0.3s;
-  }
-
-  .modal1-input-group .modal1-input {
-    padding: 0.28vw 0.28vw; 
-    width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    outline: none;
-    color: var(--white-color2);
-    font-size: 0.49vw; 
-    font-family: inherit;
-    background-color: transparent;
-    border-radius: 7px; 
-  }
-
-  .modal1-input-group .modal1-input:hover,
-  .modal1-input-group .modal1-input:focus {
-    border: 1px solid var(--white-color2);
-  }
-
-  .modal1-input-group .modal1-input:focus + label,
-  .modal1-input-group .modal1-input:not(:placeholder-shown) + label {
-    top: -0.2vw;
-    font-size: 0.28vw;
-    padding: 0 0.28vw;
-    background: none;
-    border-radius: 7px; 
-    color: var(--white-color2);
-  } 
-
-  /* Input заголовок без границ */
-  .modal1-input-TYPE1 {
-    position: relative;
-    font-family: "Comfortaa", sans-serif;
-    width: 1.4vw; /* Уменьшено на 30% от 2vw */
-    border: none;
-    outline: none;
-    color: rgba(255, 255, 255, 0.6);
-    background-color: transparent;
-    margin-top: 0.7vw; /* Уменьшено на 30% от 1vw */
-  }
-
-    /* Дополнительные стили для кнопки добавления проекта */
-  #add-project-button {
-    background-color: var(--white-color2);
-    color: var(--black-color);
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.3s;
-  }
-
-  #add-project-button:hover {
-    background-color: var(--white-color1);
-  }
-
-
-
-  
-  /* Стили для модального окна редактирования */
+/* Стили модального окна редактирования */
 .edit-modal {
   position: fixed;
   top: 0;
@@ -402,11 +438,9 @@
   align-items: center;
   z-index: 1100;
 }
-
 .edit-modal.hidden {
   display: none;
 }
-
 .edit-modal-content {
   background: white;
   padding: 2rem;
@@ -414,7 +448,6 @@
   width: 50%;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
-
 .close-edit-modal {
   position: absolute;
   top: 1vw;
@@ -424,10 +457,7 @@
   font-size: 0.7vw;
   cursor: pointer;
 }
-
-
-
-  .button-D {
+.button-D {
   height: 1vw;
   width: 8vw;
   position: fixed;
@@ -439,7 +469,6 @@
   color: var(--black-color);
   transition: all 0.2s ease-in-out;
 }
-
 .btn-txt {
   z-index: 1;
   font-weight: 800;
@@ -447,17 +476,16 @@
   text-transform: uppercase;
   font-size: 0.5vw;
 }
-
 .button-D:active {
   transform: scale(0.9);
   background-color: var(--white-color1);
-  }
-  
+}
 </style>
 
 <script type="module">
-//функция фильтрации данных (пример из инструкции не требуется, но оставим комментарий как образец)
-//ключи для рендеринга карточек с данными (пример из инструкции не требуется, но оставим)
+//функция фильтрации данных (пример из инструкции - не требуется, но пусть будет как образец)
+//ключи для рендеринга карточек с данными (пример из инструкции - не требуется)
+
 // Инициализация Supabase (предполагаем, что window.supabase уже инициализирован где-то выше)
 const supabase = window.supabase;
 
@@ -470,41 +498,44 @@ const editForm = document.getElementById('edit-form');
 // Текущее редактируемое поле
 let currentEditingProject = null;
 
-// //функция генерации уникального project_id
+/**********************/
+/*  ГЕНЕРАЦИЯ ID-шников */
 function generateProjectID() {
   return 'proj_' + Math.random().toString(36).substr(2, 9);
 }
+function generateSpecificationID() {
+  return 'spec_' + Math.random().toString(36).substr(2, 9);
+}
 
-// //функция создания контейнера проекта из шаблона
+/**********************/
+/*    ШАБЛОНЫ/ОТРИСОВКА */
+
+/* Создаём DOM-контейнер проекта из шаблона */
 function createProjectContainer(project) {
   if (!project || !project.project_id) {
     console.error('Некорректные данные проекта:', project);
     return null;
   }
-
-  // Находим сам <template> по id
   const template = document.getElementById('project-template');
   if (!template) {
-    console.error('Шаблон project-template не найден в HTML.');
+    console.error('Шаблон project-template не найден.');
     return null;
   }
-
-  // Клонируем содержимое шаблона (true — глубокое клонирование)
   const clone = template.content.cloneNode(true);
-
-  // Ищем в клонированном фрагменте ".modal1-container"
   const container = clone.querySelector('.modal1-container');
 
-  // Пропишем в dataset айди проекта
+  // data-id для проекта
   container.dataset.id = project.project_id;
 
-  // Иконки (редактировать/удалить) — проставляем data-id
+  // Иконки
   const editIcon = container.querySelector('[data-action="edit"]');
   const deleteIcon = container.querySelector('[data-action="delete"]');
+  const newSpecIcon = container.querySelector('[data-action="new-specificstion"]');
   if (editIcon) editIcon.dataset.id = project.project_id;
   if (deleteIcon) deleteIcon.dataset.id = project.project_id;
+  if (newSpecIcon) newSpecIcon.dataset.id = project.project_id;
 
-  // Дополнительно сохраняем данные проекта в data-атрибутах
+  // Сохраняем данные проекта в data-атрибутах
   container.dataset.projectName = project.project_name || '';
   container.dataset.status = project.status || '';
   container.dataset.contractAmount = project.contract_amount || 0;
@@ -516,7 +547,7 @@ function createProjectContainer(project) {
   container.dataset.buyerCompany = project.buyer_company || '';
   container.dataset.tinBuyer = project.tin_buyer || '';
 
-  // Заполняем <input data-field="..."> значениями проекта
+  // Заполняем input-ы
   container.querySelector('[data-field="project_id"]').value = project.project_id;
   container.querySelector('[data-field="project_name"]').value = project.project_name || '';
   container.querySelector('[data-field="status"]').value = project.status || '';
@@ -529,18 +560,48 @@ function createProjectContainer(project) {
   container.querySelector('[data-field="buyer_company"]').value = project.buyer_company || '';
   container.querySelector('[data-field="tin_buyer"]').value = project.tin_buyer || '';
 
-  return container; // возвращаем готовый узел
+  return container;
 }
 
-// //функция загрузки проектов
+/* Создаём DOM-контейнер спецификации из шаблона */
+function createSpecificationContainer(spec) {
+  if (!spec || !spec.specification_id) {
+    console.error('Некорректные данные спецификации:', spec);
+    return null;
+  }
+  const template = document.getElementById('specification-template');
+  if (!template) {
+    console.error('Шаблон specification-template не найден.');
+    return null;
+  }
+  const clone = template.content.cloneNode(true);
+  const specContainer = clone.querySelector('.spec-container');
+
+  // data-spec-id
+  specContainer.dataset.specId = spec.specification_id;
+
+  // Заполняем input-ы
+  specContainer.querySelector('[data-field="specification_name"]').value = spec.specification_name || '';
+  specContainer.querySelector('[data-field="status"]').value = spec.status || '';
+  specContainer.querySelector('[data-field="specification_amount"]').value = spec.specification_amount || 0;
+  specContainer.querySelector('[data-field="specification_costs"]').value = spec.specification_costs || 0;
+  specContainer.querySelector('[data-field="specification_profit"]').value = spec.specification_profit || 0;
+  specContainer.querySelector('[data-field="profit_percentage"]').value = spec.profit_percentage || 0;
+  specContainer.querySelector('[data-field="responsible"]').value = spec.responsible || '';
+
+  return specContainer;
+}
+
+/**********************/
+/*      ЗАГРУЗКА ДАННЫХ */
+
 async function loadProjects() {
   const { data, error } = await supabase.from('projects').select('*');
   if (error) {
     console.error('Ошибка загрузки проектов:', error);
     return;
   }
-
-  projectsContainer.innerHTML = ''; // Очищаем контейнер
+  projectsContainer.innerHTML = '';
 
   const fragment = document.createDocumentFragment();
   data.forEach((project) => {
@@ -552,7 +613,31 @@ async function loadProjects() {
   projectsContainer.appendChild(fragment);
 }
 
-// //функция добавления нового проекта
+/* Загрузим все спецификации и поместим их под соответствующие проекты */
+async function loadSpecifications() {
+  const { data, error } = await supabase.from('specifications').select('*');
+  if (error) {
+    console.error('Ошибка загрузки спецификаций:', error);
+    return;
+  }
+  // Для каждой спецификации найдём её проект и добавим в DOM
+  data.forEach((spec) => {
+    const projectContainer = projectsContainer.querySelector(`[data-id="${spec.project_id}"]`);
+    if (projectContainer) {
+      const specsWrapper = projectContainer.querySelector('.specifications-wrapper');
+      if (specsWrapper) {
+        const specElement = createSpecificationContainer(spec);
+        if (specElement) {
+          specsWrapper.appendChild(specElement);
+        }
+      }
+    }
+  });
+}
+
+/**********************/
+/*    ДОБАВЛЕНИЕ ЗАПИСЕЙ */
+
 async function addNewProject() {
   const newProject = {
     project_id: generateProjectID(),
@@ -568,7 +653,6 @@ async function addNewProject() {
     tin_buyer: '',
   };
 
-  // Добавляем .select('*') для возврата всех полей вставленной записи
   const { data, error } = await supabase
     .from('projects')
     .insert([newProject])
@@ -579,15 +663,39 @@ async function addNewProject() {
     console.error('Ошибка добавления проекта:', error);
     return;
   }
-
   if (!data) {
     console.error('Нет данных после вставки нового проекта');
     return;
   }
-  // Не вставляем вручную в DOM — сработает Realtime
+  // Реальное добавление в DOM произойдёт через Realtime (или можно сразу отрисовать, но у нас подписка)
 }
 
-// //функция удаления проекта
+/* Создаём новую спецификацию, привязанную к проекту (project_id) */
+async function addNewSpecification(projectId) {
+  const newSpec = {
+    specification_id: generateSpecificationID(),
+    project_id: projectId,
+    specification_name: 'New spec',
+    status: 'draft',
+    specification_amount: 0.00,
+    specification_costs: 0.00,
+    specification_profit: 0.00,
+    profit_percentage: 0.00,
+    responsible: '',
+  };
+  const { data, error } = await supabase
+    .from('specifications')
+    .insert([newSpec])
+    .select('*')
+    .single();
+  if (error) {
+    console.error('Ошибка добавления спецификации:', error);
+    return;
+  }
+}
+
+/**********************/
+/*   УДАЛЕНИЕ ПРОЕКТА  */
 async function deleteProject(projectId) {
   const { error } = await supabase
     .from('projects')
@@ -597,24 +705,23 @@ async function deleteProject(projectId) {
     console.error('Ошибка удаления проекта:', error);
     return;
   }
-
   const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
   if (projectElement && projectsContainer.contains(projectElement)) {
     projectsContainer.removeChild(projectElement);
   } else {
-    console.error(`Элемент проекта с project_id ${projectId} не найден в projectsContainer.`);
+    console.error(`Элемент проекта с project_id ${projectId} не найден в DOM.`);
   }
 }
 
-// //функция открыть модальное редактирование
+/**********************/
+/*     РЕДАКТИРОВАНИЕ  */
 function openEditModal(projectId) {
   const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
   if (!projectElement) {
     console.error(`Проект с project_id ${projectId} не найден.`);
     return;
   }
-
-  // Собираем данные из data-атрибутов
+  // Получаем данные
   const project = {
     project_id: projectId,
     project_name: projectElement.dataset.projectName,
@@ -628,7 +735,6 @@ function openEditModal(projectId) {
     buyer_company: projectElement.dataset.buyerCompany,
     tin_buyer: projectElement.dataset.tinBuyer,
   };
-
   currentEditingProject = project;
 
   // Заполняем форму
@@ -643,30 +749,17 @@ function openEditModal(projectId) {
   editForm['edit-buyer-company'].value = project.buyer_company;
   editForm['edit-tin-buyer'].value = project.tin_buyer;
 
-  // Показываем модал
   editModal.classList.remove('hidden');
 }
-
-// //функция закрытия модального окна редактирования
 function closeEditModal() {
   editModal.classList.add('hidden');
   currentEditingProject = null;
 }
-
-// //функция закрытия основного модального окна (пример)
-function closeModal() {
-  // Здесь уже от вас зависит, как скрывать/закрывать окно
-  // Ниже просто пример:
-  document.querySelector('.modal111-content').style.display = 'none';
-}
-
-// //функция сохранения измененного проекта
 async function saveProject() {
   if (!currentEditingProject) {
     console.error('Нет текущего редактируемого проекта.');
     return;
   }
-
   const updatedProject = {
     project_name: editForm['edit-project-name'].value,
     status: editForm['edit-status'].value,
@@ -679,23 +772,19 @@ async function saveProject() {
     buyer_company: editForm['edit-buyer-company'].value,
     tin_buyer: editForm['edit-tin-buyer'].value,
   };
-
   const { data, error } = await supabase
     .from('projects')
     .update(updatedProject)
     .eq('project_id', currentEditingProject.project_id)
     .select('*')
     .single();
-
   if (error) {
     console.error('Ошибка сохранения проекта:', error);
     return;
   }
-
-  // Найдем элемент проекта в DOM
+  // Обновим DOM
   const projectElement = projectsContainer.querySelector(`[data-id="${currentEditingProject.project_id}"]`);
-  if (projectElement) {
-    // Обновим data-атрибуты
+  if (projectElement && data) {
     projectElement.dataset.projectName = data.project_name || '';
     projectElement.dataset.status = data.status || '';
     projectElement.dataset.contractAmount = data.contract_amount || 0;
@@ -707,7 +796,6 @@ async function saveProject() {
     projectElement.dataset.buyerCompany = data.buyer_company || '';
     projectElement.dataset.tinBuyer = data.tin_buyer || '';
 
-    // Обновим значения инпутов
     const fields = [
       'project_id',
       'project_name',
@@ -728,14 +816,15 @@ async function saveProject() {
       }
     });
   }
-
-  // Закрываем окно редактирования
   closeEditModal();
 }
 
-// //функция настройки Realtime подписки
+/**********************/
+/*    REALTIME-ПОДПИСКА */
+
 function setupRealtime() {
-  const channel = supabase
+  // Подписка на изменения в таблице projects
+  const channelProjects = supabase
     .channel('realtime_projects')
     .on(
       'postgres_changes',
@@ -745,7 +834,7 @@ function setupRealtime() {
         if (!projectId) return;
 
         if (payload.eventType === 'INSERT' && payload.new) {
-          // Проверяем, есть ли уже проект в DOM
+          // Если в DOM ещё нет этого проекта, добавим
           if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
             const projectElement = createProjectContainer(payload.new);
             if (projectElement) {
@@ -756,8 +845,6 @@ function setupRealtime() {
           const projectElement = projectsContainer.querySelector(`[data-id="${projectId}"]`);
           if (projectElement) {
             const updatedProject = payload.new;
-
-            // Обновляем data-атрибуты
             projectElement.dataset.projectName = updatedProject.project_name || '';
             projectElement.dataset.status = updatedProject.status || '';
             projectElement.dataset.contractAmount = updatedProject.contract_amount || 0;
@@ -769,7 +856,6 @@ function setupRealtime() {
             projectElement.dataset.buyerCompany = updatedProject.buyer_company || '';
             projectElement.dataset.tinBuyer = updatedProject.tin_buyer || '';
 
-            // Обновляем значения всех полей
             const fields = [
               'project_id',
               'project_name',
@@ -800,40 +886,103 @@ function setupRealtime() {
     )
     .subscribe();
 
-  channel.on('subscription_error', (status) => {
-    console.error('Ошибка подписки на канал:', status);
+  // Подписка на изменения в таблице specifications
+  const channelSpecs = supabase
+    .channel('realtime_specifications')
+    .on(
+      'postgres_changes',
+      { event: '*', schema: 'public', table: 'specifications' },
+      (payload) => {
+        const specId = payload.new?.specification_id || payload.old?.specification_id;
+        if (!specId) return;
+
+        const projectId = payload.new?.project_id || payload.old?.project_id;
+        if (!projectId) return;
+
+        if (payload.eventType === 'INSERT' && payload.new) {
+          const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+          if (projectContainer) {
+            const specsWrapper = projectContainer.querySelector('.specifications-wrapper');
+            if (specsWrapper) {
+              // Создаём элемент спецификации
+              const specElement = createSpecificationContainer(payload.new);
+              if (specElement) {
+                specsWrapper.appendChild(specElement);
+              }
+            }
+          }
+        } else if (payload.eventType === 'UPDATE' && payload.new) {
+          // Ищем старый элемент
+          const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+          if (projectContainer) {
+            const specElement = projectContainer.querySelector(`[data-spec-id="${specId}"]`);
+            if (specElement) {
+              // Обновим поля
+              const updatedSpec = payload.new;
+              specElement.querySelector('[data-field="specification_name"]').value = updatedSpec.specification_name || '';
+              specElement.querySelector('[data-field="status"]').value = updatedSpec.status || '';
+              specElement.querySelector('[data-field="specification_amount"]').value = updatedSpec.specification_amount || 0;
+              specElement.querySelector('[data-field="specification_costs"]').value = updatedSpec.specification_costs || 0;
+              specElement.querySelector('[data-field="specification_profit"]').value = updatedSpec.specification_profit || 0;
+              specElement.querySelector('[data-field="profit_percentage"]').value = updatedSpec.profit_percentage || 0;
+              specElement.querySelector('[data-field="responsible"]').value = updatedSpec.responsible || '';
+            }
+          }
+        } else if (payload.eventType === 'DELETE') {
+          const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+          if (projectContainer) {
+            const specElement = projectContainer.querySelector(`[data-spec-id="${specId}"]`);
+            if (specElement) {
+              specElement.remove();
+            }
+          }
+        }
+      }
+    )
+    .subscribe();
+
+  channelProjects.on('subscription_error', (status) => {
+    console.error('Ошибка подписки (projects):', status);
+  });
+  channelSpecs.on('subscription_error', (status) => {
+    console.error('Ошибка подписки (specifications):', status);
   });
 }
 
-// //инициализация
+/**********************/
+/*    ЗАПУСК / ИНИЦ.    */
+
 if (addProjectButton) {
   addProjectButton.addEventListener('click', addNewProject);
 }
 
-// //слушатель кликов на контейнере проектов
+// Слушатель кликов по контейнеру проектов (удалить / редактировать / новая спецификация)
 projectsContainer.addEventListener('click', (event) => {
   const icon = event.target.closest('.modal1-icon');
   if (!icon) return;
 
   const action = icon.dataset.action;
   const projectId = icon.dataset.id;
-
   if (action === 'delete') {
     deleteProject(projectId);
   } else if (action === 'edit') {
     openEditModal(projectId);
+  } else if (action === 'new-specificstion') {
+    addNewSpecification(projectId);
   }
 });
 
-// //закрыть окно редактирования
+// Закрыть окно редактирования
 document.querySelector('.close-edit-modal').addEventListener('click', closeEditModal);
-// //кнопка "Сохранить" в форме редактирования
+// Сохранить изменения
 editForm.querySelector('.save-button').addEventListener('click', saveProject);
 
-// //запуск начальной загрузки проектов + Realtime
-loadProjects();
-setupRealtime();
-</script>
+// Начальная загрузка данных + настройка Realtime
+loadProjects().then(loadSpecifications).then(setupRealtime);
 
-</body>
-</html>
+/**********************/
+/*   Пример закрытия всего модала (если нужно) */
+function closeModal() {
+  document.querySelector('.modal111-content').style.display = 'none';
+}
+</script>
