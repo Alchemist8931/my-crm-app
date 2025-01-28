@@ -108,7 +108,6 @@
 
 <!-- Шаблон для проекта -->
 <template id="project-template">
-  <!-- Обёртка проекта: содержит сам контейнер сделки и ниже блок спецификаций -->
   <div class="project-block">
     <div class="modal1-container" data-id="">
       <!-- Иконка Редактировать -->
@@ -140,25 +139,49 @@
 
       <!-- Contract Amount -->
       <div class="modal1-input-group left">
-        <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="contract_amount" readonly />
+        <input 
+          type="text"  <!-- используется text, чтобы проще отображать форматированный вывод -->
+          style="width: 4.5vw; text-align:right;" 
+          class="modal1-input numeric-align" 
+          data-field="contract_amount" 
+          readonly 
+        />
         <label>Contract Amount</label>
       </div>
 
       <!-- Contract Costs -->
       <div class="modal1-input-group right">
-        <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="contract_costs" readonly />
+        <input 
+          type="text" 
+          style="width: 4.5vw; text-align:right;"
+          class="modal1-input numeric-align"
+          data-field="contract_costs" 
+          readonly 
+        />
         <label>Contract Costs</label>
       </div>
 
       <!-- Contract Profit -->
       <div class="modal1-input-group right">
-        <input type="number" style="width: 4.5vw"step="0.01" class="modal1-input" placeholder=" " data-field="contract_profit" readonly />
+        <input 
+          type="text" 
+          style="width: 4.5vw; text-align:right;"
+          class="modal1-input numeric-align"
+          data-field="contract_profit" 
+          readonly 
+        />
         <label>Contract Profit</label>
       </div>
 
       <!-- Profit % -->
       <div class="modal1-input-group right">
-        <input type="number" style="width: 2vw" step="0.01" class="modal1-input" style="width: 2.6vw;" placeholder=" " data-field="profit_percentage" readonly />
+        <input 
+          type="text"  <!-- text, чтобы показать форматированный вывод и выравнивание по центру -->
+          style="width: 2vw; text-align:center;" 
+          class="modal1-input numeric-align-center" 
+          data-field="profit_percentage" 
+          readonly 
+        />
         <label>Profit %</label>
       </div>
 
@@ -216,22 +239,46 @@
     </div>
     <!-- Amount -->
     <div class="modal1-input-group left">
-      <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="specification_amount" readonly />
+      <input 
+        type="text"
+        style="width: 4.5vw; text-align:right;" 
+        class="modal1-input numeric-align"
+        data-field="specification_amount" 
+        readonly 
+      />
       <label>Amount</label>
     </div>
     <!-- Costs -->
     <div class="modal1-input-group right">
-      <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="specification_costs" readonly />
+      <input
+        type="text"
+        style="width: 4.5vw; text-align:right;"
+        class="modal1-input numeric-align"
+        data-field="specification_costs" 
+        readonly 
+      />
       <label>Costs</label>
     </div>
     <!-- Profit -->
     <div class="modal1-input-group right">
-      <input type="number" style="width: 4.5vw" step="0.01" class="modal1-input" placeholder=" " data-field="specification_profit" readonly />
+      <input
+        type="text"
+        style="width: 4.5vw; text-align:right;"
+        class="modal1-input numeric-align"
+        data-field="specification_profit" 
+        readonly 
+      />
       <label>Profit</label>
     </div>
     <!-- Profit % -->
     <div class="modal1-input-group right">
-      <input type="number" style="width: 2vw" step="0.01" class="modal1-input" style="width: 2.6vw;" placeholder=" " data-field="profit_percentage" readonly />
+      <input
+        type="text"
+        style="width: 2vw; text-align:center;"
+        class="modal1-input numeric-align-center"
+        data-field="profit_percentage" 
+        readonly 
+      />
       <label>Profit %</label>
     </div>
     <!-- Responsible -->
@@ -263,6 +310,23 @@
   
   --borderRadius: 0.4vw;
   --spacer: 1vw; 
+}
+
+  /* Убираем стрелки в input[type=number] (вспомогательно для полей, где всё же type=number) */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Моноширинные цифры (tabular) для полей, где это нужно */
+.numeric-align {
+  font-variant-numeric: tabular-nums;
+  /* или font-feature-settings: "tnum" 1, "lnum" 1; */
+}
+.numeric-align-center {
+  font-variant-numeric: tabular-nums;
+  text-align: center;
 }
 
 /* Закрыть главное модальное окно */
@@ -654,6 +718,23 @@ const deleteOverlay = document.getElementById('delete-overlay');
 let currentEditingProject = null;
 let currentEditingSpec = null;
 
+  // Пример функции для расстановки пробелов между тысячами
+function formatNumberWithSpaces(value) {
+  // Если undefined/null или не число, вернём пустую строку
+  if (value == null || value === '') return '';
+  const num = Number(value);
+  if (isNaN(num)) return '';
+  // Форматируем: toFixed(2) при желании, или просто:
+  // Здесь пример без обязательных двух знаков после точки, 
+  // а с любым количеством (регулируйте под себя).
+  // Разделяем целую часть и дробную.
+  const parts = num.toString().split('.');
+  const intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' '); // вставляем пробелы
+  let result = intPart;
+  if (parts[1]) result += '.' + parts[1];
+  return result;
+}
+
 /**********************/
 /* ФУНКЦИИ ПОКАЗ/СКРЫТЬ LOADER */
 function showLoader() {
@@ -687,7 +768,7 @@ function createProjectContainer(project) {
     return null;
   }
   const clone = template.content.cloneNode(true);
-  const block = clone.querySelector('.project-block'); 
+  const block = template.content.cloneNode(true); 
   const container = block.querySelector('.modal1-container'); 
 
   container.dataset.id = project.project_id;
@@ -725,6 +806,8 @@ function createProjectContainer(project) {
   container.querySelector('[data-field="buyer_company"]').value = project.buyer_company || '';
   container.querySelector('[data-field="tin_buyer"]').value = project.tin_buyer || '';
 
+  fillProjectFields(container, project);
+  
   return block;
 }
 
@@ -769,6 +852,8 @@ function createSpecificationContainer(spec) {
   specContainer.querySelector('[data-field="profit_percentage"]').value = spec.profit_percentage || 0;
   specContainer.querySelector('[data-field="responsible"]').value = spec.responsible || '';
 
+  fillSpecFields(specContainer, spec);
+  
   return specContainer;
 }
 
