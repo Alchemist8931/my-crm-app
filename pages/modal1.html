@@ -463,19 +463,24 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex;
   align-items: center;
   padding: 0.4vw;
-  border-radius: var(--borderRadius);
+  border-radius: 2px;
   color: var(--white-color2);
   z-index: 1100;
   box-sizing: border-box;
   background: rgba(179, 185, 193, 0.025);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: none;
+  border: 0px solid rgba(179, 185, 193, 0.15);
   width: 83vw;
   height: 1.2vw;
-  margin-left: 7.5vw;
+  margin-left: 6.5vw;
   margin-top: 0.5vw;
   position: relative;
+}
+.spec-container:hover,
+.spec-container:focus {
+  border-left: 1px solid var(--white-color2);
+  border-right: 1px solid var(--white-color2);
 }
 
 /* Иконки спецификации (редактировать/удалить) */
