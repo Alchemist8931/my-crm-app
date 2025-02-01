@@ -1,5 +1,6 @@
 <!-- /pages/modal1.html -->
 <!-- Основной контент страницы -->
+  <!-- Основной контент страницы -->
   <button class="close-modal" onclick="closeModal()">×</button>
   <div class="modal111-content" style="justify-content: flex-start;">
     <h2 class="modal1-title">ELABORATION SALES</h2>
@@ -21,47 +22,36 @@
       <button class="close-edit-modal">×</button>
       <h3>Редактирование проекта</h3>
       <form id="edit-form">
-        <!-- Название проекта -->
         <label for="edit-project-name">Название проекта</label>
         <input type="text" id="edit-project-name" placeholder="Введите название проекта" required />
-
-        <!-- Статус проекта -->
+  
         <label for="edit-status">Статус</label>
         <input type="text" id="edit-status" placeholder="Введите статус проекта" required />
-
-        <!-- Сумма контракта -->
+  
         <label for="edit-contract-amount">Сумма контракта</label>
         <input type="number" id="edit-contract-amount" step="0.01" placeholder="Введите сумму контракта" required />
-
-        <!-- Стоимость контракта -->
+  
         <label for="edit-contract-cost">Стоимость контракта</label>
         <input type="number" id="edit-contract-cost" step="0.01" placeholder="Введите стоимость контракта" />
-
-        <!-- Прибыль -->
+  
         <label for="edit-contract-profit">Прибыль</label>
         <input type="number" id="edit-contract-profit" step="0.01" placeholder="Введите прибыль" />
-
-        <!-- Процент прибыли -->
+  
         <label for="edit-profit-percentage">Процент прибыли</label>
         <input type="number" id="edit-profit-percentage" step="0.01" placeholder="Введите процент прибыли" />
-
-        <!-- Компания-продавец -->
+  
         <label for="edit-company-seller">Компания-продавец</label>
         <input type="text" id="edit-company-seller" placeholder="Введите название компании-продавца" />
-
-        <!-- ИНН продавца -->
+  
         <label for="edit-tin-seller">ИНН продавца</label>
         <input type="text" id="edit-tin-seller" placeholder="Введите ИНН продавца" />
-
-        <!-- Компания-покупатель -->
+  
         <label for="edit-buyer-company">Компания-покупатель</label>
         <input type="text" id="edit-buyer-company" placeholder="Введите название компании-покупателя" />
-
-        <!-- ИНН покупателя -->
+  
         <label for="edit-tin-buyer">ИНН покупателя</label>
         <input type="text" id="edit-tin-buyer" placeholder="Введите ИНН покупателя" />
-
-        <!-- Кнопка для сохранения изменений -->
+  
         <button type="button" class="save-button">Сохранить</button>
       </form>
     </div>
@@ -73,10 +63,10 @@
       <button class="close-edit-spec-modal">×</button>
       
       <form id="edit-spec-form">  
-        <div class="modalProjectCalculation" style="width: 97.2vw; height: 96.8vh; flex-direction: column;">
+        <div class="modalProjectCalculation" style="width: 97.2vw; height: 96.8vh;">
           <p style="width: 12vw; text-transform: uppercase;">project costs</p> 
           <div class="modalRow" style="margin-top: 8vh;">
-            <!-- Сюда вписать поля фильтров и итоговые значения  -->
+            <!-- Поля спецификации -->
             <span class="modal1-icon" data-action="new-position-specification" data-id="">
               <i class="material-symbols-outlined">note_add</i>
             </span>                
@@ -91,68 +81,9 @@
           </div>
           <div id="modalBottom" class="modalVNUT" style="top: 14vh; height: 84.2vh; width: 97vw;">
             <div class="modalVNUT-content">
-              <!-- Контент внутри нижнего окна -->
-              <div class="modalPositionSpecification" style="width: 168vw;"> 
-                <div class="modalProjectCARD" style="width: 168vw; height: auto; flex-direction: row;">
-                  <div class="modalRow">
-                    <input class="inputCALC" type="text" placeholder="p / p agreement" style="width: 2.3vw;"/>
-                    <input class="inputCALC" type="text" placeholder="Description Position agreement" style="width: 16vw;"/>
-                    <input class="inputCALC" type="text" placeholder="q-ty agreement" style="width: 2.5vw;"/>
-                    <input class="inputCALC" type="text" placeholder="price no VAT agreement" style="width: 5.2vw;"/>
-                    <input class="inputCALC" type="text" placeholder="sum no VAT agreement" style="width: 5.2vw;"/>
-                    <input class="inputCALC" type="text" placeholder="price VAT agreement" style="width: 5.2vw;"/>
-                    <input class="inputCALC" type="text" placeholder="sum VAT agreement" style="width: 5.2vw;"/>
-                    <!-- Иконка Удалить позицию -->
-                    <span class="spec-icon" style="top: -1.2vw;" data-action="delete-position-spec" data-spec-id="">
-                      <i class="material-symbols-outlined">delete</i>
-                    </span>
-                    <!-- Иконка скрыть / отобразить подпозиции к позиции -->
-                    <label class="switch">
-                      <input type="checkbox">
-                      <span class="slider"></span>
-                    </label>
-                    <!-- Иконка создания подпозиции -->
-                    <span class="modal1-icon" style="top: -1.2vw;" data-action="new-child-position" data-id="">
-                      <i class="material-symbols-outlined">note_add</i>
-                    </span>
-                    <div class="modalColumn" style="height: 4vw; width: 93vw;">
-                      <div class="modalRow" id="ModalSumPosition">
-                        <input class="inputCALC" type="text" placeholder="p / p specification" style="width: 2.3vw;"/>
-                        <input class="inputCALC" type="text" placeholder="Catalog Position specification" style="width: 6vw;"/>
-                        <input class="inputCALC" type="text" placeholder="Description Position specification" style="width: 16vw;"/>
-                        <input class="inputCALC" type="text" placeholder="q-ty specification" style="width: 2.5vw;"/>
-                        <input class="inputCALC" type="text" placeholder="price no VAT specification" style="width: 5.2vw; margin-left: 38vw;"/>
-                        <input class="inputCALC" type="text" placeholder="sum no VAT specification" style="width: 5.2vw;"/>
-                        <input class="inputCALC" type="text" placeholder="price VAT specification" style="width: 5.2vw;"/>
-                        <input class="inputCALC" type="text" placeholder="sum VAT specification" style="width: 5.2vw;"/>
-                      </div>
-                      <div class="modalRow" id="ModalChildPosition" style="margin-left: -2.7vw;">
-                        <!-- Иконка Удалить подпозицию -->
-                        <span class="spec-icon" data-action="delete-position-spec" data-spec-id="">
-                          <i class="material-symbols-outlined">delete</i>
-                        </span>
-                        <input class="inputCALC" type="text" placeholder="p / p ChildPosition" style="width: 2.3vw;"/>
-                        <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;"/>
-                        <input class="inputCALC" type="text" placeholder="Description Position ChildPosition" style="width: 16vw;"/>
-                        <input class="inputCALC" type="text" placeholder="q-ty ChildPosition" style="width: 2.5vw;"/>
-                        <input class="inputCALC" type="text" placeholder="supplier name ChildPosition" style="width: 8vw;"/>
-                        <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;"/>
-                        <input class="inputCALC" type="text" placeholder="WAT ChildPosition" style="width: 2.5vw;"/>
-                        <input class="inputCALC" type="text" placeholder="RUB ChildPosition" style="width: 5.2vw;"/>
-                        <input class="inputCALC" type="text" placeholder="USD ChildPosition" style="width: 5.2vw;"/>
-                        <input class="inputCALC" type="text" placeholder="EUR ChildPosition" style="width: 5.2vw;"/>
-                        <input class="inputCALC" type="text" placeholder="price no VAT ChildPosition" style="width: 5.2vw;"/>
-                        <input class="inputCALC" type="text" placeholder="sum no VAT ChildPosition" style="width: 5.2vw;"/>
-                        <input class="inputCALC" type="text" placeholder="price VAT ChildPosition" style="width: 5.2vw;"/>
-                        <input class="inputCALC" type="text" placeholder="sum VAT ChildPosition" style="width: 5.2vw;"/>
-                      </div>
-                    </div>
-                    <input class="inputCALC" type="text" placeholder="price no VAT margin" style="width: 5.2vw;"/>
-                    <input class="inputCALC" type="text" placeholder="sum no VAT margin" style="width: 5.2vw;"/>
-                    <input class="inputCALC" type="text" placeholder="price VAT margin" style="width: 5.2vw;"/>
-                    <input class="inputCALC" type="text" placeholder="sum VAT margin" style="width: 5.2vw;"/>
-                  </div>
-                </div>
+              <!-- Контейнер для позиций спецификации – по умолчанию пустой -->
+              <div class="modalPositionSpecification" style="width: 168vw;">
+                <!-- Здесь будут динамически добавляться позиции (каждая позиция – блок с классом "modalProjectCARD") -->
               </div> 
             </div>
           </div>
@@ -165,197 +96,109 @@
   <template id="project-template">
     <div class="project-block">
       <div class="modal1-container" data-id="">
-        <!-- Иконка Редактировать -->
         <span class="modal1-icon" style="left: 0.2vw;" data-action="edit" data-id="">
           <i class="material-symbols-outlined">receipt</i>
         </span>
-        <!-- Иконка Создать спецификацию -->
         <span class="modal1-icon" style="left: 0.2vw;" data-action="new-specificstion" data-id="">
           <i class="material-symbols-outlined">stat_minus_2</i>
         </span>
-  
-        <!-- Project ID -->
         <div class="modal1-input-group left">
-          <input type="text" style="width: 5vw" class="modal1-input" placeholder=" " data-field="project_id" readonly />
+          <input type="text" style="width: 5vw" class="modal1-input" data-field="project_id" readonly />
           <label>Project ID</label>
         </div>
-  
-        <!-- Project Name -->
         <div class="modal1-input-group right">
-          <input type="text" style="width: 20vw" class="modal1-input" placeholder=" " data-field="project_name" readonly />
+          <input type="text" style="width: 20vw" class="modal1-input" data-field="project_name" readonly />
           <label>Project Name</label>
         </div>
-  
-        <!-- Status -->
         <div class="modal1-input-group right">
-          <input type="text" style="width: 7vw" class="modal1-input" placeholder=" " data-field="status" readonly />
+          <input type="text" style="width: 7vw" class="modal1-input" data-field="status" readonly />
           <label>Status</label>
         </div>
-  
-        <!-- Contract Amount -->
         <div class="modal1-input-group left">
-          <input 
-            type="text"
-            style="width: 4.5vw; text-align: right;" 
-            class="modal1-input numeric-align" 
-            data-field="contract_amount" 
-            readonly 
-          />
+          <input type="text" style="width: 4.5vw; text-align: right;" class="modal1-input numeric-align" data-field="contract_amount" readonly />
           <label>Contract Amount</label>
         </div>
-  
-        <!-- Contract Costs -->
         <div class="modal1-input-group right">
-          <input 
-            type="text" 
-            style="width: 4.5vw; text-align: right;"
-            class="modal1-input numeric-align"
-            data-field="contract_costs" 
-            readonly 
-          />
+          <input type="text" style="width: 4.5vw; text-align: right;" class="modal1-input numeric-align" data-field="contract_costs" readonly />
           <label>Contract Costs</label>
         </div>
-  
-        <!-- Contract Profit -->
         <div class="modal1-input-group right">
-          <input 
-            type="text" 
-            style="width: 4.5vw; text-align:right;"
-            class="modal1-input numeric-align"
-            data-field="contract_profit" 
-            readonly 
-          />
+          <input type="text" style="width: 4.5vw; text-align: right;" class="modal1-input numeric-align" data-field="contract_profit" readonly />
           <label>Contract Profit</label>
         </div>
-  
-        <!-- Profit % -->
         <div class="modal1-input-group right">
-          <input 
-            type="text"
-            style="width: 2vw; text-align:center;" 
-            class="modal1-input numeric-align-center" 
-            data-field="profit_percentage" 
-            readonly 
-          />
+          <input type="text" style="width: 2vw; text-align: center;" class="modal1-input numeric-align-center" data-field="profit_percentage" readonly />
           <label>Profit %</label>
         </div>
-  
-        <!-- Company Seller -->
         <div class="modal1-input-group left">
-          <input type="text" class="modal1-input" placeholder=" " data-field="company_seller" readonly />
+          <input type="text" class="modal1-input" data-field="company_seller" readonly />
           <label>Company Seller</label>
         </div>
-  
-        <!-- TIN Seller -->
         <div class="modal1-input-group right">
-          <input type="text" style="width: 5vw" class="modal1-input" placeholder=" " data-field="tin_seller" readonly />
+          <input type="text" style="width: 5vw" class="modal1-input" data-field="tin_seller" readonly />
           <label>TIN Seller</label>
         </div>
-  
-        <!-- Buyer Company -->
         <div class="modal1-input-group left">
-          <input type="text" class="modal1-input" placeholder=" " data-field="buyer_company" readonly />
+          <input type="text" class="modal1-input" data-field="buyer_company" readonly />
           <label>Buyer Company</label>
         </div>
-  
-        <!-- TIN Buyer -->
         <div class="modal1-input-group right">
-          <input type="text" style="width: 5vw" class="modal1-input" placeholder=" " data-field="tin_buyer" readonly />
+          <input type="text" style="width: 5vw" class="modal1-input" data-field="tin_buyer" readonly />
           <label>TIN Buyer</label>
         </div>
-  
-        <!-- Иконка Удалить -->
         <span class="modal1-icon" style="right: -2.4vw;" data-action="delete" data-id="">
           <i class="material-symbols-outlined">delete</i>
         </span>
       </div>
-  
-      <!-- Блок для спецификаций -->
       <div class="specifications-wrapper"></div>
     </div>
   </template>
-  
+
   <!-- Шаблон для спецификации -->
   <template id="specification-template">
     <div class="spec-container" data-spec-id="">
-      <!-- Иконка Редактировать спецификацию -->
       <span class="spec-icon" style="left: 0.2vw;" data-action="edit-spec" data-spec-id="">
         <i class="material-symbols-outlined">edit_note</i>
       </span>
-      <!-- Specification Name -->
       <div class="modal1-input-group left" style="margin-left: 1.3vw;">
-        <input type="text" style="width: 20vw" class="modal1-input" placeholder=" " data-field="specification_name" readonly />
+        <input type="text" style="width: 20vw" class="modal1-input" data-field="specification_name" readonly />
         <label>Spec Name</label>
       </div>
-      <!-- Status -->
       <div class="modal1-input-group right">
-        <input type="text" style="width: 7vw" class="modal1-input" placeholder=" " data-field="status" readonly />
+        <input type="text" style="width: 7vw" class="modal1-input" data-field="status" readonly />
         <label>Status</label>
       </div>
-      <!-- Amount -->
       <div class="modal1-input-group left">
-        <input 
-          type="text"
-          style="width: 4.5vw; text-align:right;" 
-          class="modal1-input numeric-align"
-          data-field="specification_amount" 
-          readonly 
-        />
+        <input type="text" style="width: 4.5vw; text-align: right;" class="modal1-input numeric-align" data-field="specification_amount" readonly />
         <label>Amount</label>
       </div>
-      <!-- Costs -->
       <div class="modal1-input-group right">
-        <input
-          type="text"
-          style="width: 4.5vw; text-align:right;"
-          class="modal1-input numeric-align"
-          data-field="specification_costs" 
-          readonly 
-        />
+        <input type="text" style="width: 4.5vw; text-align: right;" class="modal1-input numeric-align" data-field="specification_costs" readonly />
         <label>Costs</label>
       </div>
-      <!-- Profit -->
       <div class="modal1-input-group right">
-        <input
-          type="text"
-          style="width: 4.5vw; text-align:right;"
-          class="modal1-input numeric-align"
-          data-field="specification_profit" 
-          readonly 
-        />
+        <input type="text" style="width: 4.5vw; text-align: right;" class="modal1-input numeric-align" data-field="specification_profit" readonly />
         <label>Profit</label>
       </div>
-      <!-- Profit % -->
       <div class="modal1-input-group right">
-        <input
-          type="text"
-          style="width: 2vw; text-align:center;"
-          class="modal1-input numeric-align-center"
-          data-field="profit_percentage" 
-          readonly 
-        />
+        <input type="text" style="width: 2vw; text-align: center;" class="modal1-input numeric-align-center" data-field="profit_percentage" readonly />
         <label>Profit %</label>
       </div>
-      <!-- Responsible -->
       <div class="modal1-input-group left">
-        <input type="text" class="modal1-input" placeholder=" " data-field="responsible" readonly />
+        <input type="text" class="modal1-input" data-field="responsible" readonly />
         <label>Responsible</label>
       </div>
-  
-       <!-- list of contractors -->
       <div class="modal1-input-group left">
-        <input type="text" class="modal1-input" style="width: 18vw" placeholder=" " data-field="list_of_contractors" readonly />
+        <input type="text" style="width: 18vw" class="modal1-input" data-field="list_of_contractors" readonly />
         <label>list of contractors</label>
       </div>
-  
-      <!-- Иконка Удалить -->
       <span class="spec-icon" style="right: -2.4vw;" data-action="delete-spec" data-spec-id="">
         <i class="material-symbols-outlined">delete</i>
       </span>
     </div>
   </template>
-  
-  <!-- Оверлей-загрузчик (loader) -->
+
+  <!-- Оверлей-загрузчик -->
   <div class="overlay hidden" id="delete-overlay">
     <div class="loader">
       <label>Удаление записи из базы данных...</label>
@@ -367,14 +210,11 @@
     :root {
       --scrollbar-color: rgba(255, 255, 255, 0.04); 
       --scrollbar-thumb-color: #D1D5D0; 
-      --scroll-y-position: 10%;
-      --reflection-y-position: 50%;
-      
       --borderRadius: 0.4vw;
       --spacer: 1vw; 
     }
     
-    /* Стили модального окна редактирования (общие) */
+    /* Общие стили модальных окон редактирования */
     .edit-modal {
       position: fixed;
       top: 0;
@@ -415,155 +255,94 @@
     }
     
     h3 {
-      color: var(--white-color2);
+      color: #fff;
       font-size: 1vw;
     }
     
-    /* Модальное окно для полей карточки проекта */
-    .modalProjectCalculation {
-      display: flex;
-      position: relative;
-      color: var(--white-color2);
-      z-index: 1100;
-      box-sizing: border-box;
-      align-content: start;
-      background: none;
-    }
-    
-    .modalRow {
-      display: flex;
-      position: relative;
-      flex-direction: row;
-      background: none;
-      gap: 1vw;
-    }
-    
-    .modalColumn {
-      display: flex;
-      position: relative;
-      flex-direction: column;
-      background: none;
-      gap: 1vw;
-    }
-    
-    /* Модальное окно с прокруткой */
+    /* Стили модального окна с прокруткой */
     .modalVNUT {
       display: flex;
       position: fixed;
       background: none;
-      padding: 0vw;
+      padding: 0;
       border-radius: 0.4vw;
-      border: none;
-      color: black;
       z-index: 1000;
-      overflow: hidden; /* Отключаем общий скролл */
+      overflow: hidden;
       box-sizing: border-box;
     }
-    
-    /* Внутренний контейнер с прокруткой */
     .modalVNUT-content {
-      padding: 0vw 1vw 1vw 0vw;
+      padding: 0.5vh 2vh 0 0;
       height: 100%;
       width: 100%;
-      overflow-y: scroll; /* Включаем вертикальную прокрутку */
-      overflow-x: scroll; /* Включаем горизонтальную прокрутку */
-      white-space: nowrap; /* Чтобы контент не переносился */
+      overflow-y: scroll;
+      overflow-x: scroll;
+      white-space: nowrap;
       box-sizing: border-box;
       padding-right: 2vw;
     }
-    
-    /* Стилизация вертикального скроллбара */
     .modalVNUT-content::-webkit-scrollbar {
       width: 4px;
       height: 4px;
       background-color: var(--scrollbar-color);
     }
-    
     .modalVNUT-content::-webkit-scrollbar-thumb {
       background-color: var(--scrollbar-thumb-color);
       border-radius: 10px;
     }
     
-    .modalVNUT-content::-webkit-scrollbar-track {
-      background-color: var(--scrollbar-color);
-    }
-    
-    /* Контейнеры внутри модального окна */
-    .modalPositionSpecification {
+    /* Стили контейнеров внутри модальных окон */
+    .modalProjectCalculation {
       display: flex;
-      position: relative;
-      padding: 0.5vw;
-      border-radius: 0.4vw;
-      color: black;
+      flex-direction: column;
+      color: #fff;
       z-index: 1100;
       box-sizing: border-box;
-      vertical-align: middle;
-      height: auto;
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(0px);
-      border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-    }
-    
-    .modalPositionSpecification:hover,
-    .modalPositionSpecification:focus {
-      border: 1px solid var(--white-color2);
-    }
-    
-    /* Отступы только между контейнерами */
-    .modalPositionSpecification:not(:last-child) {
-      margin-bottom: 0.8vw;
-    }
-    
-    .modalPositionSpecification-CONTEINER {
-      display: flex;
-      position: relative;
-      flex-direction: row;
       background: none;
+    }
+    .modalRow {
+      display: flex;
+      gap: 1vw;
+      margin-bottom: 1vw;
+    }
+    .modalColumn {
+      display: flex;
+      flex-direction: column;
       gap: 1vw;
     }
     
-    /* input без LABEL */
+    /* Стили инпутов */
     .inputCALC {
-      position: relative;
       font-family: "Comfortaa", sans-serif;
-      padding: 0.4vw 0.4vw;
+      padding: 0.4vw;
       min-width: 1vw;
       height: 1.4vw;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      outline: none;
-      color: var(--white-color2);
-      font-size: 0.7vw;
-      font-family: inherit;
-      background-color: transparent;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: transparent;
       border-radius: 10px;
+      color: #fff;
+      font-size: 0.7vw;
     }
-    
     .inputCALC:hover,
     .inputCALC:focus {
-      border: 1px solid var(--white-color2);
+      border: 1px solid #fff;
     }
     
-    /* The switch - the box around the slider */
+    /* Стили переключателя */
     .switch {
       font-size: 0.7vw;
-      position: relative;
       display: inline-block;
       width: 2.3vw;
       height: 1.3vw;
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255,255,255,0.18);
       border-radius: 6px;
       margin: 0.1vw;
+      position: relative;
     }
-    
-    /* Hide default HTML checkbox */
     .switch input {
       opacity: 0;
       width: 0;
       height: 0;
     }
-    
-    /* The slider */
     .slider {
       position: absolute;
       cursor: pointer;
@@ -571,31 +350,28 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background-color: var(--black-color);
-      transition: .4s;
+      background-color: #000;
+      transition: 0.4s;
       border-radius: 6px;
     }
-    
     .slider:before {
-      position: absolute;
       content: "";
+      position: absolute;
       height: 0.8vw;
       width: 0.18vw;
       border-radius: 10px;
       left: 0.2vw;
       bottom: 0.2vw;
-      background-color: var(--white-color2);
-      transition: .4s;
+      background-color: #fff;
+      transition: 0.4s;
     }
-    
     input:checked + .slider {
-      background-color: var(--white-color2);
-      box-shadow: inset 4px rgb(0, 0, 0);
+      background-color: #fff;
+      box-shadow: inset 4px #000;
     }
-    
     input:checked + .slider:before {
       transform: translateX(1.55vw) rotate(360deg);
-      background-color: var(--black-color);
+      background-color: #000;
     }
     
     /* Основной контент страницы */
@@ -603,174 +379,59 @@
       position: absolute;
       top: 1vw;
       right: 1vw;
-      background: none;
-      border: none;
       font-size: 1vw;
       cursor: pointer;
-      color: var(--white-color2);
+      color: #fff;
     }
     .close-modal:hover {
       color: #393E41;
     }
-    
     .modal111-content {
       font-family: "Comfortaa", sans-serif;
-      color: var(--white-color2);
-      background-color: none;
+      color: #fff;
       border-radius: var(--borderRadius);
       height: calc(100vh - (var(--spacer)*2));
       width: calc(100vw - (var(--spacer)*6));
-      box-sizing: border-box;
-      position: relative;
       padding: 1vw;
+      position: relative;
     }
-    
-    /* Заголовок и подзаголовок */
     .modal1-title {
-      color: var(--white-color2);
       font-size: 0.7vw;
-      margin-top: 0vw;
-      margin-left: 0vw;
-      display: flex;
+      margin: 0;
     }
     .modal1-subtitle {
-      color: var(--white-color2);
       font-size: 0.45vw;
       margin-top: 0.2vw;
-      margin-left: 0vw;
-      display: flex;
     }
     
-    /* Модальное окно с прокруткой (основное) */
-    .modalVNUT {
-      display: flex;
-      position: fixed;
-      background: none;
-      padding: 0vw;
-      border-radius: 0.4vw;
-      border: 0px solid rgba(255, 255, 255, 0.18);
-      color: black;
-      z-index: 1000;
-      overflow: hidden;
-      box-sizing: border-box;
-    }
-    .modalVNUT-content {
-      padding: 0.5vh 2vh 0vw 0vw;
-      height: 100%;
-      width: 92vw;
-      overflow-y: scroll;
-      box-sizing: border-box;
-    }
-    .modalVNUT-content::-webkit-scrollbar {
-      width: 4px;
-      background-color: var(--scrollbar-color);
-    }
-    .modalVNUT-content::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb-color);
-      border-radius: 10px;
-    }
-    .modalVNUT-content::-webkit-scrollbar-track {
-      background-color: var(--scrollbar-color);
-    }
-    
-    /* Обёртка каждого проекта + спецификаций */
+    /* Контейнеры проектов и спецификаций */
     .project-block {
       margin-bottom: 1vw;
     }
-    
-    /* Родительский контейнер (сделка) */
     .modal1-container {
       display: flex;
       align-items: center;
       padding: 0.4vw;
       border-radius: var(--borderRadius);
-      color: var(--white-color2);
-      z-index: 1100;
-      box-sizing: border-box;
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 0.5px solid rgba(179, 185, 193, 0.15);
+      background: rgba(255,255,255,0.04);
       width: 90.5vw;
       height: 2.1vw;
-      transform-origin: top left;
       position: relative;
+      box-sizing: border-box;
     }
-    .modal1-container:hover,
-    .modal1-container:focus {
-      border: 1px solid var(--white-color2);
-    }
-    
-    /* Иконки (редактировать/удалить/новая спецификация) */
     .modal1-icon {
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255,255,255,0.6);
       font-size: 0.7vw;
       margin-right: 0.5vw;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      position: relative;
     }
     .modal1-icon:hover {
-      color: var(--white-color2);
+      color: #fff;
       transform: scale(1.1);
     }
     .modal1-icon:active {
       transform: scale(0.92);
     }
-    
-    /* Блок спецификаций */
-    .specifications-wrapper {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      margin-top: 0.5vw;
-    }
-    
-    /* Дочерний контейнер (спецификация) */
-    .spec-container {
-      display: flex;
-      align-items: center;
-      padding: 0.4vw;
-      border-radius: 2px;
-      color: var(--white-color2);
-      z-index: 1100;
-      box-sizing: border-box;
-      background: rgba(179, 185, 193, 0.025);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 0px solid rgba(179, 185, 193, 0.15);
-      width: 83vw;
-      height: 1.2vw;
-      margin-left: 7.5vw;
-      margin-top: 0.5vw;
-      position: relative;
-    }
-    .spec-container:hover,
-    .spec-container:focus {
-      border-left: 1px solid var(--white-color2);
-      border-right: 1px solid var(--white-color2);
-    }
-    
-    /* Иконки спецификации (редактировать/удалить) */
-    .spec-icon {
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 0.7vw;
-      margin-right: 0.5vw;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      position: relative;
-    }
-    .spec-icon:hover {
-      color: var(--white-color2);
-      transform: scale(1.1);
-    }
-    .spec-icon:active {
-      transform: scale(0.92);
-    }
-    
-    /* Группы инпутов */
     .modal1-input-group {
       position: relative;
       font-family: "Comfortaa", sans-serif;
@@ -782,105 +443,80 @@
       margin-left: 0.4vw;
     }
     .modal1-input-group label {
-      background: none;
-      color: rgba(255, 255, 255, 0.6);
       position: absolute;
       top: 0.61vw;
       left: 0.28vw;
-      transform: translateY(-50%);
+      font-size: 0.42vw;
       text-transform: uppercase;
       font-weight: 700;
       pointer-events: none;
-      font-size: 0.42vw;
+      color: rgba(255,255,255,0.6);
       transition: all 0.3s;
     }
     .modal1-input-group .modal1-input {
-      padding: 0.28vw 0.28vw; 
       width: 100%;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      outline: none;
-      color: var(--white-color2);
-      font-size: 0.49vw; 
-      font-family: inherit;
-      background-color: transparent;
-      border-radius: 7px; 
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 7px;
+      padding: 0.28vw;
+      background: transparent;
+      color: #fff;
+      font-size: 0.49vw;
     }
     .modal1-input-group .modal1-input:hover,
     .modal1-input-group .modal1-input:focus {
-      border: 1px solid var(--white-color2);
+      border: 1px solid #fff;
     }
     .modal1-input-group .modal1-input:focus + label,
     .modal1-input-group .modal1-input:not(:placeholder-shown) + label {
       top: -0.2vw;
       font-size: 0.28vw;
-      background: none;
-      border-radius: 7px; 
-      color: var(--white-color3);
+      color: #fff;
     }
     
-    /* Кнопка добавления проекта */
-    #add-project-button {
-      background-color: var(--white-color2);
-      color: var(--black-color);
-      border: none;
-      border-radius: 5px;
-      transition: background-color 0.3s;
+    .specifications-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 0.5vw;
     }
-    #add-project-button:hover {
-      background-color: var(--white-color1);
+    .spec-container {
+      display: flex;
+      align-items: center;
+      padding: 0.4vw;
+      background: rgba(179,185,193,0.025);
+      border-radius: 2px;
+      width: 83vw;
+      height: 1.2vw;
+      margin-left: 7.5vw;
+      margin-top: 0.5vw;
+      position: relative;
+      box-sizing: border-box;
+    }
+    .spec-container:hover {
+      border-left: 1px solid #fff;
+      border-right: 1px solid #fff;
+    }
+    .spec-icon {
+      color: rgba(255,255,255,0.6);
+      font-size: 0.7vw;
+      margin-right: 0.5vw;
+      cursor: pointer;
+    }
+    .spec-icon:hover {
+      color: #fff;
+      transform: scale(1.1);
     }
     
-    /* Стили модального окна редактирования (общие) */
-.edit-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(6px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1100;
-}
-.edit-modal.hidden {
-  display: none;
-}
-.edit-modal-content {
-  background: none;
-  padding: 2rem;
-  border-radius: 10px;
-  width: 100vw;
-  height: 100vh;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-.close-edit-modal,
-.close-edit-spec-modal {
-  position: absolute;
-  top: 1vw;
-  right: 1vw;
-  background: none;
-  border: none;
-  font-size: 0.7vw;
-  cursor: pointer;
-}
-.close-edit-modal:hover,
-.close-edit-spec-modal:hover {
-  color: white;
-}
-    
-    /* Кнопка add project */
+    /* Кнопка создания проекта */
     .button-D {
       height: 1vw;
       width: 8vw;
       position: fixed;
       background-color: transparent;
       cursor: pointer;
-      border: 2px solid var(--white-color2);
-      overflow: hidden;
+      border: 2px solid #fff;
       border-radius: 10px;
-      color: var(--black-color);
+      color: #000;
       transition: all 0.2s ease-in-out;
     }
     .btn-txt {
@@ -892,10 +528,10 @@
     }
     .button-D:active {
       transform: scale(0.9);
-      background-color: var(--white-color1);
+      background-color: #ddd;
     }
     
-    /* Overlay (loader) стили */
+    /* Overlay loader */
     .overlay {
       position: fixed;
       top: 0; 
@@ -942,34 +578,15 @@
       z-index: 1;
       animation: loading 0.6s alternate infinite;
     }
-    .loader > label {
-      color: #002;
-      font-size: 18px;
-      animation: bit 0.6s alternate infinite;
-    }
-    
-    @keyframes bit {
-      from {
-        opacity: 0.3;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    
     @keyframes loading {
-      0% {
-        left: 0%;
-      }
-      100% {
-        left: 50%;
-      }
+      0% { left: 0%; }
+      100% { left: 50%; }
     }
   </style>
 
 <!-- Скрипт (инициализация Supabase предполагается, window.supabase должен быть доступен) -->
   <script type="module">
-    // Инициализация Supabase (предполагаем, что window.supabase уже инициализирован)
+    // Инициализация Supabase (предполагается, что window.supabase уже инициализирован)
     const supabase = window.supabase;
   
     // Локальные переменные
@@ -989,12 +606,12 @@
     let currentEditingProject = null;
     let currentEditingSpec = null;
   
-    // Функция генерации ID
+    // Функция генерации уникальных ID
     function generateID(prefix = 'id_') {
       return prefix + Math.random().toString(36).substr(2, 9);
     }
   
-    // Преобразование числа с пробелами
+    // Функция форматирования чисел с разделителями
     function formatNumberWithSpaces(value) {
       if (value == null || value === '') return '';
       const num = Number(value);
@@ -1014,7 +631,7 @@
       deleteOverlay.classList.add('hidden');
     }
   
-    // Функция создания контейнера проекта
+    // Функция создания DOM-элемента проекта из шаблона
     function createProjectContainer(project) {
       if (!project || !project.project_id) {
         console.error('[LOG] Некорректные данные проекта:', project);
@@ -1026,9 +643,9 @@
         return null;
       }
       const block = template.content.cloneNode(true);
-      const container = block.querySelector('.modal1-container'); 
+      const container = block.querySelector('.modal1-container');
       if (!container) {
-        console.error('[LOG] Не найден контейнер .modal1-container в блоке проекта');
+        console.error('[LOG] Не найден контейнер .modal1-container в проекте');
         return null;
       }
       container.dataset.id = project.project_id;
@@ -1074,14 +691,10 @@
       if (buyerCompanyInput) buyerCompanyInput.value = project.buyer_company || '';
       if (tinBuyerInput) tinBuyerInput.value = project.tin_buyer || '';
   
-      const specsWrapper = block.querySelector('.specifications-wrapper');
-      if (specsWrapper) {
-        // спецификации будут загружаться отдельно
-      }
       return block;
     }
   
-    // Функция создания контейнера спецификации
+    // Функция создания DOM-элемента спецификации из шаблона
     function createSpecificationContainer(spec) {
       if (!spec || !spec.specification_id) {
         console.error('[LOG] Некорректные данные спецификации:', spec);
@@ -1094,12 +707,10 @@
       }
       const block = template.content.cloneNode(true);
       const specContainer = block.querySelector('.spec-container');
-  
       if (!specContainer) {
-        console.error('[LOG] Не найден контейнер .spec-container в шаблоне спецификации');
+        console.error('[LOG] Не найден контейнер .spec-container в спецификации');
         return null;
       }
-  
       specContainer.dataset.specId = spec.specification_id;
       specContainer.dataset.projectId = spec.project_id;
   
@@ -1135,36 +746,31 @@
       return specContainer;
     }
   
-    // Загрузка проектов из Supabase
+    // Загрузка проектов
     async function loadProjects() {
-      console.log('[LOG] Загрузка списка проектов...');
+      console.log('[LOG] Загрузка проектов...');
       const { data, error } = await supabase.from('projects').select('*');
       if (error) {
         console.error('[LOG] Ошибка загрузки проектов:', error);
         return;
       }
-      console.log('[LOG] Загружено проектов:', data?.length || 0);
-  
       projectsContainer.innerHTML = '';
       const fragment = document.createDocumentFragment();
       data.forEach((project) => {
         const projectBlock = createProjectContainer(project);
-        if (projectBlock) {
-          fragment.appendChild(projectBlock);
-        }
+        if (projectBlock) fragment.appendChild(projectBlock);
       });
       projectsContainer.appendChild(fragment);
     }
   
-    // Загрузка спецификаций из Supabase
+    // Загрузка спецификаций
     async function loadSpecifications() {
-      console.log('[LOG] Загрузка списка спецификаций...');
+      console.log('[LOG] Загрузка спецификаций...');
       const { data, error } = await supabase.from('specifications').select('*');
       if (error) {
         console.error('[LOG] Ошибка загрузки спецификаций:', error);
         return;
       }
-      console.log('[LOG] Загружено спецификаций:', data?.length || 0);
       data.forEach((spec) => {
         const projectContainer = projectsContainer.querySelector(`[data-id="${spec.project_id}"]`);
         if (projectContainer) {
@@ -1172,9 +778,7 @@
           const specsWrapper = projectBlock.querySelector('.specifications-wrapper');
           if (specsWrapper) {
             const specElem = createSpecificationContainer(spec);
-            if (specElem) {
-              specsWrapper.appendChild(specElem);
-            }
+            if (specElem) specsWrapper.appendChild(specElem);
           }
         }
       });
@@ -1195,14 +799,9 @@
         buyer_company: '',
         tin_buyer: '',
       };
-      console.log('[LOG] Создаём новый проект:', newProject);
-      const { error } = await supabase
-        .from('projects')
-        .insert([newProject]);
-  
-      if (error) {
-        console.error('[LOG] Ошибка добавления проекта:', error);
-      }
+      console.log('[LOG] Добавление проекта:', newProject);
+      const { error } = await supabase.from('projects').insert([newProject]);
+      if (error) console.error('[LOG] Ошибка добавления проекта:', error);
     }
   
     // Добавление новой спецификации
@@ -1218,48 +817,49 @@
         profit_percentage: 0.00,
         responsible: '',
       };
-      console.log('[LOG] Создаём новую спецификацию:', newSpec);
-      const { error } = await supabase
-        .from('specifications')
-        .insert([newSpec]);
-  
-      if (error) {
-        console.error('[LOG] Ошибка добавления спецификации:', error);
-      }
+      console.log('[LOG] Добавление спецификации:', newSpec);
+      const { error } = await supabase.from('specifications').insert([newSpec]);
+      if (error) console.error('[LOG] Ошибка добавления спецификации:', error);
     }
   
     // Удаление проекта
     async function deleteProject(projectId) {
-      console.log('[LOG] Удаляем проект:', projectId);
+      console.log('[LOG] Удаление проекта:', projectId);
       showLoader();
-      const { error } = await supabase
-        .from('projects')
-        .delete()
-        .eq('project_id', projectId);
-  
+      const { error } = await supabase.from('projects').delete().eq('project_id', projectId);
       if (error) {
         console.error('[LOG] Ошибка удаления проекта:', error);
         hideLoader();
         return;
       }
-      console.log('[LOG] Запрос на удаление проекта успешно отправлен в БД...');
+      console.log('[LOG] Проект удалён');
     }
   
     // Удаление спецификации
     async function deleteSpecification(specId) {
-      console.log('[LOG] Удаляем спецификацию:', specId);
+      console.log('[LOG] Удаление спецификации:', specId);
       showLoader();
-      const { error } = await supabase
-        .from('specifications')
-        .delete()
-        .eq('specification_id', specId);
-  
+      const { error } = await supabase.from('specifications').delete().eq('specification_id', specId);
       if (error) {
         console.error('[LOG] Ошибка удаления спецификации:', error);
         hideLoader();
         return;
       }
-      console.log('[LOG] Запрос на удаление спецификации успешно отправлен в БД...');
+      console.log('[LOG] Спецификация удалена');
+    }
+  
+    // Удаление позиции спецификации (из таблицы spec_positions)
+    async function deletePositionSpecification(posId, element) {
+      console.log('[LOG] Удаление позиции спецификации:', posId);
+      const { error } = await supabase.from('spec_positions').delete().eq('id', posId);
+      if (error) {
+        console.error('[LOG] Ошибка удаления позиции спецификации:', error);
+        return;
+      }
+      // Удаляем элемент из DOM
+      if (element && element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
     }
   
     // Редактирование проекта
@@ -1280,18 +880,16 @@
         tin_buyer: projectContainer.dataset.tinBuyer,
       };
       currentEditingProject = project;
-  
       editForm['edit-project-name'].value = project.project_name;
       editForm['edit-status'].value = project.status;
       editForm['edit-contract-amount'].value = project.contract_amount;
-      editForm['edit-contract-cost'].value = project.contract_costs;
+      editForm['edit-contract-cost'].value = project.contractCosts;
       editForm['edit-contract-profit'].value = project.contract_profit;
       editForm['edit-profit-percentage'].value = project.profit_percentage;
-      editForm['edit-company-seller'].value = project.company_seller;
-      editForm['edit-tin-seller'].value = project.tin_seller;
-      editForm['edit-buyer-company'].value = project.buyer_company;
-      editForm['edit-tin-buyer'].value = project.tin_buyer;
-  
+      editForm['edit-company-seller'].value = project.companySeller;
+      editForm['edit-tin-seller'].value = project.tinSeller;
+      editForm['edit-buyer-company'].value = project.buyerCompany;
+      editForm['edit-tin-buyer'].value = project.tinBuyer;
       editModal.classList.remove('hidden');
     }
     function closeEditModal() {
@@ -1303,24 +901,18 @@
       const updatedProject = {
         project_name: editForm['edit-project-name'].value,
         status: editForm['edit-status'].value,
-        contract_amount: parseFloat(editForm['edit-contract-amount'].value) || 0.00,
-        contract_costs: parseFloat(editForm['edit-contract-cost'].value) || 0.00,
-        contract_profit: parseFloat(editForm['edit-contract-profit'].value) || 0.00,
-        profit_percentage: parseFloat(editForm['edit-profit-percentage'].value) || 0.00,
+        contract_amount: parseFloat(editForm['edit-contract-amount'].value) || 0,
+        contract_costs: parseFloat(editForm['edit-contract-cost'].value) || 0,
+        contract_profit: parseFloat(editForm['edit-contract-profit'].value) || 0,
+        profit_percentage: parseFloat(editForm['edit-profit-percentage'].value) || 0,
         company_seller: editForm['edit-company-seller'].value,
         tin_seller: editForm['edit-tin-seller'].value,
         buyer_company: editForm['edit-buyer-company'].value,
         tin_buyer: editForm['edit-tin-buyer'].value,
       };
-      console.log('[LOG] Сохраняем изменения проекта:', currentEditingProject.project_id, updatedProject);
-      const { error } = await supabase
-        .from('projects')
-        .update(updatedProject)
-        .eq('project_id', currentEditingProject.project_id);
-  
-      if (error) {
-        console.error('[LOG] Ошибка сохранения проекта:', error);
-      }
+      console.log('[LOG] Сохранение проекта:', currentEditingProject.project_id, updatedProject);
+      const { error } = await supabase.from('projects').update(updatedProject).eq('project_id', currentEditingProject.project_id);
+      if (error) console.error('[LOG] Ошибка сохранения проекта:', error);
       closeEditModal();
     }
   
@@ -1328,7 +920,6 @@
     function openEditSpecModal(specId) {
       const specContainer = projectsContainer.querySelector(`[data-spec-id="${specId}"]`);
       if (!specContainer) return;
-  
       const spec = {
         specification_id: specId,
         project_id: specContainer.dataset.projectId,
@@ -1341,7 +932,6 @@
         responsible: specContainer.dataset.responsible,
       };
       currentEditingSpec = spec;
-  
       editSpecForm['edit-spec-name'].value = spec.specification_name;
       editSpecForm['edit-spec-status'].value = spec.status;
       editSpecForm['edit-spec-amount'].value = spec.specification_amount;
@@ -1349,7 +939,6 @@
       editSpecForm['edit-spec-profit'].value = spec.specification_profit;
       editSpecForm['edit-spec-profit-pct'].value = spec.profit_percentage;
       editSpecForm['edit-spec-responsible'].value = spec.responsible;
-  
       editSpecModal.classList.remove('hidden');
     }
     function closeEditSpecModal() {
@@ -1361,38 +950,32 @@
       const updatedSpec = {
         specification_name: editSpecForm['edit-spec-name'].value,
         status: editSpecForm['edit-spec-status'].value,
-        specification_amount: parseFloat(editSpecForm['edit-spec-amount'].value) || 0.00,
-        specification_costs: parseFloat(editSpecForm['edit-spec-costs'].value) || 0.00,
-        specification_profit: parseFloat(editSpecForm['edit-spec-profit'].value) || 0.00,
-        profit_percentage: parseFloat(editSpecForm['edit-spec-profit-pct'].value) || 0.00,
+        specification_amount: parseFloat(editSpecForm['edit-spec-amount'].value) || 0,
+        specification_costs: parseFloat(editSpecForm['edit-spec-costs'].value) || 0,
+        specification_profit: parseFloat(editSpecForm['edit-spec-profit'].value) || 0,
+        profit_percentage: parseFloat(editSpecForm['edit-spec-profit-pct'].value) || 0,
         responsible: editSpecForm['edit-spec-responsible'].value,
       };
-      console.log('[LOG] Сохраняем изменения спецификации:', currentEditingSpec.specification_id, updatedSpec);
-      const { error } = await supabase
-        .from('specifications')
-        .update(updatedSpec)
-        .eq('specification_id', currentEditingSpec.specification_id);
-  
-      if (error) {
-        console.error('[LOG] Ошибка сохранения спецификации:', error);
-      }
+      console.log('[LOG] Сохранение спецификации:', currentEditingSpec.specification_id, updatedSpec);
+      const { error } = await supabase.from('specifications').update(updatedSpec).eq('specification_id', currentEditingSpec.specification_id);
+      if (error) console.error('[LOG] Ошибка сохранения спецификации:', error);
       closeEditSpecModal();
     }
   
-    // Функции для создания новых позиций спецификации и подпозиций
-  
-    // При нажатии на кнопку "new-position-specification" в модальном окне редактирования спецификации
+    // Функция добавления новой позиции спецификации
     async function addNewPositionSpecification() {
-      // Находим контейнер для позиций внутри модального окна редактирования спецификации
+      // Контейнер позиций внутри окна редактирования спецификации
       const specPositionsContainer = editSpecModal.querySelector('.modalPositionSpecification');
       if (!specPositionsContainer) {
         console.error('Контейнер для позиций спецификации не найден');
         return;
       }
-      // Создаем новый DOM-элемент для позиции
+      // Создаем новый элемент позиции
+      const posID = generateID('spec_pos_');
       const newPositionElem = document.createElement('div');
       newPositionElem.classList.add('modalProjectCARD');
       newPositionElem.style.cssText = "width: 168vw; height: auto; flex-direction: row;";
+      // В разметке используем data-атрибут data-pos-id с присвоенным ID
       newPositionElem.innerHTML = `
         <div class="modalRow">
           <input class="inputCALC" type="text" placeholder="p / p agreement" style="width: 2.3vw;"/>
@@ -1402,8 +985,8 @@
           <input class="inputCALC" type="text" placeholder="sum no VAT agreement" style="width: 5.2vw;"/>
           <input class="inputCALC" type="text" placeholder="price VAT agreement" style="width: 5.2vw;"/>
           <input class="inputCALC" type="text" placeholder="sum VAT agreement" style="width: 5.2vw;"/>
-          <!-- Иконка Удалить позицию -->
-          <span class="spec-icon" style="top: -1.2vw;" data-action="delete-position-spec" data-pos-id="">
+          <!-- Кнопка удаления позиции -->
+          <span class="spec-icon" style="top: -1.2vw;" data-action="delete-position-spec" data-pos-id="${posID}">
             <i class="material-symbols-outlined">delete</i>
           </span>
           <!-- Переключатель для подпозиций -->
@@ -1411,11 +994,11 @@
             <input type="checkbox">
             <span class="slider"></span>
           </label>
-          <!-- Кнопка создания новой подпозиции -->
-          <span class="modal1-icon" style="top: -1.2vw;" data-action="new-child-position" data-pos-id="">
+          <!-- Кнопка добавления новой подпозиции -->
+          <span class="modal1-icon" style="top: -1.2vw;" data-action="new-child-position" data-pos-id="${posID}">
             <i class="material-symbols-outlined">note_add</i>
           </span>
-          <!-- Контейнер для подпозиций -->
+          <!-- Контейнер для подпозиций (будет заполняться динамически) -->
           <div class="modalColumn" style="height: 4vw; width: 93vw;"></div>
           <input class="inputCALC" type="text" placeholder="price no VAT margin" style="width: 5.2vw;"/>
           <input class="inputCALC" type="text" placeholder="sum no VAT margin" style="width: 5.2vw;"/>
@@ -1423,10 +1006,8 @@
           <input class="inputCALC" type="text" placeholder="sum VAT margin" style="width: 5.2vw;"/>
         </div>
       `;
-      const posID = generateID('spec_pos_');
-      newPositionElem.dataset.posId = posID;
   
-      // Формируем объект данных для новой позиции
+      // Сохраняем новую позицию в базу данных
       const newPositionData = {
         id: posID,
         specification_id: currentEditingSpec ? currentEditingSpec.specification_id : null,
@@ -1443,17 +1024,17 @@
         sum_vat_margin: 0,
       };
   
-      const { error } = await supabase
-        .from('spec_positions')
-        .insert([newPositionData]);
+      const { error } = await supabase.from('spec_positions').insert([newPositionData]);
       if (error) {
-        console.error('Ошибка добавления позиции:', error);
+        console.error('Ошибка добавления позиции спецификации:', error);
         return;
       }
+  
+      // Добавляем элемент в DOM
       specPositionsContainer.appendChild(newPositionElem);
     }
   
-    // Функция для добавления новой подпозиции внутри позиции
+    // Функция добавления новой подпозиции (осталась без изменений)
     async function addNewChildPosition(event) {
       const btn = event.target.closest('[data-action="new-child-position"]');
       if (!btn) return;
@@ -1501,9 +1082,7 @@
         price_vat_child: 0,
         sum_vat_child: 0,
       };
-      const { error } = await supabase
-        .from('spec_child_positions')
-        .insert([newChildData]);
+      const { error } = await supabase.from('spec_child_positions').insert([newChildData]);
       if (error) {
         console.error('Ошибка добавления подпозиции:', error);
         return;
@@ -1511,11 +1090,21 @@
       childContainer.appendChild(newChildElem);
     }
   
-    // Настройка событий
-    if (addProjectButton) {
-      addProjectButton.addEventListener('click', addNewProject);
-    }
+    // Делегирование событий для удаления позиций спецификации внутри окна редактирования спецификации
+    document.querySelector('#editSpecModal').addEventListener('click', function(event) {
+      const delBtn = event.target.closest('[data-action="delete-position-spec"]');
+      if (delBtn && delBtn.hasAttribute('data-pos-id')) {
+        // Если нажата кнопка удаления для позиции (не подпозиции)
+        const posId = delBtn.dataset.posId;
+        // Находим родительский элемент позиции (например, .modalProjectCARD)
+        const posElem = delBtn.closest('.modalProjectCARD');
+        if (posId && posElem) {
+          deletePositionSpecification(posId, posElem);
+        }
+      }
+    });
   
+    // Общая делегация событий для проектов и спецификаций (удаление, редактирование и т.д.)
     projectsContainer.addEventListener('click', (event) => {
       const iconProject = event.target.closest('.modal1-icon');
       if (iconProject) {
@@ -1530,7 +1119,6 @@
         }
         return;
       }
-  
       const iconSpec = event.target.closest('.spec-icon');
       if (iconSpec) {
         const specAction = iconSpec.dataset.action;
@@ -1549,158 +1137,117 @@
     document.querySelector('.close-edit-spec-modal').addEventListener('click', closeEditSpecModal);
     editSpecForm.querySelector('.save-spec-button').addEventListener('click', saveSpecification);
   
-    // Обработчик для кнопки создания новой позиции спецификации
+    // Обработчик для создания новой позиции спецификации
     document.querySelector('[data-action="new-position-specification"]').addEventListener('click', addNewPositionSpecification);
   
-    // Делегирование событий для кнопок создания подпозиций (так как они появляются динамически)
+    // Делегирование для создания подпозиций (динамически появляющихся)
     document.addEventListener('click', function(event) {
       if (event.target.closest('[data-action="new-child-position"]')) {
         addNewChildPosition(event);
       }
     });
   
-    // Реалтайм подписки (пример; настройте по необходимости)
+    // Настройка realtime-подписок (пример; настройте по необходимости)
     function setupRealtime() {
       const channelProjects = supabase
         .channel('realtime_projects')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'projects' },
-          (payload) => {
-            const projectId = payload.new?.project_id || payload.old?.project_id;
-            if (!projectId) return;
-  
-            if (payload.eventType === 'INSERT' && payload.new) {
-              console.log('[LOG] Realtime: INSERT project:', payload.new);
-              if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
-                const block = createProjectContainer(payload.new);
-                if (block) projectsContainer.appendChild(block);
-              }
-            } else if (payload.eventType === 'UPDATE' && payload.new) {
-              console.log('[LOG] Realtime: UPDATE project:', payload.new);
-              const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-              if (projectContainer) {
-                const updatedProject = payload.new;
-                projectContainer.dataset.projectName = updatedProject.project_name || '';
-                projectContainer.dataset.status = updatedProject.status || '';
-                projectContainer.dataset.contractAmount = updatedProject.contract_amount || 0;
-                projectContainer.dataset.contractCosts = updatedProject.contract_costs || 0;
-                projectContainer.dataset.contractProfit = updatedProject.contract_profit || 0;
-                projectContainer.dataset.profitPercentage = updatedProject.profit_percentage || 0;
-                projectContainer.dataset.companySeller = updatedProject.company_seller || '';
-                projectContainer.dataset.tinSeller = updatedProject.tin_seller || '';
-                projectContainer.dataset.buyerCompany = updatedProject.buyer_company || '';
-                projectContainer.dataset.tinBuyer = updatedProject.tin_buyer || '';
-  
-                const fields = [
-                  'project_id',
-                  'project_name',
-                  'status',
-                  'contract_amount',
-                  'contract_costs',
-                  'contract_profit',
-                  'profit_percentage',
-                  'company_seller',
-                  'tin_seller',
-                  'buyer_company',
-                  'tin_buyer'
-                ];
-                fields.forEach(field => {
-                  const input = projectContainer.querySelector(`[data-field="${field}"]`);
-                  if (input) {
-                    if (['contract_amount', 'contract_costs', 'contract_profit', 'profit_percentage'].includes(field)) {
-                      input.value = formatNumberWithSpaces(updatedProject[field]) || 0;
-                    } else {
-                      input.value = updatedProject[field] !== undefined ? updatedProject[field] : '';
-                    }
-                  }
-                });
-              }
-            } else if (payload.eventType === 'DELETE') {
-              console.log('[LOG] Realtime: DELETE project:', payload.old);
-              const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
-              if (projectContainer) {
-                const projectBlock = projectContainer.closest('.project-block');
-                if (projectBlock) {
-                  projectsContainer.removeChild(projectBlock);
-                }
-              }
-              hideLoader();
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, (payload) => {
+          const projectId = payload.new?.project_id || payload.old?.project_id;
+          if (!projectId) return;
+          if (payload.eventType === 'INSERT' && payload.new) {
+            if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
+              const block = createProjectContainer(payload.new);
+              if (block) projectsContainer.appendChild(block);
             }
+          } else if (payload.eventType === 'UPDATE' && payload.new) {
+            const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+            if (projectContainer) {
+              const updatedProject = payload.new;
+              projectContainer.dataset.projectName = updatedProject.project_name || '';
+              projectContainer.dataset.status = updatedProject.status || '';
+              projectContainer.dataset.contractAmount = updatedProject.contract_amount || 0;
+              projectContainer.dataset.contractCosts = updatedProject.contract_costs || 0;
+              projectContainer.dataset.contractProfit = updatedProject.contract_profit || 0;
+              projectContainer.dataset.profitPercentage = updatedProject.profit_percentage || 0;
+              projectContainer.dataset.companySeller = updatedProject.company_seller || '';
+              projectContainer.dataset.tinSeller = updatedProject.tin_seller || '';
+              projectContainer.dataset.buyerCompany = updatedProject.buyer_company || '';
+              projectContainer.dataset.tinBuyer = updatedProject.tin_buyer || '';
+              const fields = ['project_id','project_name','status','contract_amount','contract_costs','contract_profit','profit_percentage','company_seller','tin_seller','buyer_company','tin_buyer'];
+              fields.forEach(field => {
+                const input = projectContainer.querySelector(`[data-field="${field}"]`);
+                if (input) {
+                  if (['contract_amount','contract_costs','contract_profit','profit_percentage'].includes(field)) {
+                    input.value = formatNumberWithSpaces(updatedProject[field]) || 0;
+                  } else {
+                    input.value = updatedProject[field] !== undefined ? updatedProject[field] : '';
+                  }
+                }
+              });
+            }
+          } else if (payload.eventType === 'DELETE') {
+            const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
+            if (projectContainer) {
+              const projectBlock = projectContainer.closest('.project-block');
+              if (projectBlock) projectsContainer.removeChild(projectBlock);
+            }
+            hideLoader();
           }
-        )
+        })
         .subscribe();
   
       const channelSpecs = supabase
         .channel('realtime_specifications')
-        .on(
-          'postgres_changes',
-          { event: '*', schema: 'public', table: 'specifications' },
-          (payload) => {
-            const specId = payload.new?.specification_id || payload.old?.specification_id;
-            if (!specId) return;
-  
-            if (payload.eventType === 'INSERT' && payload.new) {
-              console.log('[LOG] Realtime: INSERT specification:', payload.new);
-              const projectId = payload.new.project_id;
-              const projectContainer = document.querySelector(`[data-id="${projectId}"]`);
-              if (projectContainer) {
-                const projectBlock = projectContainer.closest('.project-block');
-                const specsWrapper = projectBlock?.querySelector('.specifications-wrapper');
-                if (specsWrapper) {
-                  const specEl = createSpecificationContainer(payload.new);
-                  if (specEl) {
-                    specsWrapper.appendChild(specEl);
-                  }
-                }
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'specifications' }, (payload) => {
+          const specId = payload.new?.specification_id || payload.old?.specification_id;
+          if (!specId) return;
+          if (payload.eventType === 'INSERT' && payload.new) {
+            const projectId = payload.new.project_id;
+            const projectContainer = document.querySelector(`[data-id="${projectId}"]`);
+            if (projectContainer) {
+              const projectBlock = projectContainer.closest('.project-block');
+              const specsWrapper = projectBlock?.querySelector('.specifications-wrapper');
+              if (specsWrapper) {
+                const specEl = createSpecificationContainer(payload.new);
+                if (specEl) specsWrapper.appendChild(specEl);
               }
-            } else if (payload.eventType === 'UPDATE' && payload.new) {
-              console.log('[LOG] Realtime: UPDATE specification:', payload.new);
-              const specElem = document.querySelector(`[data-spec-id="${specId}"]`);
-              if (specElem) {
-                const updatedSpec = payload.new;
-                specElem.dataset.specificationName = updatedSpec.specification_name || '';
-                specElem.dataset.status = updatedSpec.status || '';
-                specElem.dataset.specificationAmount = updatedSpec.specification_amount || 0;
-                specElem.dataset.specificationCosts = updatedSpec.specification_costs || 0;
-                specElem.dataset.specificationProfit = updatedSpec.specification_profit || 0;
-                specElem.dataset.profitPercentage = updatedSpec.profit_percentage || 0;
-                specElem.dataset.responsible = updatedSpec.responsible || '';
-  
-                const specNameInput = specElem.querySelector('[data-field="specification_name"]');
-                const specStatusInput = specElem.querySelector('[data-field="status"]');
-                const specAmountInput = specElem.querySelector('[data-field="specification_amount"]');
-                const specCostsInput = specElem.querySelector('[data-field="specification_costs"]');
-                const specProfitInput = specElem.querySelector('[data-field="specification_profit"]');
-                const specProfitPctInput = specElem.querySelector('[data-field="profit_percentage"]');
-                const responsibleInput = specElem.querySelector('[data-field="responsible"]');
-  
-                if (specNameInput) specNameInput.value = updatedSpec.specification_name || '';
-                if (specStatusInput) specStatusInput.value = updatedSpec.status || '';
-                if (specAmountInput) specAmountInput.value = formatNumberWithSpaces(updatedSpec.specification_amount) || 0;
-                if (specCostsInput) specCostsInput.value = formatNumberWithSpaces(updatedSpec.specification_costs) || 0;
-                if (specProfitInput) specProfitInput.value = formatNumberWithSpaces(updatedSpec.specification_profit) || 0;
-                if (specProfitPctInput) specProfitPctInput.value = formatNumberWithSpaces(updatedSpec.profit_percentage) || 0;
-                if (responsibleInput) responsibleInput.value = updatedSpec.responsible || '';
-              }
-            } else if (payload.eventType === 'DELETE') {
-              console.log('[LOG] Realtime: DELETE specification:', payload.old);
-              const specElem = document.querySelector(`[data-spec-id="${specId}"]`);
-              if (specElem) {
-                specElem.remove();
-              }
-              hideLoader();
             }
+          } else if (payload.eventType === 'UPDATE' && payload.new) {
+            const specElem = document.querySelector(`[data-spec-id="${specId}"]`);
+            if (specElem) {
+              const updatedSpec = payload.new;
+              specElem.dataset.specificationName = updatedSpec.specification_name || '';
+              specElem.dataset.status = updatedSpec.status || '';
+              specElem.dataset.specificationAmount = updatedSpec.specification_amount || 0;
+              specElem.dataset.specificationCosts = updatedSpec.specification_costs || 0;
+              specElem.dataset.specificationProfit = updatedSpec.specification_profit || 0;
+              specElem.dataset.profitPercentage = updatedSpec.profit_percentage || 0;
+              specElem.dataset.responsible = updatedSpec.responsible || '';
+              const specNameInput = specElem.querySelector('[data-field="specification_name"]');
+              const specStatusInput = specElem.querySelector('[data-field="status"]');
+              const specAmountInput = specElem.querySelector('[data-field="specification_amount"]');
+              const specCostsInput = specElem.querySelector('[data-field="specification_costs"]');
+              const specProfitInput = specElem.querySelector('[data-field="specification_profit"]');
+              const specProfitPctInput = specElem.querySelector('[data-field="profit_percentage"]');
+              const responsibleInput = specElem.querySelector('[data-field="responsible"]');
+              if (specNameInput) specNameInput.value = updatedSpec.specification_name || '';
+              if (specStatusInput) specStatusInput.value = updatedSpec.status || '';
+              if (specAmountInput) specAmountInput.value = formatNumberWithSpaces(updatedSpec.specification_amount) || 0;
+              if (specCostsInput) specCostsInput.value = formatNumberWithSpaces(updatedSpec.specification_costs) || 0;
+              if (specProfitInput) specProfitInput.value = formatNumberWithSpaces(updatedSpec.specification_profit) || 0;
+              if (specProfitPctInput) specProfitPctInput.value = formatNumberWithSpaces(updatedSpec.profit_percentage) || 0;
+              if (responsibleInput) responsibleInput.value = updatedSpec.responsible || '';
+            }
+          } else if (payload.eventType === 'DELETE') {
+            const specElem = document.querySelector(`[data-spec-id="${specId}"]`);
+            if (specElem) specElem.remove();
+            hideLoader();
           }
-        )
+        })
         .subscribe();
   
-      channelProjects.on('subscription_error', (status) => {
-        console.error('[LOG] Ошибка подписки (projects):', status);
-      });
-      channelSpecs.on('subscription_error', (status) => {
-        console.error('[LOG] Ошибка подписки (specifications):', status);
-      });
+      channelProjects.on('subscription_error', (status) => { console.error('[LOG] Ошибка подписки (projects):', status); });
+      channelSpecs.on('subscription_error', (status) => { console.error('[LOG] Ошибка подписки (specifications):', status); });
     }
   
     loadProjects()
