@@ -70,41 +70,44 @@
 <div id="editSpecModal" class="edit-modal hidden">
   <div class="edit-modal-content">
     <button class="close-edit-spec-modal">×</button>
-    <h3>Редактирование спецификации</h3>
-    <form id="edit-spec-form">
-      <!-- Название спецификации -->
-      <label for="edit-spec-name">Название спецификации</label>
-      <input type="text" id="edit-spec-name" placeholder="Например: «Spec #1»" required />
+    
+    <!--форма редактирования “шапки” спецификации-->
+    <form id="edit-spec-form">  
+      <div class="modalProjectCalculation" style="width: 97.2vw; height: 96.8vh; flex-direction: column;">
+        <p style="width: 12vw; text-transform: uppercase;">project costs</p> 
 
-      <!-- Статус -->
-      <label for="edit-spec-status">Статус</label>
-      <input type="text" id="edit-spec-status" placeholder="draft / active / closed" required />
+        <!-- Строка полей для заголовка спецификации + кнопка создать позицию -->
+        <div class="modalRow" style="margin-top: 8vh;">
+          <!--иконка/кнопка создать новую позицию спецификации-->
+          <span class="modal1-icon" data-action="new-position-specification" data-id="">
+            <i class="material-symbols-outlined">note_add</i>
+          </span>
 
-      <!-- Сумма -->
-      <label for="edit-spec-amount">Сумма</label>
-      <input type="number" id="edit-spec-amount" step="0.01" placeholder="Введите сумму" />
+          <!-- поля шапки спецификации -->
+          <input type="text" class="inputCALC" id="edit-spec-name" placeholder="Например: «Spec #1»" required />
+          <input type="text" class="inputCALC" id="edit-spec-status" placeholder="draft / active / closed" required />
+          <input type="number" class="inputCALC" id="edit-spec-amount" step="0.01" placeholder="Введите сумму" />
+          <input type="number" class="inputCALC" id="edit-spec-costs" step="0.01" placeholder="Введите стоимость" />
+          <input type="number" class="inputCALC" id="edit-spec-profit" step="0.01" placeholder="Введите прибыль" />
+          <input type="number" class="inputCALC" id="edit-spec-profit-pct" step="0.01" placeholder="%" />
+          <input type="text" class="inputCALC" id="edit-spec-responsible" placeholder="ФИО / отдел" />
+          <button type="button" class="save-spec-button">Сохранить</button>
+        </div>
 
-      <!-- Стоимость -->
-      <label for="edit-spec-costs">Стоимость</label>
-      <input type="number" id="edit-spec-costs" step="0.01" placeholder="Введите стоимость" />
-
-      <!-- Прибыль -->
-      <label for="edit-spec-profit">Прибыль</label>
-      <input type="number" id="edit-spec-profit" step="0.01" placeholder="Введите прибыль" />
-
-      <!-- Процент прибыли -->
-      <label for="edit-spec-profit-pct">Процент прибыли</label>
-      <input type="number" id="edit-spec-profit-pct" step="0.01" placeholder="%" />
-
-      <!-- Ответственный -->
-      <label for="edit-spec-responsible">Ответственный</label>
-      <input type="text" id="edit-spec-responsible" placeholder="ФИО / отдел" />
-
-      <!-- Кнопка для сохранения изменений спецификации -->
-      <button type="button" class="save-spec-button">Сохранить</button>
+        <!-- Нижняя часть модалки со скроллом, где будут отображаться созданные позиции (и подпозиции) -->
+        <div id="modalBottom" class="modalVNUT" style="top: 14vh; height: 84.2vh; width: 97vw;">
+          <div class="modalVNUT-content" id="specPositionsContainer">
+            <!-- 
+              Здесь динамически будут добавляться .modalPositionSpecification 
+              (позиции спецификации) и их дочерние блоки 
+            -->
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 </div>
+
 
 <!-- Шаблон для проекта -->
 <template id="project-template">
@@ -1316,6 +1319,43 @@ input[type=number]::-webkit-outer-spin-button {
       )
       .subscribe();
 
+
+
+    // //обработчик кликов внутри окна editSpecModal
+const editSpecModalEl = document.getElementById('editSpecModal');
+editSpecModalEl.addEventListener('click', async (event) => {
+  // //кнопка «создать позицию спецификации»
+  const newPosBtn = event.target.closest('[data-action="new-position-specification"]');
+  if (newPosBtn) {
+    // предполагаем, что в data-id у вас хранится specification_id
+    const specId = newPosBtn.dataset.id;
+    if (specId) {
+      await addNewPositionSpec(specId);
+    }
+    return; 
+  }
+
+  // //кнопка «создать child-позицию»
+  const newChildBtn = event.target.closest('[data-action="new-child-position"]');
+  if (newChildBtn) {
+    // в data-position-id будет id родительской позиции
+    const parentPositionId = newChildBtn.dataset.positionId;
+    if (parentPositionId) {
+      await addNewChildPosition(parentPositionId);
+    }
+    return;
+  }
+});
+
+
+    const newPositionIcon = editSpecModalEl.querySelector('[data-action="new-position-specification"]');
+if (newPositionIcon) {
+  newPositionIcon.dataset.id = specId; // чтобы знать, куда вставлять
+}
+
+
+    
+
     channelProjects.on('subscription_error', (status) => {
       console.error('[LOG] Ошибка подписки (projects):', status);
     });
@@ -1380,4 +1420,186 @@ input[type=number]::-webkit-outer-spin-button {
   function closeModal() {
     document.querySelector('.modal111-content').style.display = 'none';
   }
+
+
+
+
+/**********************/
+// //функция создания DOM для позиции спецификации
+function createPositionInDom(positionData) {
+  // Родительский контейнер, куда вставляем
+  const specPositionsContainer = document.getElementById('specPositionsContainer');
+  if (!specPositionsContainer) return null;
+
+  // //создаём оболочку для позиции
+  const divPosition = document.createElement('div');
+  divPosition.classList.add('modalPositionSpecification');
+  divPosition.style.width = '168vw';
+
+  // Присвоим data-атрибут, чтобы при необходимости находить DOM по position_id
+  divPosition.dataset.positionId = positionData.position_id || '';
+
+  // //внутренний блок, повторяющий Вашу структуру
+  // (примерно, упрощённо, копируем Ваши поля/иконки).
+  // Вы можете скопировать всю верстку из примера, главное — добавить data-атрибуты
+  // с нужными ID, чтобы работать с ними при редактировании/удалении и т.п.
+  divPosition.innerHTML = `
+    <div class="modalProjectCARD" style="width: 168vw; height: auto; flex-direction: row;">
+      <div class="modalRow">
+        <input class="inputCALC" type="text" placeholder="p / p agreement" style="width: 2.3vw;" value="${positionData.p_p_agreement || ''}"/>
+        <input class="inputCALC" type="text" placeholder="Description Position agreement" style="width: 16vw;" value="${positionData.description_position_agreement || ''}"/>
+        <input class="inputCALC" type="text" placeholder="q-ty agreement" style="width: 2.5vw;" value="${positionData.qty_agreement || ''}"/>
+        <input class="inputCALC" type="text" placeholder="price no VAT agreement" style="width: 5.2vw;" value="${positionData.price_no_vat_agreement || ''}"/>
+        <input class="inputCALC" type="text" placeholder="sum no VAT agreement" style="width: 5.2vw;" value="${positionData.sum_no_vat_agreement || ''}"/>
+        <input class="inputCALC" type="text" placeholder="price VAT agreement" style="width: 5.2vw;" value="${positionData.price_vat_agreement || ''}"/>
+        <input class="inputCALC" type="text" placeholder="sum VAT agreement" style="width: 5.2vw;" value="${positionData.sum_vat_agreement || ''}"/>
+        
+        <!-- Иконка Удалить позицию (пример, если нужно) -->
+        <span class="spec-icon" style="top: -1.2vw;" data-action="delete-position-spec" data-position-id="${positionData.position_id || ''}">
+          <i class="material-symbols-outlined">delete</i>
+        </span>
+        
+        <!-- Иконка скрыть / отобразить подпозиции к позиции (пример переключателя) -->
+        <label class="switch">
+          <input type="checkbox">
+          <span class="slider"></span>
+        </label>
+        
+        <!-- Иконка Создать дочернюю позицию -->
+        <span class="modal1-icon" style="top: -1.2vw;" data-action="new-child-position" data-position-id="${positionData.position_id || ''}">
+          <i class="material-symbols-outlined">note_add</i>
+        </span>
+        
+        <!-- Колонка, куда пойдут итоги + дочерние подпозиции -->
+        <div class="modalColumn" style="height: 4vw; width: 93vw;">
+          <!-- пример строки с id="ModalSumPosition", если нужно -->
+          <div class="modalRow" id="ModalSumPosition">
+            <!-- ... поля для "ModalSumPosition" ... -->
+          </div>
+          
+          <!-- контейнер для дочерних позиций, добавлять будем сюда -->
+          <div class="modalRow-child-list">
+            <!-- сюда скриптом вставляем <div class="modalRow" id="ModalChildPosition"> для каждого child -->
+          </div>
+        </div>
+        
+        <!-- поля маржи -->
+        <input class="inputCALC" type="text" placeholder="price no VAT margin" style="width: 5.2vw;" value="${positionData.price_no_vat_margin || ''}"/>
+        <input class="inputCALC" type="text" placeholder="sum no VAT margin" style="width: 5.2vw;" value="${positionData.sum_no_vat_margin || ''}"/>
+        <input class="inputCALC" type="text" placeholder="price VAT margin" style="width: 5.2vw;" value="${positionData.price_vat_margin || ''}"/>
+        <input class="inputCALC" type="text" placeholder="sum VAT margin" style="width: 5.2vw;" value="${positionData.sum_vat_margin || ''}"/>
+      </div>
+    </div>
+  `;
+  specPositionsContainer.appendChild(divPosition);
+  return divPosition;
+}
+
+// //функция создания DOM для дочерней позиции
+function createChildPositionInDom(childData) {
+  // Находим родительский контейнер по parent position_id
+  const parentDiv = document.querySelector(`[data-position-id="${childData.position_id}"]`);
+  if (!parentDiv) return null;
+
+  // находим внутри него блок .modalRow-child-list
+  const childList = parentDiv.querySelector('.modalRow-child-list');
+  if (!childList) return null;
+
+  // //создаём элемент для подпозиции
+  const divChild = document.createElement('div');
+  divChild.classList.add('modalRow');
+  divChild.id = 'ModalChildPosition';
+
+  // Присвоим data-атрибут, чтобы при необходимости находить DOM по child_position_id
+  divChild.dataset.childPositionId = childData.child_position_id || '';
+
+  divChild.innerHTML = `
+    <!-- Иконка Удалить подпозицию -->
+    <span class="spec-icon" data-action="delete-child-position" data-child-position-id="${childData.child_position_id || ''}">
+      <i class="material-symbols-outlined">delete</i>
+    </span>
+    <input class="inputCALC" type="text" placeholder="p / p ChildPosition" style="width: 2.3vw;" value="${childData.p_p_child_position || ''}" />
+    <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;" value="${childData.catalog_position_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="Description Position ChildPosition" style="width: 16vw;" value="${childData.description_position_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="q-ty ChildPosition" style="width: 2.5vw;" value="${childData.qty_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="supplier name ChildPosition" style="width: 8vw;" value="${childData.supplier_name_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;" />
+    <input class="inputCALC" type="text" placeholder="WAT ChildPosition" style="width: 2.5vw;" value="${childData.vat_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="RUB ChildPosition" style="width: 5.2vw;" value="${childData.rub_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="USD ChildPosition" style="width: 5.2vw;" value="${childData.usd_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="EUR ChildPosition" style="width: 5.2vw;" value="${childData.eur_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="price no VAT ChildPosition" style="width: 5.2vw;" value="${childData.price_no_vat_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="sum no VAT ChildPosition" style="width: 5.2vw;" value="${childData.sum_no_vat_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="price VAT ChildPosition" style="width: 5.2vw;" value="${childData.price_vat_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="sum VAT ChildPosition" style="width: 5.2vw;" value="${childData.sum_vat_child || ''}" />
+  `;
+  childList.appendChild(divChild);
+
+  return divChild;
+}
+
+/**********************/
+// //функция добавить новую позицию в БД
+async function addNewPositionSpec(specificationId) {
+  // //готовим объект вставки:
+  const newPositionData = {
+    specification_id: specificationId,
+    p_p_agreement: '', // можно какие-то дефолты
+    description_position_agreement: '',
+    qty_agreement: 0,
+    price_no_vat_agreement: 0,
+    sum_no_vat_agreement: 0,
+    price_vat_agreement: 0,
+    sum_vat_agreement: 0,
+    price_no_vat_margin: 0,
+    sum_no_vat_margin: 0,
+    price_vat_margin: 0,
+    sum_vat_margin: 0
+  };
+  const { data, error } = await supabase.from('spec_positions').insert([newPositionData]).select();
+  if (error) {
+    console.error('[LOG] Ошибка при создании позиции:', error);
+    return;
+  }
+  if (data && data.length > 0) {
+    // как правило Supabase вернёт вставленную запись (с уже заполненным position_id)
+    const insertedPosition = data[0];
+    // //создаем DOM-элемент
+    createPositionInDom(insertedPosition);
+  }
+}
+
+/**********************/
+// //функция добавить новую «дочернюю» позицию
+async function addNewChildPosition(positionId) {
+  const newChildData = {
+    position_id: positionId,
+    p_p_child_position: '',
+    catalog_position_child: '',
+    description_position_child: '',
+    qty_child: 0,
+    supplier_name_child: '',
+    vat_child: 0,
+    rub_child: 0,
+    usd_child: 0,
+    eur_child: 0,
+    price_no_vat_child: 0,
+    sum_no_vat_child: 0,
+    price_vat_child: 0,
+    sum_vat_child: 0
+  };
+  const { data, error } = await supabase.from('spec_child_positions').insert([newChildData]).select();
+  if (error) {
+    console.error('[LOG] Ошибка при создании дочерней позиции:', error);
+    return;
+  }
+  if (data && data.length > 0) {
+    const insertedChild = data[0];
+    createChildPositionInDom(insertedChild);
+  }
+}
+
+
+
+  
 </script>
