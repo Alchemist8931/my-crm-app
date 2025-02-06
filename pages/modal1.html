@@ -1050,47 +1050,70 @@ input[type=number]::-webkit-outer-spin-button {
 
   /**********************/
   // //Редактирование спецификации
-  function openEditSpecModal(specId) {
-    const specContainer = projectsContainer.querySelector(`[data-spec-id="${specId}"]`);
-    if (!specContainer) return;
+  // //функция открыть модальное окно редактирования спецификации
+function openEditSpecModal(specId) {
+  console.log(`[LOG] openEditSpecModal: Запущена функция, получен specId="${specId}"`);
 
-    const spec = {
-      specification_id: specId,
-      project_id: specContainer.dataset.projectId,
-      specification_name: specContainer.dataset.specificationName,
-      status: specContainer.dataset.status,
-      specification_amount: specContainer.dataset.specificationAmount,
-      specification_costs: specContainer.dataset.specificationCosts,
-      specification_profit: specContainer.dataset.specificationProfit,
-      profit_percentage: specContainer.dataset.profitPercentage,
-      responsible: specContainer.dataset.responsible,
-    };
-    currentEditingSpec = spec;
-
-    editSpecForm['edit-spec-name'].value = spec.specification_name;
-    editSpecForm['edit-spec-status'].value = spec.status;
-    editSpecForm['edit-spec-amount'].value = spec.specification_amount;
-    editSpecForm['edit-spec-costs'].value = spec.specification_costs;
-    editSpecForm['edit-spec-profit'].value = spec.specification_profit;
-    editSpecForm['edit-spec-profit-pct'].value = spec.profit_percentage;
-    editSpecForm['edit-spec-responsible'].value = spec.responsible;
-
-    // Привязываем specId к иконке создания позиции
-    const newPosBtn = editSpecModal.querySelector('[data-action="new-position-specification"]');
-    if (newPosBtn) {
-      newPosBtn.dataset.id = specId;
-    }
-
-    // Очищаем контейнер позиций
-    const specPositionsContainer = document.getElementById('specPositionsContainer');
-    if (specPositionsContainer) {
-      specPositionsContainer.innerHTML = '';
-    }
-    // Загружаем позиции данной спецификации
-    loadSpecPositions(specId);
-
-    editSpecModal.classList.remove('hidden');
+  // Пытаемся найти в DOM элемент спецификации (список проектов находится в projectsContainer)
+  const specContainer = projectsContainer.querySelector(`[data-spec-id="${specId}"]`);
+  if (!specContainer) {
+    console.log(`[LOG] openEditSpecModal: Не найден элемент .spec-container с data-spec-id="${specId}". Прерываем.`);
+    return;
   }
+  
+  // Собираем данные из data-атрибутов (то, что было прописано при создании DOM-элемента спецификации)
+  const spec = {
+    specification_id: specId,
+    project_id: specContainer.dataset.projectId,
+    specification_name: specContainer.dataset.specificationName,
+    status: specContainer.dataset.status,
+    specification_amount: specContainer.dataset.specificationAmount,
+    specification_costs: specContainer.dataset.specificationCosts,
+    specification_profit: specContainer.dataset.specificationProfit,
+    profit_percentage: specContainer.dataset.profitPercentage,
+    responsible: specContainer.dataset.responsible,
+  };
+
+  console.log('[LOG] openEditSpecModal: Считанные данные спецификации из DOM:', spec);
+
+  // Запоминаем текущую спецификацию, которую редактируем
+  currentEditingSpec = spec;
+
+  // Заполняем поля формы modалa редактирования спецификации
+  editSpecForm['edit-spec-name'].value = spec.specification_name || '';
+  editSpecForm['edit-spec-status'].value = spec.status || '';
+  editSpecForm['edit-spec-amount'].value = spec.specification_amount || '';
+  editSpecForm['edit-spec-costs'].value = spec.specification_costs || '';
+  editSpecForm['edit-spec-profit'].value = spec.specification_profit || '';
+  editSpecForm['edit-spec-profit-pct'].value = spec.profit_percentage || '';
+  editSpecForm['edit-spec-responsible'].value = spec.responsible || '';
+
+  // Привязываем specId к иконке "new-position-specification",
+  // чтобы при клике на неё мы знали, к какой спецификации создавать позицию
+  const newPosBtn = editSpecModal.querySelector('[data-action="new-position-specification"]');
+  if (newPosBtn) {
+    newPosBtn.dataset.id = specId;
+    console.log(`[LOG] openEditSpecModal: У кнопки .modal1-icon[new-position-specification] теперь data-id="${specId}"`);
+  } else {
+    console.log('[LOG] openEditSpecModal: Не найдена кнопка [data-action="new-position-specification"] внутри editSpecModal');
+  }
+
+  // Очищаем контейнер, куда вставляются позиции (если что-то там осталось от прошлого открытия)
+  const specPositionsContainer = document.getElementById('specPositionsContainer');
+  if (specPositionsContainer) {
+    specPositionsContainer.innerHTML = '';
+    console.log('[LOG] openEditSpecModal: Очищен div#specPositionsContainer');
+  }
+
+  // Загружаем позиции данной спецификации (например, из таблицы spec_positions)
+  console.log(`[LOG] openEditSpecModal: Загружаем позиции для specification_id="${specId}"...`);
+  loadSpecPositions(specId);
+
+  // Показываем модальное окно
+  editSpecModal.classList.remove('hidden');
+  console.log('[LOG] openEditSpecModal: Модальное окно editSpecModal открыто');
+}
+
   function closeEditSpecModal() {
     editSpecModal.classList.add('hidden');
     currentEditingSpec = null;
