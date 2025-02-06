@@ -1602,50 +1602,91 @@ function openEditSpecModal(specId) {
   editSpecForm.querySelector('.save-spec-button').addEventListener('click', saveSpecification);
 
   // Обработчик кликов внутри editSpecModal (для позиций/подпозиций)
-  const editSpecModalEl = document.getElementById('editSpecModal');
-  editSpecModalEl.addEventListener('click', async (event) => {
-    const newPosBtn = event.target.closest('[data-action="new-position-specification"]');
-    if (newPosBtn) {
-      const specId = newPosBtn.dataset.id;
-      if (specId) {
-        await addNewPositionSpec(specId);
-      }
-      return;
-    }
+  // //обработчик кликов внутри модалки редактирования спецификации
+const editSpecModalEl = document.getElementById('editSpecModal');
+editSpecModalEl.addEventListener('click', async (event) => {
+  // Чтобы видеть, что вообще дошли до этого обработчика
+  console.log('[LOG] editSpecModal CLICK handler сработал. event target:', event.target);
 
-    const newChildBtn = event.target.closest('[data-action="new-child-position"]');
-    if (newChildBtn) {
-      const parentPositionId = newChildBtn.dataset.positionId;
-      if (parentPositionId) {
-        await addNewChildPosition(parentPositionId);
-      }
-      return;
-    }
+  // 1) Кнопка "new-position-specification"
+  const newPosBtn = event.target.closest('[data-action="new-position-specification"]');
+  if (newPosBtn) {
+    // Логируем факт, что нашли кнопку
+    console.log('[LOG] Обнаружена кнопка "new-position-specification":', newPosBtn);
 
-    const delPosBtn = event.target.closest('[data-action="delete-position-spec"]');
-    if (delPosBtn) {
-      const positionId = delPosBtn.dataset.positionId;
-      if (positionId) {
-        showLoader();
-        const { error } = await supabase.from('spec_positions').delete().eq('position_id', positionId);
-        if (error) console.error('[LOG] Ошибка удаления позиции:', error);
-        hideLoader();
-      }
-      return;
-    }
+    // Считываем из неё specId
+    const specId = newPosBtn.dataset.id;
+    console.log('[LOG] Значение newPosBtn.dataset.id =', specId);
 
-    const delChildBtn = event.target.closest('[data-action="delete-child-position"]');
-    if (delChildBtn) {
-      const childPositionId = delChildBtn.dataset.childPositionId;
-      if (childPositionId) {
-        showLoader();
-        const { error } = await supabase.from('spec_child_positions').delete().eq('child_position_id', childPositionId);
-        if (error) console.error('[LOG] Ошибка удаления дочерней позиции:', error);
-        hideLoader();
-      }
-      return;
+    // Проверяем, есть ли specId
+    if (specId) {
+      console.log('[LOG] Вызываем addNewPositionSpec(specId) c specId =', specId);
+      await addNewPositionSpec(specId);
+    } else {
+      console.log('[LOG] specId оказался пустым! Позиция не будет создана.');
     }
-  });
+    return; // прерываем дальнейшую обработку
+  }
+
+  // 2) Кнопка "new-child-position"
+  const newChildBtn = event.target.closest('[data-action="new-child-position"]');
+  if (newChildBtn) {
+    console.log('[LOG] Обнаружена кнопка "new-child-position":', newChildBtn);
+    const parentPositionId = newChildBtn.dataset.positionId;
+    console.log('[LOG] newChildBtn.dataset.positionId =', parentPositionId);
+    if (parentPositionId) {
+      console.log('[LOG] Вызываем addNewChildPosition(parentPositionId) c positionId =', parentPositionId);
+      await addNewChildPosition(parentPositionId);
+    } else {
+      console.log('[LOG] parentPositionId оказался пустым! Дочерняя позиция не будет создана.');
+    }
+    return;
+  }
+
+  // 3) Кнопка "delete-position-spec"
+  const delPosBtn = event.target.closest('[data-action="delete-position-spec"]');
+  if (delPosBtn) {
+    console.log('[LOG] Обнаружена кнопка "delete-position-spec":', delPosBtn);
+    const positionId = delPosBtn.dataset.positionId;
+    console.log('[LOG] delPosBtn.dataset.positionId =', positionId);
+    if (positionId) {
+      console.log('[LOG] Удаляем позицию:', positionId);
+      showLoader();
+      const { error } = await supabase.from('spec_positions').delete().eq('position_id', positionId);
+      if (error) {
+        console.error('[LOG] Ошибка удаления позиции:', error);
+      }
+      hideLoader();
+    } else {
+      console.log('[LOG] positionId пуст — позиция не удалена.');
+    }
+    return;
+  }
+
+  // 4) Кнопка "delete-child-position"
+  const delChildBtn = event.target.closest('[data-action="delete-child-position"]');
+  if (delChildBtn) {
+    console.log('[LOG] Обнаружена кнопка "delete-child-position":', delChildBtn);
+    const childPositionId = delChildBtn.dataset.childPositionId;
+    console.log('[LOG] delChildBtn.dataset.childPositionId =', childPositionId);
+    if (childPositionId) {
+      console.log('[LOG] Удаляем дочернюю позицию:', childPositionId);
+      showLoader();
+      const { error } = await supabase.from('spec_child_positions').delete().eq('child_position_id', childPositionId);
+      if (error) {
+        console.error('[LOG] Ошибка удаления дочерней позиции:', error);
+      }
+      hideLoader();
+    } else {
+      console.log('[LOG] childPositionId пуст — подпозиция не удалена.');
+    }
+    return;
+  }
+
+  // Если ни одна из кнопок не обнаружена — ничего не делаем
+  console.log('[LOG] Клик внутри editSpecModal, но не по нужной кнопке.');
+});
+
 
   /**********************/
   // //Запуск при загрузке
