@@ -66,42 +66,47 @@
   </div>
 </div>
 
-<!-- Модальное окно редактирования спецификации -->
+<!-- 
+    Обновлённый блок Модального окна редактирования спецификации 
+    (замена старого содержимого полностью)
+-->
 <div id="editSpecModal" class="edit-modal hidden">
   <div class="edit-modal-content">
     <button class="close-edit-spec-modal">×</button>
-    <h3>Редактирование спецификации</h3>
-    <form id="edit-spec-form">
-      <!-- Название спецификации -->
-      <label for="edit-spec-name">Название спецификации</label>
-      <input type="text" id="edit-spec-name" placeholder="Например: «Spec #1»" required />
+    
+    <!--форма редактирования “шапки” спецификации-->
+    <form id="edit-spec-form">  
+      <div class="modalProjectCalculation" style="width: 97.2vw; height: 96.8vh; flex-direction: column;">
+        <p style="width: 12vw; text-transform: uppercase;">project costs</p> 
 
-      <!-- Статус -->
-      <label for="edit-spec-status">Статус</label>
-      <input type="text" id="edit-spec-status" placeholder="draft / active / closed" required />
+        <!-- Строка полей для заголовка спецификации + кнопка создать позицию -->
+        <div class="modalRow" style="margin-top: 8vh;">
+          <!--иконка/кнопка создать новую позицию спецификации-->
+          <span class="modal1-icon" data-action="new-position-specification" data-id="">
+            <i class="material-symbols-outlined">note_add</i>
+          </span>
 
-      <!-- Сумма -->
-      <label for="edit-spec-amount">Сумма</label>
-      <input type="number" id="edit-spec-amount" step="0.01" placeholder="Введите сумму" />
+          <!-- поля шапки спецификации -->
+          <input type="text" class="inputCALC" id="edit-spec-name" placeholder="Например: «Spec #1»" required />
+          <input type="text" class="inputCALC" id="edit-spec-status" placeholder="draft / active / closed" required />
+          <input type="number" class="inputCALC" id="edit-spec-amount" step="0.01" placeholder="Введите сумму" />
+          <input type="number" class="inputCALC" id="edit-spec-costs" step="0.01" placeholder="Введите стоимость" />
+          <input type="number" class="inputCALC" id="edit-spec-profit" step="0.01" placeholder="Введите прибыль" />
+          <input type="number" class="inputCALC" id="edit-spec-profit-pct" step="0.01" placeholder="%" />
+          <input type="text" class="inputCALC" id="edit-spec-responsible" placeholder="ФИО / отдел" />
+          <button type="button" class="save-spec-button">Сохранить</button>
+        </div>
 
-      <!-- Стоимость -->
-      <label for="edit-spec-costs">Стоимость</label>
-      <input type="number" id="edit-spec-costs" step="0.01" placeholder="Введите стоимость" />
-
-      <!-- Прибыль -->
-      <label for="edit-spec-profit">Прибыль</label>
-      <input type="number" id="edit-spec-profit" step="0.01" placeholder="Введите прибыль" />
-
-      <!-- Процент прибыли -->
-      <label for="edit-spec-profit-pct">Процент прибыли</label>
-      <input type="number" id="edit-spec-profit-pct" step="0.01" placeholder="%" />
-
-      <!-- Ответственный -->
-      <label for="edit-spec-responsible">Ответственный</label>
-      <input type="text" id="edit-spec-responsible" placeholder="ФИО / отдел" />
-
-      <!-- Кнопка для сохранения изменений спецификации -->
-      <button type="button" class="save-spec-button">Сохранить</button>
+        <!-- Нижняя часть модалки со скроллом, где будут отображаться позиции (и подпозиции) -->
+        <div id="modalBottom" class="modalVNUT" style="top: 14vh; height: 84.2vh; width: 97vw;">
+          <div class="modalVNUT-content" id="specPositionsContainer">
+            <!-- 
+              Здесь динамически добавляются .modalPositionSpecification 
+              (позиции спецификации) и их дочерние блоки 
+            -->
+          </div>
+        </div>
+      </div>
     </form>
   </div>
 </div>
@@ -294,9 +299,9 @@
     </div>
 
     <!-- Иконка Удалить -->
-      <span class="spec-icon" style="right: -2.4vw;" data-action="delete-spec" data-spec-id="">
-        <i class="material-symbols-outlined">delete</i>
-      </span>
+    <span class="spec-icon" style="right: -2.4vw;" data-action="delete-spec" data-spec-id="">
+      <i class="material-symbols-outlined">delete</i>
+    </span>
   </div>
 </template>
 
@@ -319,24 +324,23 @@
   --spacer: 1vw; 
 }
 
-  /* Убираем стрелки в input[type=number] (вспомогательно для полей, где всё же type=number) */
+  /* Убираем стрелки в input[type=number] */
 input[type=number]::-webkit-inner-spin-button,
 input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Моноширинные цифры (tabular) для полей, где это нужно */
+/* Моноширинные цифры (tabular) для некоторых полей */
 .numeric-align {
   font-variant-numeric: tabular-nums;
-  /* или font-feature-settings: "tnum" 1, "lnum" 1; */
 }
 .numeric-align-center {
   font-variant-numeric: tabular-nums;
   text-align: center;
 }
 
-/* Закрыть главное модальное окно */
+/* Закрыть главное модальное окно (список проектов) */
 .close-modal {
   position: absolute;
   top: 1vw;
@@ -418,7 +422,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 /* Родительский контейнер (сделка) */
 .modal1-container {
-    display: flex;
+  display: flex;
   align-items: center;
   padding: 0.4vw;
   border-radius: var(--borderRadius);
@@ -556,7 +560,7 @@ input[type=number]::-webkit-outer-spin-button {
   color: var(--white-color3);
 }
 
-/* Кнопка добавления проекта */
+/* Кнопка add project */
 #add-project-button {
   background-color: var(--white-color2);
   color: var(--black-color);
@@ -632,9 +636,7 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: var(--white-color1);
 }
 
-/* ------------------------------------
-   Overlay (loader) стили 
-------------------------------------- */
+/* Overlay (loader) стили */
 .overlay {
   position: fixed;
   top: 0; 
@@ -642,7 +644,7 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100vw;
   height: 100vh;
   background: rgba(0,0,0,0.4);
-  z-index: 9999; /* выше всего */
+  z-index: 9999; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -650,8 +652,6 @@ input[type=number]::-webkit-outer-spin-button {
 .overlay.hidden {
   display: none;
 }
-
-/* Стили loader (из вашего примера) */
 .loader {
   width: 350px;
   height: 180px;
@@ -697,7 +697,6 @@ input[type=number]::-webkit-outer-spin-button {
     opacity: 1;
   }
 }
-
 @keyframes loading {
   0% {
     left: 0%;
@@ -706,11 +705,9 @@ input[type=number]::-webkit-outer-spin-button {
     left: 50%;
   }
 }
-
-  </style>
+</style>
 
 <script type="module">
-  
   // Инициализация Supabase (предполагаем, что window.supabase уже инициализирован)
   const supabase = window.supabase;
 
@@ -718,7 +715,7 @@ input[type=number]::-webkit-outer-spin-button {
   const projectsContainer = document.getElementById('projects-container');
   const addProjectButton = document.getElementById('add-project-button');
 
-  // Модалки редактирования
+  // Модалки
   const editModal = document.getElementById('editModal');
   const editForm = document.getElementById('edit-form');
   const editSpecModal = document.getElementById('editSpecModal');
@@ -732,7 +729,7 @@ input[type=number]::-webkit-outer-spin-button {
   let currentEditingSpec = null;
 
   /**********************/
-  /* Преобразование числа с пробелами */
+  // //Форматирование числа с пробелами
   function formatNumberWithSpaces(value) {
     if (value == null || value === '') return '';
     const num = Number(value);
@@ -745,7 +742,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   /**********************/
-  /* ФУНКЦИИ ПОКАЗ/СКРЫТЬ LOADER */
+  // //Loader
   function showLoader() {
     deleteOverlay.classList.remove('hidden');
   }
@@ -754,7 +751,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   /**********************/
-  /* ГЕНЕРАЦИЯ ID-шников */
+  // //Генерация ID (если у вас text)
   function generateProjectID() {
     return 'proj_' + Math.random().toString(36).substr(2, 9);
   }
@@ -763,9 +760,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   /**********************/
-  /*   ШАБЛОНЫ/ОТРИСОВКА */
-
-  // Создать DOM для проекта
+  // //Создание DOM для проектов/спецификаций
   function createProjectContainer(project) {
     if (!project || !project.project_id) {
       console.error('[LOG] Некорректные данные проекта:', project);
@@ -776,13 +771,9 @@ input[type=number]::-webkit-outer-spin-button {
       console.error('[LOG] Шаблон project-template не найден.');
       return null;
     }
-    const block = template.content.cloneNode(true); // Клонируем шаблон только один раз
+    const block = template.content.cloneNode(true);
     const container = block.querySelector('.modal1-container'); 
-
-    if (!container) {
-      console.error('[LOG] Не найден контейнер .modal1-container в блоке проекта');
-      return null;
-    }
+    if (!container) return null;
 
     container.dataset.id = project.project_id;
 
@@ -794,7 +785,7 @@ input[type=number]::-webkit-outer-spin-button {
     if (deleteIcon) deleteIcon.dataset.id = project.project_id;
     if (newSpecIcon) newSpecIcon.dataset.id = project.project_id;
 
-    // Сохраняем данные в data-атрибутах
+    // Сохраняем поля в data-атрибутах
     container.dataset.projectName = project.project_name || '';
     container.dataset.status = project.status || '';
     container.dataset.contractAmount = project.contract_amount || 0;
@@ -806,7 +797,7 @@ input[type=number]::-webkit-outer-spin-button {
     container.dataset.buyerCompany = project.buyer_company || '';
     container.dataset.tinBuyer = project.tin_buyer || '';
 
-    // Заполняем поля (readonly) с форматированием
+    // Заполняем поля (readonly)
     const projectIdInput = container.querySelector('[data-field="project_id"]');
     const projectNameInput = container.querySelector('[data-field="project_name"]');
     const statusInput = container.querySelector('[data-field="status"]');
@@ -831,16 +822,9 @@ input[type=number]::-webkit-outer-spin-button {
     if (buyerCompanyInput) buyerCompanyInput.value = project.buyer_company || '';
     if (tinBuyerInput) tinBuyerInput.value = project.tin_buyer || '';
 
-    // Добавляем спецификации
-    const specsWrapper = block.querySelector('.specifications-wrapper');
-    if (specsWrapper) {
-      // Предполагается, что спецификации будут загружены отдельно
-    }
-
     return block;
   }
 
-  // Создать DOM для спецификации
   function createSpecificationContainer(spec) {
     if (!spec || !spec.specification_id) {
       console.error('[LOG] Некорректные данные спецификации:', spec);
@@ -853,11 +837,7 @@ input[type=number]::-webkit-outer-spin-button {
     }
     const block = template.content.cloneNode(true);
     const specContainer = block.querySelector('.spec-container');
-
-    if (!specContainer) {
-      console.error('[LOG] Не найден контейнер .spec-container в шаблоне спецификации');
-      return null;
-    }
+    if (!specContainer) return null;
 
     specContainer.dataset.specId = spec.specification_id;
     specContainer.dataset.projectId = spec.project_id;
@@ -868,7 +848,6 @@ input[type=number]::-webkit-outer-spin-button {
     if (editSpecIcon) editSpecIcon.dataset.specId = spec.specification_id;
     if (deleteSpecIcon) deleteSpecIcon.dataset.specId = spec.specification_id;
 
-    // Сохраняем данные в data-атрибутах
     specContainer.dataset.specificationName = spec.specification_name || '';
     specContainer.dataset.status = spec.status || '';
     specContainer.dataset.specificationAmount = spec.specification_amount || 0;
@@ -877,7 +856,6 @@ input[type=number]::-webkit-outer-spin-button {
     specContainer.dataset.profitPercentage = spec.profit_percentage || 0;
     specContainer.dataset.responsible = spec.responsible || '';
 
-    // Заполняем поля (readonly) с форматированием
     const specNameInput = specContainer.querySelector('[data-field="specification_name"]');
     const specStatusInput = specContainer.querySelector('[data-field="status"]');
     const specAmountInput = specContainer.querySelector('[data-field="specification_amount"]');
@@ -898,8 +876,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   /**********************/
-  /*      ЗАГРУЗКА ДАННЫХ */
-
+  // //Загрузка проектов и спецификаций
   async function loadProjects() {
     console.log('[LOG] Загрузка списка проектов...');
     const { data, error } = await supabase.from('projects').select('*');
@@ -928,6 +905,7 @@ input[type=number]::-webkit-outer-spin-button {
       return;
     }
     console.log('[LOG] Загружено спецификаций:', data?.length || 0);
+
     data.forEach((spec) => {
       const projectContainer = projectsContainer.querySelector(`[data-id="${spec.project_id}"]`);
       if (projectContainer) {
@@ -944,8 +922,7 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   /**********************/
-  /*    ДОБАВЛЕНИЕ ЗАПИСЕЙ */
-
+  // //Создание проекта/спецификации
   async function addNewProject() {
     const newProject = {
       project_id: generateProjectID(),
@@ -961,10 +938,7 @@ input[type=number]::-webkit-outer-spin-button {
       tin_buyer: '',
     };
     console.log('[LOG] Создаём новый проект:', newProject);
-    const { error } = await supabase
-      .from('projects')
-      .insert([newProject]);
-
+    const { error } = await supabase.from('projects').insert([newProject]);
     if (error) {
       console.error('[LOG] Ошибка добавления проекта:', error);
     }
@@ -983,64 +957,35 @@ input[type=number]::-webkit-outer-spin-button {
       responsible: '',
     };
     console.log('[LOG] Создаём новую спецификацию:', newSpec);
-    const { error } = await supabase
-      .from('specifications')
-      .insert([newSpec]);
-
+    const { error } = await supabase.from('specifications').insert([newSpec]);
     if (error) {
       console.error('[LOG] Ошибка добавления спецификации:', error);
     }
   }
 
   /**********************/
-  /*   УДАЛЕНИЕ / ПРОЕКТ */
-
+  // //Удаление проекта/спецификации
   async function deleteProject(projectId) {
     console.log('[LOG] Удаляем проект:', projectId);
-    // Показать loader
     showLoader();
-    
-    const { error } = await supabase
-      .from('projects')
-      .delete()
-      .eq('project_id', projectId);
-
+    const { error } = await supabase.from('projects').delete().eq('project_id', projectId);
     if (error) {
       console.error('[LOG] Ошибка удаления проекта:', error);
-      // Скрываем loader при ошибке
       hideLoader();
-      return;
     }
-    console.log('[LOG] Запрос на удаление проекта успешно отправлен в БД...');
-    // Фактическое удаление из DOM произойдёт в Realtime колбэке "DELETE",
-    // где мы и скроем loader (см. ниже).
   }
-
-  /**********************/
-  /*  УДАЛЕНИЕ / СПЕЦИИ  */
-
   async function deleteSpecification(specId) {
     console.log('[LOG] Удаляем спецификацию:', specId);
-    // Показать loader
     showLoader();
-
-    const { error } = await supabase
-      .from('specifications')
-      .delete()
-      .eq('specification_id', specId);
-
+    const { error } = await supabase.from('specifications').delete().eq('specification_id', specId);
     if (error) {
       console.error('[LOG] Ошибка удаления спецификации:', error);
       hideLoader();
-      return;
     }
-    console.log('[LOG] Запрос на удаление спецификации успешно отправлен в БД...');
-    // Реальный remove из DOM сделает Realtime "DELETE", там же hideLoader().
   }
 
   /**********************/
-  /*    РЕДАКТИРОВАНИЕ   */
-
+  // //Редактирование проекта
   function openEditModal(projectId) {
     const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
     if (!projectContainer) return;
@@ -1102,7 +1047,8 @@ input[type=number]::-webkit-outer-spin-button {
     closeEditModal();
   }
 
-  // Редактирование спецификации
+  /**********************/
+  // //Редактирование спецификации
   function openEditSpecModal(specId) {
     const specContainer = projectsContainer.querySelector(`[data-spec-id="${specId}"]`);
     if (!specContainer) return;
@@ -1127,6 +1073,20 @@ input[type=number]::-webkit-outer-spin-button {
     editSpecForm['edit-spec-profit'].value = spec.specification_profit;
     editSpecForm['edit-spec-profit-pct'].value = spec.profit_percentage;
     editSpecForm['edit-spec-responsible'].value = spec.responsible;
+
+    // Привязываем specId к иконке создания позиции
+    const newPosBtn = editSpecModal.querySelector('[data-action="new-position-specification"]');
+    if (newPosBtn) {
+      newPosBtn.dataset.id = specId;
+    }
+
+    // Очищаем контейнер позиций
+    const specPositionsContainer = document.getElementById('specPositionsContainer');
+    if (specPositionsContainer) {
+      specPositionsContainer.innerHTML = '';
+    }
+    // Загружаем позиции данной спецификации
+    loadSpecPositions(specId);
 
     editSpecModal.classList.remove('hidden');
   }
@@ -1158,10 +1118,188 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   /**********************/
-  /*   REALTIME ПОДПИСКА */
+  // //Загрузка позиций и подпозиций
+  async function loadSpecPositions(specId) {
+    console.log('[LOG] Загружаем spec_positions для спецификации:', specId);
+    const { data, error } = await supabase.from('spec_positions').select('*').eq('specification_id', specId);
+    if (error) {
+      console.error('[LOG] Ошибка загрузки позиций:', error);
+      return;
+    }
+    if (data) {
+      data.forEach(pos => createPositionInDom(pos));
+    }
+  }
+  async function loadChildPositions(positionId) {
+    const { data, error } = await supabase.from('spec_child_positions').select('*').eq('position_id', positionId);
+    if (error) {
+      console.error('[LOG] Ошибка загрузки дочерних позиций:', error);
+      return;
+    }
+    if (data) {
+      data.forEach(child => createChildPositionInDom(child));
+    }
+  }
 
+  // //Создание DOM для позиции
+  function createPositionInDom(positionData) {
+    const specPositionsContainer = document.getElementById('specPositionsContainer');
+    if (!specPositionsContainer) return null;
+
+    const divPosition = document.createElement('div');
+    divPosition.classList.add('modalPositionSpecification');
+    divPosition.style.width = '168vw';
+    divPosition.dataset.positionId = positionData.position_id;
+
+    divPosition.innerHTML = `
+      <div class="modalProjectCARD" style="width: 168vw; height: auto; flex-direction: row;">
+        <div class="modalRow">
+          <input class="inputCALC" type="text" placeholder="p / p agreement" style="width: 2.3vw;" value="${positionData.p_p_agreement || ''}"/>
+          <input class="inputCALC" type="text" placeholder="Description Position agreement" style="width: 16vw;" value="${positionData.description_position_agreement || ''}"/>
+          <input class="inputCALC" type="text" placeholder="q-ty agreement" style="width: 2.5vw;" value="${positionData.qty_agreement || ''}"/>
+          <input class="inputCALC" type="text" placeholder="price no VAT agreement" style="width: 5.2vw;" value="${positionData.price_no_vat_agreement || ''}"/>
+          <input class="inputCALC" type="text" placeholder="sum no VAT agreement" style="width: 5.2vw;" value="${positionData.sum_no_vat_agreement || ''}"/>
+          <input class="inputCALC" type="text" placeholder="price VAT agreement" style="width: 5.2vw;" value="${positionData.price_vat_agreement || ''}"/>
+          <input class="inputCALC" type="text" placeholder="sum VAT agreement" style="width: 5.2vw;" value="${positionData.sum_vat_agreement || ''}"/>
+          
+          <!-- Иконка Удалить позицию -->
+          <span class="spec-icon" style="top: -1.2vw;" data-action="delete-position-spec" data-position-id="${positionData.position_id}">
+            <i class="material-symbols-outlined">delete</i>
+          </span>
+          
+          <!-- Иконка скрыть/отобразить подпозиции -->
+          <label class="switch">
+            <input type="checkbox">
+            <span class="slider"></span>
+          </label>
+          
+          <!-- Иконка Создать дочернюю позицию -->
+          <span class="modal1-icon" style="top: -1.2vw;" data-action="new-child-position" data-position-id="${positionData.position_id}">
+            <i class="material-symbols-outlined">note_add</i>
+          </span>
+          
+          <div class="modalColumn" style="height: 4vw; width: 93vw;">
+            <div class="modalRow" id="ModalSumPosition">
+            </div>
+            <!-- контейнер для дочерних позиций -->
+            <div class="modalRow-child-list">
+            </div>
+          </div>
+          
+          <input class="inputCALC" type="text" placeholder="price no VAT margin" style="width: 5.2vw;" value="${positionData.price_no_vat_margin || ''}"/>
+          <input class="inputCALC" type="text" placeholder="sum no VAT margin" style="width: 5.2vw;" value="${positionData.sum_no_vat_margin || ''}"/>
+          <input class="inputCALC" type="text" placeholder="price VAT margin" style="width: 5.2vw;" value="${positionData.price_vat_margin || ''}"/>
+          <input class="inputCALC" type="text" placeholder="sum VAT margin" style="width: 5.2vw;" value="${positionData.sum_vat_margin || ''}"/>
+        </div>
+      </div>
+    `;
+    specPositionsContainer.appendChild(divPosition);
+
+    // Загружаем дочерние
+    loadChildPositions(positionData.position_id);
+    return divPosition;
+  }
+  // //Создание DOM для дочерней позиции
+  function createChildPositionInDom(childData) {
+    const parentDiv = document.querySelector(`[data-position-id="${childData.position_id}"]`);
+    if (!parentDiv) return null;
+    const childList = parentDiv.querySelector('.modalRow-child-list');
+    if (!childList) return null;
+
+    const divChild = document.createElement('div');
+    divChild.classList.add('modalRow');
+    divChild.id = 'ModalChildPosition';
+    divChild.style.marginLeft = '-2.7vw';
+    divChild.dataset.childPositionId = childData.child_position_id || '';
+
+    divChild.innerHTML = `
+      <!-- Иконка Удалить подпозицию -->
+      <span class="spec-icon" data-action="delete-child-position" data-child-position-id="${childData.child_position_id}">
+        <i class="material-symbols-outlined">delete</i>
+      </span>
+      <input class="inputCALC" type="text" placeholder="p / p ChildPosition" style="width: 2.3vw;" value="${childData.p_p_child_position || ''}" />
+      <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;" value="${childData.catalog_position_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="Description Position ChildPosition" style="width: 16vw;" value="${childData.description_position_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="q-ty ChildPosition" style="width: 2.5vw;" value="${childData.qty_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="supplier name ChildPosition" style="width: 8vw;" value="${childData.supplier_name_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;" />
+      <input class="inputCALC" type="text" placeholder="WAT ChildPosition" style="width: 2.5vw;" value="${childData.vat_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="RUB ChildPosition" style="width: 5.2vw;" value="${childData.rub_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="USD ChildPosition" style="width: 5.2vw;" value="${childData.usd_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="EUR ChildPosition" style="width: 5.2vw;" value="${childData.eur_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="price no VAT ChildPosition" style="width: 5.2vw;" value="${childData.price_no_vat_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="sum no VAT ChildPosition" style="width: 5.2vw;" value="${childData.sum_no_vat_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="price VAT ChildPosition" style="width: 5.2vw;" value="${childData.price_vat_child || ''}" />
+      <input class="inputCALC" type="text" placeholder="sum VAT ChildPosition" style="width: 5.2vw;" value="${childData.sum_vat_child || ''}" />
+    `;
+    childList.appendChild(divChild);
+    return divChild;
+  }
+
+  /**********************/
+  // //Добавить новую позицию или подпозицию
+  async function addNewPositionSpec(specificationId) {
+    const newPositionData = {
+      specification_id: specificationId,
+      p_p_agreement: '',
+      description_position_agreement: '',
+      qty_agreement: 0,
+      price_no_vat_agreement: 0,
+      sum_no_vat_agreement: 0,
+      price_vat_agreement: 0,
+      sum_vat_agreement: 0,
+      price_no_vat_margin: 0,
+      sum_no_vat_margin: 0,
+      price_vat_margin: 0,
+      sum_vat_margin: 0
+    };
+    const { data, error } = await supabase
+      .from('spec_positions')
+      .insert([newPositionData])
+      .select();
+    if (error) {
+      console.error('[LOG] Ошибка при создании позиции:', error);
+      return;
+    }
+    if (data && data.length > 0) {
+      createPositionInDom(data[0]);
+    }
+  }
+  async function addNewChildPosition(positionId) {
+    const newChildData = {
+      position_id: positionId,
+      p_p_child_position: '',
+      catalog_position_child: '',
+      description_position_child: '',
+      qty_child: 0,
+      supplier_name_child: '',
+      vat_child: 0,
+      rub_child: 0,
+      usd_child: 0,
+      eur_child: 0,
+      price_no_vat_child: 0,
+      sum_no_vat_child: 0,
+      price_vat_child: 0,
+      sum_vat_child: 0
+    };
+    const { data, error } = await supabase
+      .from('spec_child_positions')
+      .insert([newChildData])
+      .select();
+    if (error) {
+      console.error('[LOG] Ошибка при создании дочерней позиции:', error);
+      return;
+    }
+    if (data && data.length > 0) {
+      createChildPositionInDom(data[0]);
+    }
+  }
+
+  /**********************/
+  // //Realtime для projects и specifications (как в вашем исходном коде)
+  // Если у вас уже есть эта функция setupRealtime(), сохраняйте её. Ниже — пример:
   function setupRealtime() {
-    // Подписка на проекты
+    // Подписка на таблицу projects
     const channelProjects = supabase
       .channel('realtime_projects')
       .on(
@@ -1173,7 +1311,7 @@ input[type=number]::-webkit-outer-spin-button {
 
           if (payload.eventType === 'INSERT' && payload.new) {
             console.log('[LOG] Realtime: INSERT project:', payload.new);
-            // Добавим DOM, если нет
+            // Добавляем DOM-элемент, если ещё нет
             if (!projectsContainer.querySelector(`[data-id="${projectId}"]`)) {
               const block = createProjectContainer(payload.new);
               if (block) projectsContainer.appendChild(block);
@@ -1183,7 +1321,7 @@ input[type=number]::-webkit-outer-spin-button {
             const projectContainer = projectsContainer.querySelector(`[data-id="${projectId}"]`);
             if (projectContainer) {
               const updatedProject = payload.new;
-              // Обновляем data-атрибуты
+              // Обновляем data-атрибуты + поля
               projectContainer.dataset.projectName = updatedProject.project_name || '';
               projectContainer.dataset.status = updatedProject.status || '';
               projectContainer.dataset.contractAmount = updatedProject.contract_amount || 0;
@@ -1195,7 +1333,6 @@ input[type=number]::-webkit-outer-spin-button {
               projectContainer.dataset.buyerCompany = updatedProject.buyer_company || '';
               projectContainer.dataset.tinBuyer = updatedProject.tin_buyer || '';
 
-              // Обновляем поля
               const fields = [
                 'project_id',
                 'project_name',
@@ -1212,10 +1349,10 @@ input[type=number]::-webkit-outer-spin-button {
               fields.forEach(field => {
                 const input = projectContainer.querySelector(`[data-field="${field}"]`);
                 if (input) {
-                  if (field === 'contract_amount' || field === 'contract_costs' || field === 'contract_profit' || field === 'profit_percentage') {
+                  if (['contract_amount','contract_costs','contract_profit','profit_percentage'].includes(field)) {
                     input.value = formatNumberWithSpaces(updatedProject[field]) || 0;
                   } else {
-                    input.value = updatedProject[field] !== undefined ? updatedProject[field] : '';
+                    input.value = updatedProject[field] ?? '';
                   }
                 }
               });
@@ -1229,51 +1366,40 @@ input[type=number]::-webkit-outer-spin-button {
                 projectsContainer.removeChild(projectBlock);
               }
             }
-            // Скрываем loader, т.к. удаление (и из DOM) завершено
             hideLoader();
           }
         }
       )
       .subscribe();
 
-    // Подписка на спецификации
+    // Подписка на таблицу specifications
     const channelSpecs = supabase
       .channel('realtime_specifications')
       .on(
         'postgres_changes',
         { event: '*', schema: 'public', table: 'specifications' },
         (payload) => {
-          // Определяем specId (при DELETE часто лежит в payload.old, при INSERT/UPDATE - в payload.new)
           const specId = payload.new?.specification_id || payload.old?.specification_id;
           if (!specId) return;
 
-          // Смотрим тип события
           if (payload.eventType === 'INSERT' && payload.new) {
             console.log('[LOG] Realtime: INSERT specification:', payload.new);
-
-            // Логика создания DOM-элемента (если нужно):
-            // Для вставки нам нужен project_id, чтобы найти родительский контейнер
             const projectId = payload.new.project_id;
             const projectContainer = document.querySelector(`[data-id="${projectId}"]`);
             if (projectContainer) {
               const projectBlock = projectContainer.closest('.project-block');
               const specsWrapper = projectBlock?.querySelector('.specifications-wrapper');
               if (specsWrapper) {
-                // Функция createSpecificationContainer() создаёт DOM-элемент из шаблона
                 const specEl = createSpecificationContainer(payload.new);
                 if (specEl) {
                   specsWrapper.appendChild(specEl);
                 }
               }
             }
-
           } else if (payload.eventType === 'UPDATE' && payload.new) {
             console.log('[LOG] Realtime: UPDATE specification:', payload.new);
-
-            // Найдём в DOM элемент спецификации напрямую по specId
             const specElem = document.querySelector(`[data-spec-id="${specId}"]`);
             if (specElem) {
-              // Обновляем data-атрибуты
               const updatedSpec = payload.new;
               specElem.dataset.specificationName = updatedSpec.specification_name || '';
               specElem.dataset.status = updatedSpec.status || '';
@@ -1283,7 +1409,6 @@ input[type=number]::-webkit-outer-spin-button {
               specElem.dataset.profitPercentage = updatedSpec.profit_percentage || 0;
               specElem.dataset.responsible = updatedSpec.responsible || '';
 
-              // Обновляем поля readonly
               const specNameInput = specElem.querySelector('[data-field="specification_name"]');
               const specStatusInput = specElem.querySelector('[data-field="status"]');
               const specAmountInput = specElem.querySelector('[data-field="specification_amount"]');
@@ -1300,16 +1425,12 @@ input[type=number]::-webkit-outer-spin-button {
               if (specProfitPctInput) specProfitPctInput.value = formatNumberWithSpaces(updatedSpec.profit_percentage) || 0;
               if (responsibleInput) responsibleInput.value = updatedSpec.responsible || '';
             }
-
           } else if (payload.eventType === 'DELETE') {
             console.log('[LOG] Realtime: DELETE specification:', payload.old);
-
-            // Удаляем элемент спецификации напрямую по specId (не используем project_id)
             const specElem = document.querySelector(`[data-spec-id="${specId}"]`);
             if (specElem) {
               specElem.remove();
             }
-            // Скрываем лоадер, если мы его показывали на момент удаления
             hideLoader();
           }
         }
@@ -1325,15 +1446,104 @@ input[type=number]::-webkit-outer-spin-button {
   }
 
   /**********************/
-  /*   НАСТРОЙКА EVENTS  */
+  // //Realtime для spec_positions
+  function setupRealtimePositions() {
+    const channelPositions = supabase
+      .channel('realtime_spec_positions')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'spec_positions' },
+        (payload) => {
+          const positionId = payload.new?.position_id || payload.old?.position_id;
+          if (!positionId) return;
+
+          if (payload.eventType === 'INSERT' && payload.new) {
+            console.log('[LOG] Realtime: INSERT spec_positions:', payload.new);
+            // Если окно спецификации открыто и совпадает specification_id
+            if (currentEditingSpec && currentEditingSpec.specification_id === payload.new.specification_id) {
+              createPositionInDom(payload.new);
+            }
+          }
+          else if (payload.eventType === 'UPDATE' && payload.new) {
+            console.log('[LOG] Realtime: UPDATE spec_positions:', payload.new);
+            const divPosition = document.querySelector(`[data-position-id="${positionId}"]`);
+            if (divPosition) {
+              // Обновить значения, если нужно (аналогично, как выше)
+              // ...
+            }
+          }
+          else if (payload.eventType === 'DELETE') {
+            console.log('[LOG] Realtime: DELETE spec_positions:', payload.old);
+            const divPosition = document.querySelector(`[data-position-id="${positionId}"]`);
+            if (divPosition) {
+              divPosition.remove();
+            }
+            hideLoader();
+          }
+        }
+      )
+      .subscribe();
+
+    channelPositions.on('subscription_error', (status) => {
+      console.error('[LOG] Ошибка подписки (spec_positions):', status);
+    });
+  }
+
+  /**********************/
+  // //Realtime для spec_child_positions
+  function setupRealtimeChildPositions() {
+    const channelChildPositions = supabase
+      .channel('realtime_spec_child_positions')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'spec_child_positions' },
+        (payload) => {
+          const childId = payload.new?.child_position_id || payload.old?.child_position_id;
+          if (!childId) return;
+
+          if (payload.eventType === 'INSERT' && payload.new) {
+            console.log('[LOG] Realtime: INSERT spec_child_positions:', payload.new);
+            // Если родительская позиция отображается:
+            const parentPositionId = payload.new.position_id;
+            const parentDiv = document.querySelector(`[data-position-id="${parentPositionId}"]`);
+            if (parentDiv) {
+              createChildPositionInDom(payload.new);
+            }
+          }
+          else if (payload.eventType === 'UPDATE' && payload.new) {
+            console.log('[LOG] Realtime: UPDATE spec_child_positions:', payload.new);
+            const childDiv = document.querySelector(`[data-child-position-id="${childId}"]`);
+            if (childDiv) {
+              // Обновить поля, если нужно
+              // ...
+            }
+          }
+          else if (payload.eventType === 'DELETE') {
+            console.log('[LOG] Realtime: DELETE spec_child_positions:', payload.old);
+            const childDiv = document.querySelector(`[data-child-position-id="${childId}"]`);
+            if (childDiv) {
+              childDiv.remove();
+            }
+            hideLoader();
+          }
+        }
+      )
+      .subscribe();
+
+    channelChildPositions.on('subscription_error', (status) => {
+      console.error('[LOG] Ошибка подписки (spec_child_positions):', status);
+    });
+  }
+
+  /**********************/
+  // //Настройка событий
 
   if (addProjectButton) {
     addProjectButton.addEventListener('click', addNewProject);
   }
 
-  // Общий обработчик кликов в projectsContainer
+  // Общий обработчик кликов по списку проектов
   projectsContainer.addEventListener('click', (event) => {
-    // Проекты
     const iconProject = event.target.closest('.modal1-icon');
     if (iconProject) {
       const action = iconProject.dataset.action;
@@ -1347,8 +1557,6 @@ input[type=number]::-webkit-outer-spin-button {
       }
       return;
     }
-
-    // Спецификации
     const iconSpec = event.target.closest('.spec-icon');
     if (iconSpec) {
       const specAction = iconSpec.dataset.action;
@@ -1361,22 +1569,73 @@ input[type=number]::-webkit-outer-spin-button {
     }
   });
 
-  // Кнопки закрыть/сохранить в модалках
+  // Кнопки закрыть/сохранить (проект)
   document.querySelector('.close-edit-modal').addEventListener('click', closeEditModal);
   editForm.querySelector('.save-button').addEventListener('click', saveProject);
 
+  // Кнопки закрыть/сохранить (спецификация)
   document.querySelector('.close-edit-spec-modal').addEventListener('click', closeEditSpecModal);
   editSpecForm.querySelector('.save-spec-button').addEventListener('click', saveSpecification);
 
-  /**********************/
-  /*   ЗАПУСК ПРИ ЗАГРУЗКЕ */
+  // Обработчик кликов внутри editSpecModal (для позиций/подпозиций)
+  const editSpecModalEl = document.getElementById('editSpecModal');
+  editSpecModalEl.addEventListener('click', async (event) => {
+    const newPosBtn = event.target.closest('[data-action="new-position-specification"]');
+    if (newPosBtn) {
+      const specId = newPosBtn.dataset.id;
+      if (specId) {
+        await addNewPositionSpec(specId);
+      }
+      return;
+    }
 
+    const newChildBtn = event.target.closest('[data-action="new-child-position"]');
+    if (newChildBtn) {
+      const parentPositionId = newChildBtn.dataset.positionId;
+      if (parentPositionId) {
+        await addNewChildPosition(parentPositionId);
+      }
+      return;
+    }
+
+    const delPosBtn = event.target.closest('[data-action="delete-position-spec"]');
+    if (delPosBtn) {
+      const positionId = delPosBtn.dataset.positionId;
+      if (positionId) {
+        showLoader();
+        const { error } = await supabase.from('spec_positions').delete().eq('position_id', positionId);
+        if (error) console.error('[LOG] Ошибка удаления позиции:', error);
+        hideLoader();
+      }
+      return;
+    }
+
+    const delChildBtn = event.target.closest('[data-action="delete-child-position"]');
+    if (delChildBtn) {
+      const childPositionId = delChildBtn.dataset.childPositionId;
+      if (childPositionId) {
+        showLoader();
+        const { error } = await supabase.from('spec_child_positions').delete().eq('child_position_id', childPositionId);
+        if (error) console.error('[LOG] Ошибка удаления дочерней позиции:', error);
+        hideLoader();
+      }
+      return;
+    }
+  });
+
+  /**********************/
+  // //Запуск при загрузке
   loadProjects()
     .then(loadSpecifications)
-    .then(setupRealtime);
+    .then(() => {
+      // Подписки в реальном времени
+      setupRealtime();            // projects + specifications
+      setupRealtimePositions();   // spec_positions
+      setupRealtimeChildPositions(); // spec_child_positions
+    });
 
   /**********************/
-  /*   Пример закрытия всего (основного) модала */
+  // //Закрыть главное окно (пример)
   function closeModal() {
     document.querySelector('.modal111-content').style.display = 'none';
   }
