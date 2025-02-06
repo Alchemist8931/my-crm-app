@@ -67,22 +67,26 @@
 </div>
 
 <!-- 
-  Модальное окно редактирования спецификации 
-  (СОХРАНЯЕМ ваш исходный внешний вид/разметку)
+    Обновлённый блок Модального окна редактирования спецификации 
+    (замена старого содержимого полностью)
 -->
 <div id="editSpecModal" class="edit-modal hidden">
   <div class="edit-modal-content">
     <button class="close-edit-spec-modal">×</button>
     
+    <!--форма редактирования “шапки” спецификации-->
     <form id="edit-spec-form">  
       <div class="modalProjectCalculation" style="width: 97.2vw; height: 96.8vh; flex-direction: column;">
         <p style="width: 12vw; text-transform: uppercase;">project costs</p> 
 
-        <!-- "шапка" спецификации (поля + кнопка "new-position-specification") -->
+        <!-- Строка полей для заголовка спецификации + кнопка создать позицию -->
         <div class="modalRow" style="margin-top: 8vh;">
+          <!--иконка/кнопка создать новую позицию спецификации-->
           <span class="modal1-icon" data-action="new-position-specification" data-id="">
             <i class="material-symbols-outlined">note_add</i>
-          </span>                
+          </span>
+
+          <!-- поля шапки спецификации -->
           <input type="text" class="inputCALC" id="edit-spec-name" placeholder="Например: «Spec #1»" required />
           <input type="text" class="inputCALC" id="edit-spec-status" placeholder="draft / active / closed" required />
           <input type="number" class="inputCALC" id="edit-spec-amount" step="0.01" placeholder="Введите сумму" />
@@ -93,75 +97,13 @@
           <button type="button" class="save-spec-button">Сохранить</button>
         </div>
 
-        <!-- "нижняя" часть с прокруткой -->
+        <!-- Нижняя часть модалки со скроллом, где будут отображаться позиции (и подпозиции) -->
         <div id="modalBottom" class="modalVNUT" style="top: 14vh; height: 84.2vh; width: 97vw;">
-          <div class="modalVNUT-content">
-            <!-- Пример одного контейнера позиции (как в вашем макете) -->
-            <div class="modalPositionSpecification" style="width: 168vw;"> 
-              <div class="modalProjectCARD" style="width: 168vw; height: auto; flex-direction: row;">
-                <div class="modalRow">
-                  <input class="inputCALC" type="text" placeholder="p / p agreement" style="width: 2.3vw;"/>
-                  <input class="inputCALC" type="text" placeholder="Description Position agreement" style="width: 16vw;"/>
-                  <input class="inputCALC" type="text" placeholder="q-ty agreement" style="width: 2.5vw;"/>
-                  <input class="inputCALC" type="text" placeholder="price no VAT agreement" style="width: 5.2vw;"/>
-                  <input class="inputCALC" type="text" placeholder="sum no VAT agreement" style="width: 5.2vw;"/>
-                  <input class="inputCALC" type="text" placeholder="price VAT agreement" style="width: 5.2vw;"/>
-                  <input class="inputCALC" type="text" placeholder="sum VAT agreement" style="width: 5.2vw;"/>
-
-                  <!-- Иконка Удалить позицию -->
-                  <span class="spec-icon" style="top: -1.2vw;" data-action="delete-position-spec" data-spec-id="">
-                    <i class="material-symbols-outlined">delete</i>
-                  </span>
-                  <!-- Иконка скрыть / отобразить подпозиции к позиции -->
-                  <label class="switch">
-                    <input type="checkbox">
-                    <span class="slider"></span>
-                  </label>
-                  <!-- Иконка Создать подпозицию (child) -->
-                  <span class="modal1-icon" style="top: -1.2vw;" data-action="new-child-position" data-id="">
-                    <i class="material-symbols-outlined">note_add</i>
-                  </span>
-
-                  <div class="modalColumn" style="height: 4vw; width: 93vw;">
-                    <div class="modalRow" id="ModalSumPosition">
-                      <input class="inputCALC" type="text" placeholder="p / p specification" style="width: 2.3vw;"/>
-                      <input class="inputCALC" type="text" placeholder="Catalog Position specification" style="width: 6vw;"/>
-                      <input class="inputCALC" type="text" placeholder="Description Position specification" style="width: 16vw;"/>
-                      <input class="inputCALC" type="text" placeholder="q-ty specification" style="width: 2.5vw;"/>
-                      <input class="inputCALC" type="text" placeholder="price no VAT specification" style="width: 5.2vw; margin-left: 38vw;"/>
-                      <input class="inputCALC" type="text" placeholder="sum no VAT specification" style="width: 5.2vw;"/>
-                      <input class="inputCALC" type="text" placeholder="price VAT specification" style="width: 5.2vw;"/>
-                      <input class="inputCALC" type="text" placeholder="sum VAT specification" style="width: 5.2vw;"/>
-                    </div>
-                    <div class="modalRow" id="ModalChildPosition" style="margin-left: -2.7vw;">
-                      <!-- Иконка Удалить подпозицию -->
-                      <span class="spec-icon" data-action="delete-position-spec" data-spec-id="">
-                        <i class="material-symbols-outlined">delete</i>
-                      </span>
-                      <input class="inputCALC" type="text" placeholder="p / p ChildPosition" style="width: 2.3vw;"/>
-                      <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;"/>
-                      <input class="inputCALC" type="text" placeholder="Description Position ChildPosition" style="width: 16vw;"/>
-                      <input class="inputCALC" type="text" placeholder="q-ty ChildPosition" style="width: 2.5vw;"/>
-                      <input class="inputCALC" type="text" placeholder="supplier name ChildPosition" style="width: 8vw;"/>
-                      <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;"/>
-                      <input class="inputCALC" type="text" placeholder="WAT ChildPosition" style="width: 2.5vw;"/>
-                      <input class="inputCALC" type="text" placeholder="RUB ChildPosition" style="width: 5.2vw;"/>
-                      <input class="inputCALC" type="text" placeholder="USD ChildPosition" style="width: 5.2vw;"/>
-                      <input class="inputCALC" type="text" placeholder="EUR ChildPosition" style="width: 5.2vw;"/>
-                      <input class="inputCALC" type="text" placeholder="price no VAT ChildPosition" style="width: 5.2vw;"/>
-                      <input class="inputCALC" type="text" placeholder="sum no VAT ChildPosition" style="width: 5.2vw;"/>
-                      <input class="inputCALC" type="text" placeholder="price VAT ChildPosition" style="width: 5.2vw;"/>
-                      <input class="inputCALC" type="text" placeholder="sum VAT ChildPosition" style="width: 5.2vw;"/>
-                    </div>
-                  </div>
-
-                  <input class="inputCALC" type="text" placeholder="price no VAT margin" style="width: 5.2vw;"/>
-                  <input class="inputCALC" type="text" placeholder="sum no VAT margin" style="width: 5.2vw;"/>
-                  <input class="inputCALC" type="text" placeholder="price VAT margin" style="width: 5.2vw;"/>
-                  <input class="inputCALC" type="text" placeholder="sum VAT margin" style="width: 5.2vw;"/>
-                </div>
-              </div>
-            </div> 
+          <div class="modalVNUT-content" id="specPositionsContainer">
+            <!-- 
+              Здесь динамически добавляются .modalPositionSpecification 
+              (позиции спецификации) и их дочерние блоки 
+            -->
           </div>
         </div>
       </div>
@@ -389,7 +331,7 @@ input[type=number]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-/* Моноширинные цифры (tabular-nums) для чисел */
+/* Моноширинные цифры (tabular) для некоторых полей */
 .numeric-align {
   font-variant-numeric: tabular-nums;
 }
@@ -441,7 +383,7 @@ input[type=number]::-webkit-outer-spin-button {
   display: flex
 }
 
-/* Модальное окно с прокруткой (список проектов) */
+/* Модальное окно с прокруткой */
 .modalVNUT {
   display: flex;
   position: fixed;
@@ -638,7 +580,7 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(6px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -648,10 +590,11 @@ input[type=number]::-webkit-outer-spin-button {
   display: none;
 }
 .edit-modal-content {
-  background: white;
+  background: none;
   padding: 2rem;
   border-radius: 10px;
-  width: 50%;
+  width: 100vw;
+  height: 100vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 .close-edit-modal,
@@ -666,7 +609,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 .close-edit-modal:hover,
 .close-edit-spec-modal:hover {
-  color: red;
+  color: white;
 }
 
 /* Кнопка add project */
@@ -694,9 +637,7 @@ input[type=number]::-webkit-outer-spin-button {
   background-color: var(--white-color1);
 }
 
-/* ------------------------------------
-   Overlay (loader) стили 
-------------------------------------- */
+/* Overlay (loader) стили */
 .overlay {
   position: fixed;
   top: 0; 
@@ -704,7 +645,7 @@ input[type=number]::-webkit-outer-spin-button {
   width: 100vw;
   height: 100vh;
   background: rgba(0,0,0,0.4);
-  z-index: 9999;
+  z-index: 9999; 
   display: flex;
   justify-content: center;
   align-items: center;
