@@ -1293,7 +1293,7 @@ function openEditSpecModal(specId) {
           <input class="inputCALC" type="text" placeholder="sum VAT agreement" style="width: 5.2vw;" value="${positionData.sum_vat_agreement || ''}"/>
           
           <!-- Иконка Удалить позицию -->
-          <span class="spec-icon" style="top: -1.2vw;" data-action="delete-position-spec" data-position-id="${positionData.position_id}">
+          <span class="spec-icon" style="top: -1.2vw; position: relative;" data-action="delete-position-spec" data-position-id="${positionData.position_id}">
             <i class="material-symbols-outlined">delete</i>
           </span>
           
@@ -1304,7 +1304,7 @@ function openEditSpecModal(specId) {
           </label>
           
           <!-- Иконка Создать дочернюю позицию -->
-          <span class="modal1-icon" style="top: -1.2vw;" data-action="new-child-position" data-position-id="${positionData.position_id}">
+          <span class="modal1-icon" style="top: -1.2vw; position: relative;" data-action="new-child-position" data-position-id="${positionData.position_id}">
             <i class="material-symbols-outlined">note_add</i>
           </span>
           
