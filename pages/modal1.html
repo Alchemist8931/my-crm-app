@@ -1265,41 +1265,63 @@ function openEditSpecModal(specId) {
     return divPosition;
   }
   // //Создание DOM для дочерней позиции
-  function createChildPositionInDom(childData) {
-    const parentDiv = document.querySelector(`[data-position-id="${childData.position_id}"]`);
-    if (!parentDiv) return null;
-    const childList = parentDiv.querySelector('.modalRow-child-list');
-    if (!childList) return null;
+  // //функция создать DOM для дочерней позиции (изменённая)
+function createChildPositionInDom(childData) {
+  // Находим родительский блок по position_id
+  const parentDiv = document.querySelector(`[data-position-id="${childData.position_id}"]`);
+  if (!parentDiv) return null;
 
-    const divChild = document.createElement('div');
-    divChild.classList.add('modalRow');
-    divChild.id = 'ModalChildPosition';
-    divChild.style.marginLeft = '-2.7vw';
-    divChild.dataset.childPositionId = childData.child_position_id || '';
+  // Внутри него ищем контейнер .modalRow-child-list
+  const childList = parentDiv.querySelector('.modalRow-child-list');
+  if (!childList) return null;
 
-    divChild.innerHTML = `
-      <!-- Иконка Удалить подпозицию -->
-      <span class="spec-icon" data-action="delete-child-position" data-child-position-id="${childData.child_position_id}">
-        <i class="material-symbols-outlined">delete</i>
-      </span>
-      <input class="inputCALC" type="text" placeholder="p / p ChildPosition" style="width: 2.3vw;" value="${childData.p_p_child_position || ''}" />
-      <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;" value="${childData.catalog_position_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="Description Position ChildPosition" style="width: 16vw;" value="${childData.description_position_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="q-ty ChildPosition" style="width: 2.5vw;" value="${childData.qty_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="supplier name ChildPosition" style="width: 8vw;" value="${childData.supplier_name_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;" />
-      <input class="inputCALC" type="text" placeholder="WAT ChildPosition" style="width: 2.5vw;" value="${childData.vat_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="RUB ChildPosition" style="width: 5.2vw;" value="${childData.rub_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="USD ChildPosition" style="width: 5.2vw;" value="${childData.usd_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="EUR ChildPosition" style="width: 5.2vw;" value="${childData.eur_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="price no VAT ChildPosition" style="width: 5.2vw;" value="${childData.price_no_vat_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="sum no VAT ChildPosition" style="width: 5.2vw;" value="${childData.sum_no_vat_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="price VAT ChildPosition" style="width: 5.2vw;" value="${childData.price_vat_child || ''}" />
-      <input class="inputCALC" type="text" placeholder="sum VAT ChildPosition" style="width: 5.2vw;" value="${childData.sum_vat_child || ''}" />
-    `;
-    childList.appendChild(divChild);
-    return divChild;
-  }
+  // Создаём элемент для подпозиции
+  const divChild = document.createElement('div');
+  divChild.classList.add('modalRow');
+  divChild.id = 'ModalChildPosition';
+  divChild.dataset.childPositionId = childData.child_position_id || '';
+
+  // Для плавного сдвига (анимации высоты), изначально высота = 0
+  divChild.style.overflow = 'hidden';
+  divChild.style.height = '0px';
+  divChild.style.transition = 'height 0.3s ease';
+
+  // Вставляем всю вашу разметку
+  divChild.innerHTML = `
+    <!-- Иконка Удалить подпозицию -->
+    <span class="spec-icon" data-action="delete-child-position" data-child-position-id="${childData.child_position_id}">
+      <i class="material-symbols-outlined">delete</i>
+    </span>
+    <input class="inputCALC" type="text" placeholder="p / p ChildPosition" style="width: 2.3vw;" value="${childData.p_p_child_position || ''}" />
+    <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;" value="${childData.catalog_position_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="Description Position ChildPosition" style="width: 16vw;" value="${childData.description_position_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="q-ty ChildPosition" style="width: 2.5vw;" value="${childData.qty_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="supplier name ChildPosition" style="width: 8vw;" value="${childData.supplier_name_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="Catalog Position ChildPosition" style="width: 6vw;" />
+    <input class="inputCALC" type="text" placeholder="WAT ChildPosition" style="width: 2.5vw;" value="${childData.vat_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="RUB ChildPosition" style="width: 5.2vw;" value="${childData.rub_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="USD ChildPosition" style="width: 5.2vw;" value="${childData.usd_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="EUR ChildPosition" style="width: 5.2vw;" value="${childData.eur_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="price no VAT ChildPosition" style="width: 5.2vw;" value="${childData.price_no_vat_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="sum no VAT ChildPosition" style="width: 5.2vw;" value="${childData.sum_no_vat_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="price VAT ChildPosition" style="width: 5.2vw;" value="${childData.price_vat_child || ''}" />
+    <input class="inputCALC" type="text" placeholder="sum VAT ChildPosition" style="width: 5.2vw;" value="${childData.sum_vat_child || ''}" />
+  `;
+
+  // Добавляем во вложенный контейнер
+  childList.appendChild(divChild);
+
+  // Запускаем анимацию плавного "раскрытия" (увеличения высоты)
+  requestAnimationFrame(() => {
+    // вычисляем натуральную высоту контента
+    const realHeight = divChild.scrollHeight + 'px';
+    // устанавливаем эту высоту => контент плавно сдвинется
+    divChild.style.height = realHeight;
+  });
+
+  return divChild;
+}
+
 
   /**********************/
   // //Добавить новую позицию или подпозицию
