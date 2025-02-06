@@ -733,11 +733,35 @@ input[type=number]::-webkit-outer-spin-button {
 .modalProjectCARD {
   display: flex;
   position: relative;
-  color: var(--white-color2);
+  padding: 0.5vw;
+  border-radius: 0.4vw;
+  color: black;
   z-index: 1100;
   box-sizing: border-box;
-  align-content: start;
+  vertical-align: middle;
+  height: auto;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(0px);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.modalProjectCARD:hover,
+.modalProjectCARD:focus {
+  border: 1px solid var(--white-color2);
+}
+
+/* Отступы только между контейнерами */
+.modalProjectCARD:not(:last-child) {
+  margin-bottom: 0.8vw; /* Отступ снизу только между контейнерами */
+}
+
+.modalRow-child-list {
+  display: flex;
+  position: relative;
+  flex-direction: row;
   background: none;
+  gap: 1vw;
 }
   
 .modalRow {
@@ -810,6 +834,8 @@ input:checked + .slider:before {
   transform: translateX(1.55vw) rotate(360deg);
   background-color: var(--black-color);
 }
+
+  
   
   
 </style>
